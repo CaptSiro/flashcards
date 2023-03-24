@@ -1,0 +1,368 @@
+@import url('https://fonts.googleapis.com/css2?family=Crete+Round:ital@0;1&display=swap');
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+:root {
+  --text-color-0: #ccd;
+  --text-color-1: #99a;
+  --text-color-2: #778;
+  --text-color-opposite-0: #ccd;
+  --text-color-opposite-1: #99a;
+  --container-0: #040014;
+  --container-1: #141024;
+  --container-2: #242034;
+  --container-3: #343044;
+  --container-4: #444054;
+  --container-opposite-0: #9326b6;
+  --container-opposite-1: #781d9a;
+  --container-opposite-2: #55146b;
+  --container-opposite-3: #420e52;
+
+  --font-0: 'Inter', sans-serif;
+  --font-1: 'Crete Round', serif;
+  --font-2: "Ubuntu Mono", monospace;
+}
+
+html {
+  background-color: var(--container-0);
+  color: var(--text-color-0);
+}
+
+::selection {
+  color: var(--container-0);
+  background-color: var(--text-color-0);
+}
+.no-user-select {
+  user-select: none;
+}
+.selectable {
+  user-select: text;
+  padding-right: 1px;
+}
+
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--container-opposite-3);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--container-opposite-1);
+}
+
+
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.background-blend {
+  background-color: var(--container-opposite-0) !important;
+  background-blend-mode: multiply !important;
+}
+
+.dragging {
+  caret-color: transparent !important;
+}
+
+.display-none {
+  display: none !important;
+}
+
+.center-text {
+  text-align: center;
+}
+
+.chained-inputs {
+  display: flex;
+  box-sizing: unset;
+}
+
+.chained-inputs input::-webkit-outer-spin-button,
+.chained-inputs input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.chained-inputs input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+.text-icon {
+  color: var(--text-color-0);
+}
+
+
+p.PHP-Exception {
+  display: none;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+}
+
+p.PHP-Exception.throw {
+  display: block;
+}
+
+
+p.blockquote {
+  font-size: 0.9em;
+  width: 100%;
+  border-left: transparent solid 4px;
+  padding: 8px;
+  margin-top: 4px;
+  white-space: normal;
+  color: var(--text-color-0);
+}
+
+p.note {
+  background-color: rgba(197, 81, 6, 0.5);
+  border-color: #c55106;
+}
+
+p.error {
+  display: none;
+  background-color: rgba(241, 56, 84, 0.5);
+  border-color: #f13854;
+}
+
+.show {
+  display: block !important;
+}
+
+
+
+button.link,
+a {
+  all: unset;
+  color: var(--text-color-2);
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+button.link:hover,
+a:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+
+
+
+
+
+.radio-container,
+.checkbox-container {
+  font-family: Helvetica, sans-serif;
+  font-size: 1em;
+  line-height: 1.1;
+  display: grid;
+  grid-template-columns: 1em auto;
+  gap: 0.5em;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  position: relative;
+
+  appearance: none;
+  background-color: var(--container-0);
+  margin: 0 !important;
+
+  font: inherit;
+  color: var(--text-color-0);
+  width: 1.15em;
+  height: 1.15em;
+  border: 0.08em solid var(--container-opposite-3);
+  border-radius: 0.15em !important;
+  transform: translateY(-0.075em);
+  transition: background-color 100ms linear;
+}
+
+input[type="radio"] {
+  border-radius: 50% !important;
+}
+
+input[type="radio"]:checked,
+input[type="checkbox"]:checked {
+  background-color: var(--container-opposite-0);
+  transition: background-color 150ms linear;
+}
+
+input[type=radio]:focus,
+input[type=checkbox]:focus {
+  outline: 2px solid var(--container-opposite-1);
+}
+
+
+
+
+
+input[type="radio"]:after {
+  content: "";
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  width: 50%;
+  height: 50%;
+  border-radius: 50%;
+  background-color: var(--container-0);
+}
+
+
+
+
+
+.default-container {
+  display: flex;
+  overflow: auto;
+  flex-direction: column;
+  width: 350px;
+  max-height: 100%;
+  padding: 50px;
+  background-color: var(--container-0);
+  border-radius: 8px;
+  box-shadow: var(--container-3) 0 7px 29px 0;
+}
+
+
+.button-like {
+  all: unset;
+  opacity: 1;
+  padding: 4px;
+  color: var(--text-color-opposite-0);
+  border-radius: 5px;
+  background-color: var(--container-opposite-2);
+  border: 2px solid var(--container-opposite-3);
+
+  transition: background-color 250ms linear, opacity 200ms linear;
+}
+.button-like:hover {
+  cursor: pointer;
+  background-color: var(--container-opposite-1);
+
+  transition: background-color 0ms linear;
+}
+
+button:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  touch-action: none;
+}
+
+.transition-background {
+  transition: background-color 500ms linear;
+}
+.validated {
+  background-color: #0aa25e !important;
+}
+.rejected {
+  background-color: #b21351 !important;
+}
+
+
+
+
+*.icon {
+  width: 1.75em;
+  height: 1.75em;
+  padding: 0.25em;
+  object-fit: contain;
+  z-index: 2;
+  border-radius: 5px;
+  color: var(--text-color-opposite-0);
+
+  transition: background-color 250ms linear, color 250ms;
+}
+
+
+
+
+
+.theme-colors {
+  --bg-0: #000;
+  --bg-1: #000;
+  --color-0: #fff;
+  --color-1: #fff;
+
+  background: #000;
+  background: linear-gradient(90deg, var(--bg-0) 50%, var(--bg-1) 50%);
+  display: grid;
+  place-items: center;
+  padding: 8px 0;
+}
+.theme-colors:hover {
+  cursor: pointer;
+}
+.theme-colors:hover p {
+  font-weight: bolder;
+}
+.theme-colors p {
+  width: 80%;
+  text-align: center;
+  background: #fff;
+  background: linear-gradient(90deg, var(--color-0) 50%, var(--color-1) 50%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.select-dropdown {
+  position: relative;
+  max-width: 300px;
+
+  --height: 100px;
+}
+.select-dropdown .label:hover {
+  cursor: pointer;
+}
+.select-dropdown .label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  padding: 0.25em 0.5em;
+  background-color: var(--container-2);
+  border: 1px solid var(--container-3);
+  color: var(--text-color-1);
+
+  transition: background-color 250ms, color 250ms, border-color 250ms;
+}
+.select-dropdown .label svg {
+  color: inherit;
+  transform: scale(0.8);
+  transition: transform 250ms ease;
+}
+.select-dropdown.expand .label svg {
+  transform: rotate(90deg) scale(0.8);
+}
+.select-dropdown .content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  overflow: auto;
+  max-height: 0;
+  transition: max-height 250ms ease-in-out;
+}
+.select-dropdown.expand .content {
+  max-height: var(--height);
+}
+
+
+.xdebug-error {
+  color: black !important;
+}

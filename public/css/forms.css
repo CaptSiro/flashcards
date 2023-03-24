@@ -1,0 +1,111 @@
+.form {
+    display: flex;
+    overflow: auto;
+    flex-direction: column;
+    width: 350px;
+    max-height: 100%;
+    padding: 32px;
+    background-color: var(--container-0);
+    color: var(--text-color-0);
+    border-radius: 8px;
+    box-shadow: var(--container-3) 0 7px 29px 0;
+}
+
+.form.hide {
+    display: none;
+}
+
+.form input {
+    border-radius: 8px;
+    font-size: 1.1em;
+    border: unset;
+    padding: 8px;
+    margin-top: 4px;
+    background-color: var(--container-2);
+    color: var(--text-color-0);
+    border: 2px solid var(--container-3);
+}
+
+.form input:not([type=checkbox]):focus {
+    outline: 2px solid var(--container-opposite-1);
+    background-color: var(--container-0);
+    color: var(--text-color-0);
+}
+
+.form input.invalid {
+    background-color: #f3919f;
+    border-color: #f13854;
+    color: black;
+}
+
+.form button {
+    padding: 0.5em 1em;
+    margin: 0 auto;
+    font-size: 1em;
+    border-radius: 8px;
+    color: var(--text-color-0);
+    background-color: var(--container-2);
+    border: 2px solid var(--container-3);
+}
+
+.form button:hover {
+    outline: 2px solid var(--container-opposite-0);
+    background-color: var(--container-0);
+    cursor: pointer;
+}
+
+.form button.link {
+    all: unset;
+    color: var(--text-color-2);
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.form button.link:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.form .url-website {
+    color: var(--text-color-1);
+    font-size: 0.8em;
+}
+
+.form .chained-inputs > * {
+    margin: 2px;
+}
+
+
+
+.form .hline {
+    width: 100%;
+    height: 1px;
+    margin: 10px 0;
+    background-color: var(--container-4);
+}
+
+.form .divider {
+    width: 100%;
+    height: 50px;
+}
+
+.form .wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+}
+
+.form .wrapper.row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form .wrapper:first-child {
+    margin-top: unset;
+}
+
+.form .wrapper:last-child {
+    margin-bottom: unset;
+}
