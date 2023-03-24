@@ -1,7 +1,7 @@
 <?php
 
   class Mail {
-    const FROM = "noreply@nocoma.com";
+    const FROM = "noreply@flashcards.com";
 
     public static function message ($to, $subject, $msg) {
       $headers = "MIME-Version: 1.0" . "\r\n";
