@@ -45,4 +45,21 @@
       
       return success($stacks);
     }
+    
+    
+    
+    static function by_id(Param $id): Result {
+      $stack = Database::get()->fetch(
+        "SELECT id, name, decks_id
+            FROM stacks
+            WHERE id = $id",
+        self::class
+      );
+      
+      if ($stack === false) {
+        return fail(new NotFoundExc("There are no stacks for id: ". $id->value()));
+      }
+      
+      return success($stack);
+    }
   }

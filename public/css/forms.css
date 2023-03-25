@@ -24,6 +24,8 @@
     background-color: var(--container-2);
     color: var(--text-color-0);
     border: 2px solid var(--container-3);
+
+    transition: background-color 250ms linear, border-color 250ms linear;
 }
 
 .form input:not([type=checkbox]):focus {
@@ -36,6 +38,25 @@
     background-color: #f3919f;
     border-color: #f13854;
     color: black;
+}
+
+.form textarea {
+    border-radius: 8px;
+    background-color: var(--container-2);
+    color: var(--text-color-0);
+    border: 2px solid var(--container-3);
+    resize: none;
+
+    padding: 8px;
+    margin-top: 8px;
+
+    transition: background-color 250ms linear, border-color 250ms linear;
+}
+
+.form textarea:focus {
+    outline: 2px solid var(--container-opposite-1);
+    background-color: var(--container-0);
+    color: var(--text-color-0);
 }
 
 .form button {

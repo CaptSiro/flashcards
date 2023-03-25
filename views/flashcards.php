@@ -58,6 +58,29 @@
         <p class="blockquote error error-modal"></p>
       </div>
     </div>
+  
+    <div class="window form" id="create-card">
+      <div class="wrapper">
+        <label for="card-question">Question:</label>
+        <input type="text" name="card-question" id="card-question">
+      </div>
+  
+      <div class="wrapper">
+        <label for="card-answer">Answer:</label>
+        <textarea name="card-answer" id="card-answer" cols="30" rows="10"></textarea>
+      </div>
+    
+      <div class="divider"></div>
+    
+      <div class="wrapper sideways-end">
+        <button class="cancel-modal">Cancel</button>
+        <button class="submit" type="submit">Create</button>
+      </div>
+    
+      <div class="wrapper">
+        <p class="blockquote error error-modal"></p>
+      </div>
+    </div>
   </div>
   
   <nav>

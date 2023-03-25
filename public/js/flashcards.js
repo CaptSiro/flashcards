@@ -124,19 +124,19 @@ $("#create-stack button[type=submit]").addEventListener("pointerdown", async () 
   const stack_name = stack_name_input.value.trim();
   
   if (stack_name === "") {
-    deck_control.invalidate("Deck name must not be left empty.");
+    deck_control.invalidate("Stack name must not be left empty.");
     return;
   }
   
   const s = get_state();
-  if (s.deck_id === undefined) {
+  if (s?.deck.id === undefined) {
     return;
   }
   
   const response = await AJAX.post("/stack", JSONHandler(), {
     body: JSON.stringify({
       name: stack_name,
-      deck_id: s.deck_id
+      deck_id: s?.deck.id
     })
   });
   
@@ -147,6 +147,49 @@ $("#create-stack button[type=submit]").addEventListener("pointerdown", async () 
   
   stack_control.clear();
   load_stacks(get_state());
+  clear_windows();
+});
+
+
+
+const card_question_input = $("#card-question");
+const card_answer_input = $("#card-answer");
+const card_control = new FormControl("create-card");
+$("#create-card button[type=submit]").addEventListener("pointerdown", async () => {
+  const card_question = card_question_input.value.trim();
+  
+  if (card_question === "") {
+    deck_control.invalidate("Card question must not be left empty.");
+    return;
+  }
+  
+  const card_answer = card_answer_input.value.trim();
+  
+  if (card_answer === "") {
+    deck_control.invalidate("Card answer must not be left empty.");
+    return;
+  }
+  
+  const s = get_state();
+  if (s?.stack.id === undefined) {
+    return;
+  }
+  
+  const response = await AJAX.post("/card", JSONHandler(), {
+    body: JSON.stringify({
+      question: card_question,
+      answer: card_answer,
+      stack_id: s.stack.id
+    })
+  });
+  
+  if (response.error !== undefined) {
+    card_control.invalidate(response.error);
+    return;
+  }
+  
+  card_control.clear();
+  load_cards(get_state());
   clear_windows();
 });
 
@@ -221,7 +264,7 @@ async function load_stacks(s) {
 
 
 
-function load_cards(s) {
+async function load_cards(s) {
   if (s.stack === undefined) {
     return;
   }
@@ -231,13 +274,41 @@ function load_cards(s) {
     label: Span(_, [
       "Stack: ",
       Span("important", s.stack.name)
-    ])
+    ]),
+    stack: s.stack
   });
   
   const stack_id = s.stack.id;
   
+  const cards = await AJAX.get("/card/in-stack/" + stack_id, JSONHandler());
+  if (cards.error !== undefined) {
+    console.log(cards);
+    return;
+  }
+  
   grid.textContent = "";
   grid.append(add_button);
+  
+  for (const card of cards) {
+    grid.append(
+      Div("card", [
+        Heading(3, _, card.question),
+        Span(_, card.answer)
+      ], {
+        listeners: {
+          click: () => {
+            edit_card(card)
+          }
+        }
+      })
+    )
+  }
+}
+
+
+
+function edit_card(card) {
+  // todo edit card
 }
 
 
@@ -271,7 +342,7 @@ function AddButton() {
     Button("add button-like", [
       Span("mono", "+")
     ], () => {
-      show_window("create-" + states.section)
+      show_window("create-" + get_state().section)
     })
   )
 }
