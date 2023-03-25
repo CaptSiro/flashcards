@@ -1,4 +1,4 @@
-const __ = undefined;
+const _ = undefined;
 const WIDGET_SELECTION_CLASS = "selected-widget-for-operation";
 /**
  * @type {"chrome" | "opera" | "firefox" | "safari" | "internet-explorer" | "edge" | "edge-chromium"}
@@ -520,7 +520,7 @@ function Img (src, alt, className = undefined, options = {}) {
   options.attributes.src = src;
   options.attributes.alt = alt;
   
-  return Component("img", className, __, options);
+  return Component("img", className, _, options);
 }
 
 
@@ -538,7 +538,7 @@ function Button (className = undefined, content = undefined, action = undefined,
       options.listeners = {};
     }
     
-    options.listeners.click = action;
+    options.listeners.pointerdown = action;
     options.listeners.submit = action;
   }
   
@@ -571,7 +571,7 @@ function Input (type, className = undefined, options = {}) {
   
   options.attributes.type = type;
   
-  return Component("input", className, __, options);
+  return Component("input", className, _, options);
 }
 
 /**
@@ -592,8 +592,8 @@ function Checkbox (label = "", className = undefined, id = undefined, checkboxOp
   
   return (
     Label("checkbox-container" + (className ? (" " + className) : ""), [
-      Input("checkbox", __, checkboxOptions),
-      Span(__, label)
+      Input("checkbox", _, checkboxOptions),
+      Span(_, label)
     ], {
       attributes: {
         for: id
@@ -626,8 +626,8 @@ function Radio (label, value, name, className = undefined, radioOptions = undefi
   
   return (
     Label("radio-container" + (className ? (" " + className) : ""), [
-      Input("radio", __, radioOptions),
-      Span(__, label)
+      Input("radio", _, radioOptions),
+      Span(_, label)
     ], {
       attributes: {
         for: id
