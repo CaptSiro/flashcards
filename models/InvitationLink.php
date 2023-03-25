@@ -5,11 +5,14 @@
   use OakBase\PrimitiveParam;
 
   class InvitationLink {
-    public $id, $arg, $users_id, $expires;
+    public int $id;
+    public string $arg;
+    public int $users_id;
+    public int $expires;
     
     
     
-    static function insert (string $arg, User $user): Result {
+    static function insert(string $arg, User $user): Result {
       $arg = new PrimitiveParam($arg);
       $user_id = new PrimitiveParam($user->id);
       $expires = new PrimitiveParam(time() + 60 * 5);
@@ -22,7 +25,7 @@
     
     
     
-    static function get_by_arg (string $arg): Result {
+    static function by_arg(string $arg): Result {
       self::purge_old();
       
       $arg = new PrimitiveParam($arg);
@@ -37,7 +40,7 @@
   
   
   
-    static function delete_for_user (User $user): Result {
+    static function delete_for_user(User $user): Result {
       self::purge_old();
     
       $user_id = new PrimitiveParam($user->id);
@@ -50,7 +53,7 @@
     
     
     
-    static function purge_old () {
+    static function purge_old() {
       Database::get()->statement("DELETE FROM invitation_links WHERE expires < UNIX_TIMESTAMP()");
     }
     
@@ -59,7 +62,7 @@
     const ARG_GEN_CHARSET = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM0123456789_-";
     const ARG_GEN_MAX_TRIES = 4_096;
     
-    static function arg_gen (): Result {
+    static function arg_gen(): Result {
       $arg = "";
       $try = 0;
       
@@ -70,7 +73,7 @@
           $arg .= self::ARG_GEN_CHARSET[random_int(0, 63)];
         }
         
-        $existing_arg = self::get_by_arg($arg);
+        $existing_arg = self::by_arg($arg);
         if ($existing_arg->isSuccess() && $existing_arg->getSuccess() === false) {
           return success($arg);
         }

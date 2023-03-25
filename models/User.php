@@ -1,7 +1,6 @@
 <?php
   
   use OakBase\Database;
-  use OakBase\MixedIndexingException;
   use OakBase\PrimitiveParam;
   
   class User {
@@ -10,7 +9,7 @@
   
   
   
-    static function get_by_id (int $id): Result {
+    static function by_id (int $id): Result {
       $id = new PrimitiveParam($id);
     
       return success(Database::get()->fetch(
@@ -21,7 +20,7 @@
     
     
     
-    static function get_by_email (string $email): Result {
+    static function by_email (string $email): Result {
       $email = new PrimitiveParam($email);
   
       return success(Database::get()->fetch(

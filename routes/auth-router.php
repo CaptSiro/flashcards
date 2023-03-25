@@ -40,13 +40,13 @@
         $response->fail(new Exc("Not a valid email."));
       }
     
-      $user = User::get_by_email($email)
+      $user = User::by_email($email)
         ->forwardFailure($response)
         ->getSuccess();
       
       if ($user === false) {
         User::insert($email);
-        $user = User::get_by_email($email)
+        $user = User::by_email($email)
           ->forwardFailure($response)
           ->getSuccess();
       }
@@ -106,7 +106,7 @@
   
   
   $auth_router->get("/login", [function (Request $request, Response $response) {
-    $link = InvitationLink::get_by_arg(
+    $link = InvitationLink::by_arg(
       $request->query->get("arg")
     )
       ->forwardFailure($response)
@@ -116,7 +116,7 @@
       $response->render("error", ["message" => "Link has been used or it has expired. (Expiration time: 5 minutes)"]);
     }
     
-    $user = User::get_by_id((int) $link->users_id)
+    $user = User::by_id((int) $link->users_id)
       ->forwardFailure($response)
       ->getSuccess();
     
