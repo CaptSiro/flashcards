@@ -8,24 +8,28 @@
 }
 
 :root {
-  --text-color-0: #ccd;
-  --text-color-1: #99a;
-  --text-color-2: #778;
-  --text-color-opposite-0: #ccd;
-  --text-color-opposite-1: #99a;
-  --container-0: #040014;
-  --container-1: #141024;
-  --container-2: #242034;
-  --container-3: #343044;
-  --container-4: #444054;
-  --container-opposite-0: #9326b6;
-  --container-opposite-1: #781d9a;
-  --container-opposite-2: #55146b;
-  --container-opposite-3: #420e52;
+  --text-color-0: #d9dee4;
+  --text-color-1: #c3c8cd;
+  --text-color-2: #aeb2b6;
+  --text-color-opposite-0: #d9dee4;
+  --text-color-opposite-1: #c3c8cd;
+  --container-0: #24272b;
+  --container-1: #2a2e32;
+  --container-2: #303439;
+  --container-3: #363b40;
+  --container-4: #3c4147;
+  --container-opposite-0: #ff9567;
+  --container-opposite-1: #e6865d;
+  --container-opposite-2: #cc7752;
+  --container-opposite-3: #b36848;
 
   --font-0: 'Inter', sans-serif;
   --font-1: 'Crete Round', serif;
   --font-2: "Ubuntu Mono", monospace;
+}
+
+.mono {
+  font-family: var(--font-2);
 }
 
 html {
@@ -242,22 +246,41 @@ input[type="radio"]:after {
 
 
 .button-like {
-  all: unset;
+  padding: 0.5em 1em;
+  font-size: 1em;
+  border-radius: 8px;
+  color: var(--text-color-0);
+  background-color: var(--container-2);
+  border: 2px solid var(--container-3);
   opacity: 1;
-  padding: 4px;
-  color: var(--text-color-opposite-0);
-  border-radius: 5px;
-  background-color: var(--container-opposite-2);
-  border: 2px solid var(--container-opposite-3);
 
   transition: background-color 250ms linear, opacity 200ms linear;
 }
 .button-like:hover {
+  outline: 2px solid var(--container-opposite-0);
+  background-color: var(--container-0);
   cursor: pointer;
-  background-color: var(--container-opposite-1);
 
   transition: background-color 0ms linear;
 }
+
+
+.link-like {
+  all: unset;
+  opacity: 1;
+  padding: 4px;
+  color: dodgerblue;
+  text-decoration: underline;
+
+  transition: color 250ms linear, opacity 200ms linear;
+}
+.link-like:hover {
+  cursor: pointer;
+  color: deepskyblue;
+
+  transition: color 0ms linear;
+}
+
 
 button:disabled {
   opacity: 0.5;
