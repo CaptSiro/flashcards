@@ -1,0 +1,85 @@
+.modals {
+    position: fixed;
+    z-index: 100;
+    width: 100vw;
+    height: 100vh;
+    background-color: transparent;
+    backdrop-filter: blur(8px) opacity(0);
+    visibility: hidden;
+
+    transition: background-color 500ms linear, backdrop-filter 500ms linear, visibility 0ms 500ms;
+}
+.modals.darken {
+    visibility: visible;
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px) opacity(1);
+
+    transition: background-color 500ms linear, backdrop-filter 500ms linear, visibility 0ms;
+}
+
+.window.form {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    max-height: 0;
+    width: 250px;
+    padding: 0 50px;
+    overflow: hidden;
+
+    visibility: hidden;
+
+    transition:
+            width 250ms linear,
+
+            max-height 250ms linear,
+            padding-top 250ms linear,
+            padding-bottom 250ms linear,
+
+            visibility 0ms 500ms linear;
+}
+@keyframes delay-overflow {
+    from { overflow: auto; }
+}
+.window.form.show {
+    max-height: 100%;
+    width: 350px;
+    padding: 32px;
+    overflow: auto;
+    animation: 300ms delay-overflow;
+
+    visibility: visible;
+
+    transition:
+            width 250ms linear,
+
+            max-height 250ms linear,
+            padding-top 250ms linear,
+            padding-bottom 250ms linear,
+
+            visibility 0ms linear;
+}
+.window.form.show.large {
+    width: 500px;
+}
+.window.form > * {
+    white-space: nowrap;
+}
+.window.form > *.white-space-normal {
+    white-space: normal;
+}
+.window.form .important-span {
+    font-weight: bold;
+    font-style: italic;
+    white-space: normal;
+}
+.sideways-end {
+    flex-direction: row !important;
+    justify-content: flex-end;
+    gap: 8px;
+}
+.sideways-end * {
+    margin: unset !important;
+}
