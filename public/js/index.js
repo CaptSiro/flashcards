@@ -11,7 +11,33 @@ $(".logout").addEventListener("pointerdown", async () => {
 
 
 
+let state = "deck";
 
+$(".add").addEventListener("pointerdown", () => {
+  show_window("create-" + state);
+});
+
+
+
+const deck_name_input = $("#deck-name");
+const deck_control = new FormControl("create-deck");
+$("#create-deck button[type=submit]").addEventListener("pointerdown", async () => {
+  const deck_name = deck_name_input.value.trim();
+  
+  if (deck_name === "") {
+    deck_control.invalidate("Deck name must not be left empty.");
+    return;
+  }
+  
+  const response = await AJAX.post("/deck", JSONHandler());
+  
+  if (response.error !== undefined) {
+    deck_control.invalidate(response.error);
+    return;
+  }
+  
+  // todo change to newly created deck
+});
 
 
 
@@ -32,5 +58,4 @@ function stay_logged_in() {
   
   localStorage.setItem("stay_logged_in", "false");
 }
-
 stay_logged_in();

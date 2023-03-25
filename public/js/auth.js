@@ -15,5 +15,5 @@ $("button[type=submit]").addEventListener("pointerdown", async () => {
   error.classList.remove("show");
   
   console.log(response);
-  switchForm(email.closest(".form"), "confirmation");
+  switch_form(email.closest(".form"), "confirmation");
 });

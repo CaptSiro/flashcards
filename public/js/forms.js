@@ -22,7 +22,7 @@ $$(".form").forEach(form => {
 
 $$("button[link-to]").forEach(e => {
   const linkTo = e.getAttribute("link-to");
-  e.addEventListener("pointerdown", evt => {
+  e.addEventListener("pointerdown", () => {
     e.closest(".form").classList.add("hide");
     forms.get(linkTo).classList.remove("hide");
   });
@@ -30,10 +30,47 @@ $$("button[link-to]").forEach(e => {
 
 
 /**
- * @param {HTMLElement} currentForm 
- * @param {string} formToken 
+ * @param {HTMLElement} current_form
+ * @param {string} form_token
  */
-function switchForm (currentForm, formToken) {
-  currentForm.classList.add("hide");
-  forms.get(formToken).classList.remove("hide");
+function switch_form (current_form, form_token) {
+  current_form.classList.add("hide");
+  forms.get(form_token).classList.remove("hide");
+}
+
+
+class FormControl {
+  error;
+  form_token;
+  
+  /**
+   * @param {string} form_token
+   */
+  constructor(form_token) {
+    this.error = $(`#${form_token} .error-modal`);
+    this.form_token = form_token;
+  }
+  
+  /**
+   * @param {string} message
+   */
+  invalidate(message) {
+    if (this.error === null) {
+      console.error("Cannot set message because there is no error modal for token: " + this.form_token);
+      return;
+    }
+    
+    this.error.textContent = message;
+    this.error.classList.add("show");
+  }
+  
+  clear() {
+    if (this.error === null) {
+      console.error("Cannot perform clear because there is no error modal for token: " + this.form_token);
+      return;
+    }
+    
+    this.error.textContent = "";
+    this.error.classList.remove("show");
+  }
 }
