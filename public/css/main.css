@@ -32,6 +32,12 @@
   font-family: var(--font-2);
 }
 
+.important {
+  font-family: var(--font-1);
+  font-style: italic;
+  font-weight: bold;
+}
+
 html {
   background-color: var(--container-0);
   color: var(--text-color-0);

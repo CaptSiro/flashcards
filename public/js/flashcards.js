@@ -11,8 +11,17 @@ $(".logout").addEventListener("pointerdown", async () => {
 
 
 
+/**
+ * @typedef State
+ * @property {string} section
+ * @property {HTMLElement} label
+ */
+/**
+ * @type {State[]}
+ */
 const states = [{
-  section: "deck"
+  section: "deck",
+  label: Span()
 }];
 
 $(".back").addEventListener("pointerdown", () => {
@@ -20,20 +29,39 @@ $(".back").addEventListener("pointerdown", () => {
   state_change();
 });
 
+window.addEventListener("popstate", () => {
+  states.pop();
+  if (states.length === 0) {
+    return;
+  }
+  
+  state_change();
+});
+
+/**
+ * @return {State}
+ */
 function get_state() {
-  if (states.length - 1 === 0) {
+  if (states.length - 1 < 0) {
     return {
-      section: "deck"
+      section: "deck",
+      label: Span()
     };
   }
   
   return states[states.length - 1];
 }
 
+/**
+ * @param {State} state
+ */
 function set_state(state) {
-  if (objectEqual(state, get_state())) {
+  if (objectEqual(state, get_state(), ["label"])) {
     return;
   }
+  
+  state_label.textContent = "";
+  state_label.append(state.label);
   
   states.push(state);
 }
@@ -44,9 +72,13 @@ const loaders = new Map([
   ["card", load_cards]
 ]);
 
+const state_label = $(".state-label");
 function state_change() {
   const s = get_state();
   loaders.get(s.section)(s);
+  
+  state_label.textContent = "";
+  state_label.append(s.label);
 }
 
 state_change();
@@ -137,9 +169,7 @@ async function load_decks() {
       ], {
         listeners: {
           click: () => {
-            load_stacks({
-              deck_id: deck.id
-            })
+            load_stacks({ deck })
           }
         }
       })
@@ -150,12 +180,20 @@ async function load_decks() {
 
 
 async function load_stacks(s) {
+  if (s.deck === undefined) {
+    return;
+  }
+  
   set_state({
     section: "stack",
-    deck_id: s.deck_id
+    label: Span(_, [
+      "Deck: ",
+      Span("important", s.deck.name)
+    ]),
+    deck: s.deck
   });
   
-  const deck_id = s.deck_id;
+  const deck_id = s.deck.id;
   
   const stacks = await AJAX.get("/stack/in-deck/" + deck_id, JSONHandler());
   if (stacks.error !== undefined) {
@@ -173,9 +211,7 @@ async function load_stacks(s) {
       ], {
         listeners: {
           click: () => {
-            load_cards({
-              stack_id: stack.id
-            })
+            load_cards({ stack })
           }
         }
       })
@@ -186,12 +222,19 @@ async function load_stacks(s) {
 
 
 function load_cards(s) {
+  if (s.stack === undefined) {
+    return;
+  }
+  
   set_state({
     section: "card",
-    stack_id: s.stack_id
+    label: Span(_, [
+      "Stack: ",
+      Span("important", s.stack.name)
+    ])
   });
   
-  const deck_id = s.stack_id;
+  const stack_id = s.stack.id;
   
   grid.textContent = "";
   grid.append(add_button);

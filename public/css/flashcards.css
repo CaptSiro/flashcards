@@ -69,6 +69,17 @@ main .deck:hover {
 
 
 
+main .stack {
+    width: 175px;
+    height: 250px;
+    border-radius: 10px;
+    background-color: var(--container-4);
+    display: flex;
+    justify-content: center;
+}
+
+
+
 main .card {
     width: 200px;
     height: 300px;
@@ -79,6 +90,7 @@ main .card {
 }
 
 main .deck :first-child,
+main .stack :first-child,
 main .card :first-child {
     margin-top: 50px;
 }

@@ -61,13 +61,8 @@
   </div>
   
   <nav>
-    <div class="breadcrumbs">
-      <button class="button-like back"><span class="mono">&lt;</span></button>
-<!--      <button class="button-like">Decks</button>-->
-<!--      <button class="button-like">Stacks</button>-->
-<!--      <button class="button-like">Cards</button>-->
-    </div>
-    <div>
+    <button class="button-like back"><span class="mono">&lt;</span></button>
+    <div class="state-label">
       <span>Deck: <i><b id="current-deck"></b></i></span>
     </div>
     <button class="logout button-like">Logout</button>
