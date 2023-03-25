@@ -44,7 +44,7 @@
         $response->flush();
       }
     
-      $response->render("index");
+      $response->render("flashcards");
     }
   ]);
   

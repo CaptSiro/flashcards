@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   
   <link rel="stylesheet" href="<?= $GLOBALS["__HOME__"] ?>/public/css/main.css">
-  <link rel="stylesheet" href="<?= $GLOBALS["__HOME__"] ?>/public/css/index.css">
+  <link rel="stylesheet" href="<?= $GLOBALS["__HOME__"] ?>/public/css/flashcards.css">
   <link rel="stylesheet" href="<?= $GLOBALS["__HOME__"] ?>/public/css/modal.css">
   <link rel="stylesheet" href="<?= $GLOBALS["__HOME__"] ?>/public/css/forms.css">
   
@@ -15,9 +15,9 @@
   <script>
     AJAX.DOMAIN_HOME = "<?= $GLOBALS["__HOME__"] ?>";
   </script>
-  <script src="<?= $GLOBALS["__HOME__"] ?>/public/js/index.js" defer></script>
   <script src="<?= $GLOBALS["__HOME__"] ?>/public/js/modal.js" defer></script>
   <script src="<?= $GLOBALS["__HOME__"] ?>/public/js/forms.js" defer></script>
+  <script src="<?= $GLOBALS["__HOME__"] ?>/public/js/flashcards.js" defer></script>
   
   <title>Flash decks</title>
 </head>
