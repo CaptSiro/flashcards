@@ -56,6 +56,15 @@ main .deck {
     background-color: rgba(240, 46, 170);
     display: flex;
     justify-content: center;
+    opacity: 0.8;
+
+    transition: opacity 250ms linear;
+}
+main .deck:hover {
+    opacity: 1;
+    cursor: pointer;
+
+    transition: opacity 0ms linear;
 }
 
 

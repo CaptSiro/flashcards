@@ -4,7 +4,7 @@
   require_once __DIR__ . "/lib/dotenv/dotenv.php";
   $env = new Env(__DIR__ . "/.env");
   
-  
+  require_once __DIR__ . "/models/User.php";
   
   require_once __DIR__ . "/lib/oakbase/oakbase.php";
   use OakBase\Database;
@@ -53,6 +53,7 @@
   
   
   $router->use("/auth", new RouterPromise(__DIR__ . "/routes/auth-router.php"));
+  $router->use("/deck", new RouterPromise(__DIR__ . "/routes/deck-router.php"));
   
   
   

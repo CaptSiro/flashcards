@@ -12,6 +12,8 @@ $(".logout").addEventListener("pointerdown", async () => {
 
 
 let state = "deck";
+const grid = $("main");
+const add_button = AddButton();
 
 $(".add").addEventListener("pointerdown", () => {
   show_window("create-" + state);
@@ -29,15 +31,54 @@ $("#create-deck button[type=submit]").addEventListener("pointerdown", async () =
     return;
   }
   
-  const response = await AJAX.post("/deck", JSONHandler());
+  const response = await AJAX.post("/deck", JSONHandler(), {
+    body: JSON.stringify({
+      name: deck_name
+    })
+  });
   
   if (response.error !== undefined) {
     deck_control.invalidate(response.error);
     return;
   }
   
-  // todo change to newly created deck
+  load_decks();
+  clear_windows();
 });
+
+
+
+async function load_decks() {
+  const decks = await AJAX.get("/deck/users/", JSONHandler());
+  if (decks.error !== undefined) {
+    console.log(decks);
+    return;
+  }
+  
+  grid.textContent = "";
+  grid.append(add_button);
+  
+  for (const deck of decks) {
+    grid.append(
+      Div("deck", [
+        Heading(3, _, deck.name)
+      ], {
+        listeners: {
+          click: () => {
+            load_stacks(deck.id)
+          }
+        }
+      })
+    )
+  }
+}
+load_decks();
+
+
+
+async function load_stacks(deck_id) {
+
+}
 
 
 
@@ -59,3 +100,18 @@ function stay_logged_in() {
   localStorage.setItem("stay_logged_in", "false");
 }
 stay_logged_in();
+
+
+
+/**
+ * @return {HTMLElement}
+ */
+function AddButton() {
+  return (
+    Button("add button-like", [
+      Span("mono", "+")
+    ], () => {
+      show_window("create-" + state)
+    })
+  )
+}
