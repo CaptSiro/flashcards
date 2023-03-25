@@ -40,14 +40,32 @@
         <p class="blockquote error error-modal"></p>
       </div>
     </div>
+  
+    <div class="window form" id="create-stack">
+      <div class="wrapper">
+        <label for="stack-name">Stack name:</label>
+        <input type="text" name="stack-name" id="stack-name">
+      </div>
+    
+      <div class="divider"></div>
+    
+      <div class="wrapper sideways-end">
+        <button class="cancel-modal">Cancel</button>
+        <button class="submit" type="submit">Create</button>
+      </div>
+    
+      <div class="wrapper">
+        <p class="blockquote error error-modal"></p>
+      </div>
+    </div>
   </div>
   
   <nav>
     <div class="breadcrumbs">
-      <button class="button-like"><span class="mono">&lt;</span></button>
-      <button class="button-like">Decks</button>
-      <button class="button-like">Stacks</button>
-      <button class="button-like">Cards</button>
+      <button class="button-like back"><span class="mono">&lt;</span></button>
+<!--      <button class="button-like">Decks</button>-->
+<!--      <button class="button-like">Stacks</button>-->
+<!--      <button class="button-like">Cards</button>-->
     </div>
     <div>
       <span>Deck: <i><b id="current-deck"></b></i></span>
@@ -55,53 +73,6 @@
     <button class="logout button-like">Logout</button>
   </nav>
   
-  <main>
-    <button class="add button-like"><span class="mono">+</span></button>
-    <div class="deck">
-      <h3>Something</h3>
-    </div>
-    <div class="deck">
-      <h3>Something</h3>
-    </div>
-    <div class="deck">
-      <h3>Something</h3>
-    </div>
-    <div class="deck">
-      <h3>Something</h3>
-    </div>
-    <div class="deck">
-      <h3>Something</h3>
-    </div>
-    <div class="deck">
-      <h3>Something</h3>
-    </div>
-    <div class="deck">
-      <h3>Something</h3>
-    </div>
-    <div class="deck">
-      <h3>Something</h3>
-    </div>
-    <div class="deck">
-      <h3>Something</h3>
-    </div>
-    <div class="deck">
-      <h3>Something</h3>
-    </div>
-    <div class="deck">
-      <h3>Something</h3>
-    </div>
-    <div class="deck">
-      <h3>Something</h3>
-    </div>
-    <div class="deck">
-      <h3>Something</h3>
-    </div>
-    <div class="deck">
-      <h3>Something</h3>
-    </div>
-    <div class="deck">
-      <h3>Something</h3>
-    </div>
-  </main>
+  <main></main>
 </body>
 </html>

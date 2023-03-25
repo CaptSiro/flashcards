@@ -726,6 +726,35 @@ function arrayEqual (array1, array2, compareFunction = ((a, b) => a === b)) {
 
 
 
+/**
+ *
+ * @param {*} object1
+ * @param {*} object2
+ * @param {(a: *, b: *)=>boolean} compare
+ * @return {boolean}
+ */
+function objectEqual(object1, object2, compare = (a, b) => a === b) {
+  if (Object.keys(object1).length !== Object.keys(object2).length) return false;
+  
+  for (const key in object1) {
+    if (compare(object1[key], object2[key])) {
+      continue;
+    }
+    
+    if (typeof object1[key] === "object" && typeof object2[key] === "object") {
+      if (objectEqual(object1[key], object2[key], compare)) {
+        continue;
+      }
+    }
+    
+    return false;
+  }
+  
+  return true;
+}
+
+
+
 
 /**
  * Clamps number between given bounds
