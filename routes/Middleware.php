@@ -94,7 +94,7 @@
             break;
           }
           case Middleware::RESPONSE_REDIRECT: {
-            $response->redirect($redirectURL);
+            $response->setHeader("Location", $redirectURL);
             break;
           }
         }

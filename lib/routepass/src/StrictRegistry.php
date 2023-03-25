@@ -26,9 +26,10 @@
     
     
     private function optionallyDeserializeValue ($value) {
-      return $this->useSerializedValues
-        ? unserialize($value)
-        : $value;
+//      return $this->useSerializedValues
+//        ? unserialize($value)
+//        : $value;
+      return $value;
     }
   
     

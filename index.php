@@ -1,7 +1,23 @@
 <?php
-
+  
+  
   require_once __DIR__ . "/lib/dotenv/dotenv.php";
   $env = new Env(__DIR__ . "/.env");
+  
+  
+  
+  require_once __DIR__ . "/lib/oakbase/oakbase.php";
+  use OakBase\Database;
+  use OakBase\BasicConfig;
+  
+  Database::configure(new BasicConfig(
+    $env->get_or_crash("DB_HOST"),
+    $env->get_or_crash("DB_NAME"),
+    $env->get_or_crash("DB_USER"),
+    $env->get_or_crash("DB_PASSWORD"),
+    $env->get_or_crash("DB_PORT")
+  ));
+  
   
   
   /** @var HomeRouter $router */
@@ -11,6 +27,7 @@
   
   $router->setBodyParser(HomeRouter::BODY_PARSER_JSON());
   $router->setViewDirectory(__DIR__ . "/views");
+  $router->setFlag(HomeRouter::FLAG_MAIN_SERVER_HOST_NAME, $env->get_or_crash("DOMAIN"));
   
   $router->static("/public", __DIR__ . "/public");
   
@@ -21,9 +38,9 @@
   
   
   $router->get("/", [
-    function (Request $request, Response $response) use ($env) {
+    function (Request $request, Response $response) {
       if (!$request->session->isset("user")) {
-        $response->setHeader("Location", $env->get("HOME")->forwardFailure($response)->getSuccess() ."/auth");
+        $response->setHeader("Location", Response::createRedirectURL("/auth"));
         $response->flush();
       }
     

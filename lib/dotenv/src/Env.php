@@ -31,6 +31,15 @@
       return success($this->map[$name]);
     }
     
+    public function get_or_crash ($name): string {
+      if (!isset($this->map[$name])) {
+        echo "Server: Environment variable '$name' must be set";
+        exit();
+      }
+  
+      return $this->map[$name];
+    }
+    
     function __get ($name) {
       if (!isset($this->map[$name])) {
         return null;

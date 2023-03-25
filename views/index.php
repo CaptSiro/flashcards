@@ -8,9 +8,16 @@
   
   <link rel="stylesheet" href="<?= $GLOBALS["__HOME__"] ?>/public/css/main.css">
   
+  <script src="<?= $GLOBALS["__HOME__"] ?>/public/js/tungsten.js"></script>
+  <script>
+    AJAX.DOMAIN_HOME = "<?= $GLOBALS["__HOME__"] ?>";
+  </script>
+  <script src="<?= $GLOBALS["__HOME__"] ?>/public/js/index.js" defer></script>
+  
   <title>Flash cards</title>
 </head>
 <body>
   <h1>Index.php</h1>
+  <button class="logout">Logout</button>
 </body>
 </html>

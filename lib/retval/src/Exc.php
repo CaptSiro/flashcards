@@ -11,8 +11,8 @@
   }
 
   class Exc implements JsonSerializable {
-    protected $message;
-    protected $trace = [];
+    protected string $message;
+    protected array $trace = [];
 
     public function getMessage (): string {
       return $this->message;
@@ -38,7 +38,7 @@
       }
     }
 
-    function jsonSerialize() {
+    function jsonSerialize(): object {
       return (object)[
         "error" => $this->message,
         "trace" => $this->trace
