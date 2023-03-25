@@ -33,3 +33,9 @@
   
     use ParamType, ParamStringifier;
   }
+  
+  
+  
+  function param($value): PrimitiveParam {
+    return new PrimitiveParam($value);
+  }

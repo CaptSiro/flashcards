@@ -1,7 +1,6 @@
 <?php
   
-  use OakBase\Database;
-  use OakBase\PrimitiveParam;
+  use function OakBase\param;
   
   require_once __DIR__ . "/../lib/routepass/routers.php";
   
@@ -20,8 +19,8 @@
     function (Request $request, Response $response) {
       $response->json(
         Deck::insert(
-          $request->body->get("name"),
-          $request->session->get("user")->id
+          param($request->body->get("name")),
+          param($request->session->get("user")->id)
         )
           ->forwardFailure($response)
           ->getSuccess()
@@ -35,7 +34,9 @@
     Middleware::requireToBeLoggedIn(),
     function (Request $request, Response $response) {
       $response->json(
-        Deck::users($request->session->get("user")->id)
+        Deck::users(
+          param($request->session->get("user")->id)
+        )
           ->forwardFailure($response)
           ->getSuccess()
       );

@@ -1,7 +1,7 @@
 <?php
   
   use OakBase\Database;
-  use OakBase\PrimitiveParam;
+  use OakBase\Param;
   
   require_once __DIR__ . "/Count.php";
   
@@ -12,10 +12,7 @@
     
     
     
-    static function insert(string $name, int $user_id): Result {
-      $name = new PrimitiveParam($name);
-      $user_id = new PrimitiveParam($user_id);
-      
+    static function insert(Param $name, Param $user_id): Result {
       $is_unique = Database::get()->fetch(
         "SELECT COUNT(id) as amount
             FROM decks
@@ -34,9 +31,7 @@
     
     
     
-    static function by_id(int $id): Result {
-      $id = new PrimitiveParam($id);
-      
+    static function by_id(Param $id): Result {
       $deck = Database::get()->fetch(
         "SELECT id, name, users_id
             FROM decks
@@ -53,9 +48,7 @@
     
     
     
-    static function users(int $user_id): Result {
-      $user_id = new PrimitiveParam($user_id);
-  
+    static function users(Param $user_id): Result {
       $deck = Database::get()->fetch_all(
         "SELECT id, name, users_id
             FROM decks

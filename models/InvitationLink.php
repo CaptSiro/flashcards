@@ -1,9 +1,9 @@
 <?php
   
   use OakBase\Database;
-  use OakBase\MixedIndexingException;
+  use OakBase\Param;
   use OakBase\PrimitiveParam;
-
+  
   class InvitationLink {
     public int $id;
     public string $arg;
@@ -12,9 +12,7 @@
     
     
     
-    static function insert(string $arg, User $user): Result {
-      $arg = new PrimitiveParam($arg);
-      $user_id = new PrimitiveParam($user->id);
+    static function insert(Param $arg, Param $user_id): Result {
       $expires = new PrimitiveParam(time() + 60 * 5);
   
       return success(Database::get()->statement(
@@ -25,11 +23,9 @@
     
     
     
-    static function by_arg(string $arg): Result {
+    static function by_arg(Param $arg): Result {
       self::purge_old();
       
-      $arg = new PrimitiveParam($arg);
-  
       return success(Database::get()->fetch(
         "SELECT id, arg, expires, users_id
           FROM invitation_links
@@ -40,10 +36,8 @@
   
   
   
-    static function delete_for_user(User $user): Result {
+    static function delete_for_user(Param $user_id): Result {
       self::purge_old();
-    
-      $user_id = new PrimitiveParam($user->id);
     
       return success(Database::get()->statement(
         "DELETE FROM invitation_links
@@ -73,7 +67,7 @@
           $arg .= self::ARG_GEN_CHARSET[random_int(0, 63)];
         }
         
-        $existing_arg = self::by_arg($arg);
+        $existing_arg = self::by_arg(new PrimitiveParam($arg));
         if ($existing_arg->isSuccess() && $existing_arg->getSuccess() === false) {
           return success($arg);
         }

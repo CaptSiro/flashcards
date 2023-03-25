@@ -4,6 +4,7 @@
   use OakBase\PrimitiveParam;
   use PHPMailer\PHPMailer\PHPMailer;
   use PHPMailer\PHPMailer\SMTP;
+  use function OakBase\param;
   
   require_once __DIR__ . "/../lib/routepass/routers.php";
 //  require_once __DIR__ . "/../lib/susmail/susmail.php";
@@ -40,13 +41,13 @@
         $response->fail(new Exc("Not a valid email."));
       }
     
-      $user = User::by_email($email)
+      $user = User::by_email(param($email))
         ->forwardFailure($response)
         ->getSuccess();
       
       if ($user === false) {
-        User::insert($email);
-        $user = User::by_email($email)
+        User::insert(param($email));
+        $user = User::by_email(param($email))
           ->forwardFailure($response)
           ->getSuccess();
       }
@@ -55,7 +56,7 @@
         ->forwardFailure($response)
         ->getSuccess();
       
-      InvitationLink::insert($arg, $user);
+      InvitationLink::insert(param($arg), param($user->id));
       
       $mail = new PHPMailer(true);
       
@@ -107,7 +108,7 @@
   
   $auth_router->get("/login", [function (Request $request, Response $response) {
     $link = InvitationLink::by_arg(
-      $request->query->get("arg")
+      param($request->query->get("arg"))
     )
       ->forwardFailure($response)
       ->getSuccess();
@@ -116,7 +117,7 @@
       $response->render("error", ["message" => "Link has been used or it has expired. (Expiration time: 5 minutes)"]);
     }
     
-    $user = User::by_id((int) $link->users_id)
+    $user = User::by_id(param($link->users_id))
       ->forwardFailure($response)
       ->getSuccess();
     
@@ -126,7 +127,7 @@
     
     $request->session->set("user", $user);
     
-    InvitationLink::delete_for_user($user);
+    InvitationLink::delete_for_user(param($user->id));
     
     $response->redirect("/");
   }]);
