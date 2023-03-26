@@ -6,6 +6,7 @@
   
   require_once __DIR__ . "/../models/Card.php";
   require_once __DIR__ . "/../models/Stack.php";
+  require_once __DIR__ . "/../models/ExamResult.php";
   
   require_once __DIR__ . "/Middleware.php";
   
@@ -34,14 +35,40 @@
       
       $response->render("exam", [
         "cards" => $cards->getSuccess(),
-        "stack_name" => $stack->getSuccess()->name
+        "stack_name" => $stack->getSuccess()->name,
+        "stack_id" => $stack->getSuccess()->id
       ]);
     }
   ]);
   
   
   
+  $exam_router->post("/result", [
+    Middleware::requireToBeLoggedIn(),
+    function (Request $request, Response $response) {
+      $response->json(
+        ExamResult::insert(
+          param($request->body->get("fraction")),
+          param($request->session->get("user")->id),
+          param($request->body->get("stack_id")),
+        )
+      );
+    }
+  ]);
   
+  
+  
+  $exam_router->get("/results/:stack_id", [
+    Middleware::requireToBeLoggedIn(),
+    function (Request $request, Response $response) {
+      $response->json(
+        ExamResult::in_stack(
+          param($request->param->get("stack_id")),
+          param($request->session->get("user")->id)
+        )
+      );
+    }
+  ]);
   
   
   

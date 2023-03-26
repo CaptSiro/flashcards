@@ -13,6 +13,7 @@
   <script src="<?= $GLOBALS["__HOME__"] ?>/public/js/tungsten.js"></script>
   <script>
     AJAX.DOMAIN_HOME = "<?= $GLOBALS["__HOME__"] ?>";
+    const stack_id = <?= $GLOBALS["stack_id"] ?>;
     const cards = shuffle_mut(JSON.parse(`<?= json_encode($GLOBALS["cards"]) ?>`));
   </script>
   <script src="<?= $GLOBALS["__HOME__"] ?>/public/js/exam.js" defer></script>

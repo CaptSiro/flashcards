@@ -99,8 +99,7 @@ initial_div.querySelector(".next").addEventListener("pointerdown", () => {
   handle_next();
 });
 function handle_next() {
-  if (!thought_answer_div.classList.contains("display-none")) {
-    console.log("thought")
+  if (!initial_div.classList.contains("display-none")) {
     initial_div.classList.add("display-none");
     text_answer_div.classList.add("display-none");
   
@@ -110,7 +109,6 @@ function handle_next() {
     return;
   }
   
-  console.log("text")
   card_div.classList.remove("right", "wrong");
   next_card();
   
@@ -211,7 +209,7 @@ function answer_right() {
 
 
 
-function show_stats() {
+async function show_stats() {
   results.classList.remove("display-none");
   exam.classList.add("display-none");
   
@@ -228,7 +226,20 @@ function show_stats() {
   wrong_span.textContent = String(outcomes[0]);
   percentage_span.textContent = Math.round(percentage * 100) / 100 + "%";
   
+  const response = await AJAX.post("/exam/result", JSONHandler(), {
+    body: JSON.stringify({
+      fraction: percentage,
+      stack_id
+    })
+  });
   
+  if (response.error !== undefined) {
+    console.log(response.error);
+    // return;
+  }
+  
+  // const stack_results = await AJAX.get("/exam/results/" + stack_id, JSONHandler());
+  // todo render graph
 }
 
 

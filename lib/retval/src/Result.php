@@ -43,7 +43,7 @@
   /**
    * @template T
    */
-  class Result extends JSONEncodeAble {
+  class Result implements JsonSerializable {
     /**
      * @var T $succ
      */
@@ -165,6 +165,14 @@
       }
 
       return new ResultSet($succeeded, $failed);
+    }
+  
+    public function jsonSerialize() {
+      if ($this->isFailure()) {
+        return $this->getFailure();
+      }
+      
+      return $this->getSuccess();
     }
   }
   
