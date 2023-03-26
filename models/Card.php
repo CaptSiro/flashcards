@@ -12,6 +12,7 @@
     public string $question;
     public string $answer;
     public int $decks_id;
+    public int $rank;
     
     
     
@@ -56,10 +57,11 @@
     
     static function in_stack(Param $stack_id): Result {
       $cards = Database::get()->fetch_all(
-        "SELECT id, question, answer, decks_id
+        "SELECT c.id, question, answer, p.`rank`
             FROM cards_in_stacks
             JOIN cards c ON cards_in_stacks.cards_id = c.id
-                AND stacks_id = $stack_id",
+                AND stacks_id = $stack_id
+            JOIN privileges p on c.decks_id = p.decks_id",
         self::class
       );
       
@@ -68,5 +70,23 @@
       }
       
       return success($cards);
+    }
+    
+    
+    
+    static function delete(Param $id): Result {
+      Database::get()->statement(
+        "DELETE FROM cards_in_stacks WHERE cards_id = $id"
+      );
+      
+      $card = Database::get()->statement(
+        "DELETE FROM cards WHERE id = $id LIMIT 1"
+      );
+      
+      if ($card->row_count() === 0) {
+        return fail(new Exc("Could not remove card."));
+      }
+      
+      return success($card);
     }
   }

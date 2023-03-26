@@ -2,13 +2,14 @@
   
   use OakBase\Database;
   use OakBase\Param;
+  use function OakBase\param;
   
   require_once __DIR__ . "/Count.php";
   
   class Deck {
     public int $id;
     public string $name;
-    public int $users_id;
+    public int $rank;
     
     
     
@@ -24,16 +25,28 @@
         return fail(new NotUniqueValueExc("Name must be unique."));
       }
       
-      return success(Database::get()->statement(
-        "INSERT INTO decks (name, users_id) VALUE ($name, $user_id)"
-      ));
+      $side_effect = Database::get()->statement(
+        "INSERT INTO decks (name) VALUE ($name)"
+      );
+      
+      if ($side_effect->last_inserted_ID() === 0) {
+        return fail(new NotUniqueValueExc("Could not create deck."));
+      }
+      
+      $deck_id = param($side_effect->last_inserted_ID());
+      Database::get()->statement(
+        "INSERT INTO privileges (`rank`, decks_id, users_id)
+            VALUE (0, $deck_id, $user_id)"
+      );
+      
+      return success($side_effect);
     }
     
     
     
     static function by_id(Param $id): Result {
       $deck = Database::get()->fetch(
-        "SELECT id, name, users_id
+        "SELECT id, name
             FROM decks
             WHERE id = $id",
         self::class
@@ -50,9 +63,10 @@
     
     static function users(Param $user_id): Result {
       $deck = Database::get()->fetch_all(
-        "SELECT id, name, users_id
+        "SELECT decks.id, name, p.rank
             FROM decks
-            WHERE users_id = $user_id",
+            JOIN privileges p ON decks.id = p.decks_id
+                AND p.users_id = $user_id",
         self::class
       );
   

@@ -1,3 +1,9 @@
+const CREATOR = 0;
+const COWORKER = 1;
+const VISITOR = 2;
+
+
+
 $(".logout").addEventListener("pointerdown", async () => {
   const response = await AJAX.delete("/auth", JSONHandler());
   
@@ -203,7 +209,7 @@ async function load_decks() {
   }
   
   grid.textContent = "";
-  grid.style.setProperty("--grid-item--min-width", "230px");
+  grid.style.setProperty("--grid-item--min-width", "250px");
   grid.append(add_button);
   
   for (const deck of decks) {
@@ -212,17 +218,28 @@ async function load_decks() {
         "deck",
         deck.name,
         [],
-        [
+        OptionalComponents(deck.rank === CREATOR || deck.rank === COWORKER, [
           Opt("Edit", () => {
             console.log("edit: " + deck.name);
           }),
-          Opt("Delete", () => {
-            console.log("delete: " + deck.name);
-          }),
           Opt("Share", () => {
             console.log("share: " + deck.name);
-          })
-        ],
+          }),
+          ...OptionalComponents(deck.rank === CREATOR, [
+            Opt("Manage privileges", async () => {
+              console.log("manage privileges")
+            }),
+            Opt("Delete", async evt => {
+              const response = await AJAX.delete("/deck/" + deck.id, JSONHandler());
+              if (response.error !== undefined) {
+                console.log(response);
+                return;
+              }
+    
+              evt.target.closest(".deck").remove();
+            })
+          ])
+        ]),
         () => load_stacks({ deck })
       )
     )
@@ -254,7 +271,7 @@ async function load_stacks(s) {
   }
   
   grid.textContent = "";
-  grid.style.setProperty("--grid-item--min-width", "260px");
+  grid.style.setProperty("--grid-item--min-width", "280px");
   grid.append(add_button);
   
   for (const stack of stacks) {
@@ -267,14 +284,20 @@ async function load_stacks(s) {
   
           window.location.replace(AJAX.DOMAIN_HOME + "/exam/?stack=" + stack.id);
         })],
-        [
+        OptionalComponents(stack.rank === CREATOR || stack.rank === COWORKER, [
           Opt("Edit", () => {
-          
+    
           }),
-          Opt("Delete", () => {
-          
+          Opt("Delete", async evt => {
+            const response = await AJAX.delete("/stack/" + stack.id, JSONHandler());
+            if (response.error !== undefined) {
+              console.log(response);
+              return;
+            }
+    
+            evt.target.closest(".stack").remove();
           })
-        ],
+        ]),
         () => load_cards({ stack }),
         true
       )
@@ -316,14 +339,20 @@ async function load_cards(s) {
         "card",
         card.question,
         [Span(_, card.answer)],
-        [
+        OptionalComponents(card.rank === CREATOR || card.rank === COWORKER, [
           Opt("Edit", () => {
           
           }),
-          Opt("Delete", () => {
-          
+          Opt("Delete", async evt => {
+            const response = await AJAX.delete("/card/" + card.id, JSONHandler());
+            if (response.error !== undefined) {
+              console.log(response);
+              return;
+            }
+            
+            evt.target.closest(".card").remove();
           })
-        ],
+        ]),
         _,
         true
       )

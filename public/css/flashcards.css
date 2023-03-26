@@ -59,7 +59,7 @@ main .deck {
         rgba(240, 46, 170, 0.1) 20px 20px,
         rgba(240, 46, 170, 0.05) 25px 25px;
 
-    width: 200px;
+    width: 240px;
     aspect-ratio: 16/10;
     background-color: rgba(240, 46, 170);
     display: flex;
@@ -78,7 +78,7 @@ main .deck:hover {
 
 
 main .stack {
-    width: 250px;
+    width: 270px;
     aspect-ratio: 16/10;
     border-radius: 8px;
     background-color: var(--container-4);

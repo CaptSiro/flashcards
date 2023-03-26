@@ -31,6 +31,17 @@
   
   
   
+  $card_router->delete("/:id", [
+    Middleware::requireToBeLoggedIn(),
+    function (Request $request, Response $response) {
+      $response->json(Card::delete(
+        param($request->param->get("id"))
+      ));
+    }
+  ], ["id" => Router::REGEX_NUMBER]);
+  
+  
+  
   $card_router->get("/in-stack/:id", [
     Middleware::requireToBeLoggedIn(),
     function (Request $request, Response $response) {

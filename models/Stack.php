@@ -9,9 +9,10 @@
     public int $id;
     public string $name;
     public int $decks_id;
+    public int $rank;
     
-    
-    
+  
+  
     static function insert(Param $name, Param $deck_id): Result {
       $is_unique = Database::get()->fetch(
           "SELECT COUNT(id) as amount
@@ -33,9 +34,10 @@
     
     static function in_deck(Param $deck_id): Result {
       $stacks = Database::get()->fetch_all(
-        "SELECT id, name, decks_id
+        "SELECT stacks.id, name, p.`rank`
             FROM stacks
-            WHERE decks_id = $deck_id",
+                JOIN privileges p on stacks.decks_id = p.decks_id
+            WHERE p.decks_id = $deck_id",
         self::class
       );
       
@@ -50,9 +52,10 @@
     
     static function by_id(Param $id): Result {
       $stack = Database::get()->fetch(
-        "SELECT id, name, decks_id
+        "SELECT stacks.id, name, p.`rank`, p.decks_id
             FROM stacks
-            WHERE id = $id",
+                JOIN privileges p on stacks.decks_id = p.decks_id
+            WHERE stacks.id = $id",
         self::class
       );
       
@@ -60,6 +63,35 @@
         return fail(new NotFoundExc("There are no stacks for id: ". $id->value()));
       }
       
+      return success($stack);
+    }
+    
+    
+    
+    static function delete(Param $id): Result {
+      Database::get()->statement(
+        "DELETE FROM cards_in_stacks WHERE stacks_id = $id"
+      );
+  
+      Database::get()->statement(
+        "DELETE c
+            FROM cards c
+            LEFT JOIN cards_in_stacks cis on c.id = cis.cards_id
+            WHERE cis.stacks_id IS NULL"
+      );
+      
+      Database::get()->statement(
+        "DELETE FROM results WHERE stacks_id = $id"
+      );
+  
+      $stack = Database::get()->statement(
+        "DELETE FROM stacks WHERE id = $id"
+      );
+  
+      if ($stack->row_count() === 0) {
+        return fail(new Exc("Could not remove stack."));
+      }
+  
       return success($stack);
     }
   }

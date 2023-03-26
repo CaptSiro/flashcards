@@ -30,6 +30,17 @@
   
   
   
+  $stack_router->delete("/:id", [
+    Middleware::requireToBeLoggedIn(),
+    function (Request $request, Response $response) {
+      $response->json(Stack::delete(
+        param($request->param->get("id"))
+      ));
+    }
+  ], ["id" => Router::REGEX_NUMBER]);
+  
+  
+  
   $stack_router->get("/in-deck/:id", [
     Middleware::requireToBeLoggedIn(),
     function (Request $request, Response $response) {
