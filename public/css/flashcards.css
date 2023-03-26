@@ -10,6 +10,12 @@ nav {
     justify-content: space-between;
     align-items: center;
     background-color: var(--container-1);
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
 }
 
 .breadcrumbs {
@@ -20,7 +26,7 @@ nav {
 
 
 main {
-    margin: 16px;
+    margin: calc(64px + 32px) 16px 16px 16px;
     overflow: auto;
 
     --grid-layout-gap: 16px;
@@ -102,4 +108,14 @@ main .card :first-child {
 main .deck:hover,
 main .stack:hover {
     cursor: pointer;
+}
+
+
+
+
+
+@media only screen and (max-width: 470px) {
+    main {
+        grid-template-rows: 80px;
+    }
 }
