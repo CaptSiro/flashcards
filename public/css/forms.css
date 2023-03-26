@@ -15,31 +15,6 @@
     display: none;
 }
 
-.form input {
-    border-radius: 8px;
-    font-size: 1.1em;
-    border: unset;
-    padding: 8px;
-    margin-top: 4px;
-    background-color: var(--container-2);
-    color: var(--text-color-0);
-    border: 2px solid var(--container-3);
-
-    transition: background-color 250ms linear, border-color 250ms linear;
-}
-
-.form input:not([type=checkbox]):focus {
-    outline: 2px solid var(--container-opposite-1);
-    background-color: var(--container-0);
-    color: var(--text-color-0);
-}
-
-.form input.invalid {
-    background-color: #f3919f;
-    border-color: #f13854;
-    color: black;
-}
-
 .form textarea {
     border-radius: 8px;
     background-color: var(--container-2);

@@ -1,0 +1,178 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+
+body {
+    display: grid;
+    grid-template-rows: 64px 1fr;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+nav {
+    display: flex;
+    height: 64px;
+    padding: 0 32px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--container-1);
+}
+
+nav .void {
+    width: 43px;
+}
+
+
+
+.exam {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 1fr 30vh;
+}
+
+
+
+.exam .card {
+    width: 350px;
+    aspect-ratio: 16/10;
+    border-radius: 8px;
+    background-color: var(--container-opposite-3);
+    display: grid;
+    place-items: center;
+    color: black;
+
+    justify-self: center;
+    align-self: center;
+    font-family: var(--font-1);
+    font-size: 18px;
+}
+
+.exam .card.wrong {
+    background-color: #881347;
+    color: white;
+}
+
+.exam .card.right {
+    background-color: #007541;
+    color: white;
+}
+
+
+
+
+.controls {
+    justify-self: center;
+}
+
+.controls .initial {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.controls .row {
+    display: flex;
+    gap: 16px;
+}
+
+.controls button {
+    padding: 1em 2em;
+    font-size: 18px;
+}
+
+#answer-input {
+    width: 350px;
+    margin: 10px 0;
+}
+
+#answer-right {
+    color: white;
+    background-color: #007541;
+    border: 2px solid #1E8C45;
+}
+
+#answer-right:hover {
+    outline: 2px solid #78D23D;
+    background-color: #007541;
+}
+
+#answer-wrong {
+    color: white;
+    background-color: #881347;
+    border: 2px solid #AC124A;
+}
+
+#answer-wrong:hover {
+    outline: 2px solid #ea4141;
+    background-color: #881347;
+}
+
+.next {
+    color: white;
+    background-color: #0F5298;
+    border: 2px solid #2565AE;
+}
+
+.next:hover {
+    outline: 2px solid #66D3FA;
+    background-color: #0F5298;
+}
+
+
+
+
+.no-cards {
+    display: grid;
+    place-items: center;
+}
+
+.no-cards > p {
+    width: fit-content;
+}
+
+
+
+
+
+.results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    overflow: auto;
+}
+
+.results .stats {
+    margin: 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stats .percentage {
+    font-size: 100px;
+    font-family: 'Pacifico', cursive;
+}
+
+.fraction .right {
+    color: #1E8C45;
+    font-family: 'Pacifico', cursive;
+}
+.fraction .wrong {
+    color: #AC124A;
+    font-family: 'Pacifico', cursive;
+}
+.fraction span {
+    margin: 10px;
+    font-size: 24px;
+}
+
+
+
+canvas {
+    width: clamp(300px, 40vw, 600px);
+    aspect-ratio: 16/10;
+    margin: 32px;
+}

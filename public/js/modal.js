@@ -38,6 +38,8 @@ function show_window(id, doClearInputs = true) {
         }
       }
     });
+    
+    win.querySelectorAll("textarea").forEach(area => area.value = "")
   }
   
   container.classList.add("darken");

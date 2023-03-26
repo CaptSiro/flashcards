@@ -79,15 +79,6 @@ html {
   align-items: center;
 }
 
-.background-blend {
-  background-color: var(--container-opposite-0) !important;
-  background-blend-mode: multiply !important;
-}
-
-.dragging {
-  caret-color: transparent !important;
-}
-
 .display-none {
   display: none !important;
 }
@@ -95,40 +86,6 @@ html {
 .center-text {
   text-align: center;
 }
-
-.chained-inputs {
-  display: flex;
-  box-sizing: unset;
-}
-
-.chained-inputs input::-webkit-outer-spin-button,
-.chained-inputs input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-.chained-inputs input[type=number] {
-  -moz-appearance: textfield;
-}
-
-
-.text-icon {
-  color: var(--text-color-0);
-}
-
-
-p.PHP-Exception {
-  display: none;
-  position: fixed;
-  top: 10px;
-  left: 10px;
-}
-
-p.PHP-Exception.throw {
-  display: block;
-}
-
 
 p.blockquote {
   font-size: 0.9em;
@@ -140,12 +97,12 @@ p.blockquote {
   color: var(--text-color-0);
 }
 
-p.note {
+p.blockquote.note {
   background-color: rgba(197, 81, 6, 0.5);
   border-color: #c55106;
 }
 
-p.error {
+p.blockquote.error {
   display: none;
   background-color: rgba(241, 56, 84, 0.5);
   border-color: #f13854;
@@ -232,6 +189,33 @@ input[type="radio"]:after {
   height: 50%;
   border-radius: 50%;
   background-color: var(--container-0);
+}
+
+
+
+input {
+  border-radius: 8px;
+  font-size: 1.1em;
+  border: unset;
+  padding: 8px;
+  margin-top: 4px;
+  background-color: var(--container-2);
+  color: var(--text-color-0);
+  border: 2px solid var(--container-3);
+
+  transition: background-color 250ms linear, border-color 250ms linear;
+}
+
+input:not([type=checkbox]):focus {
+  outline: 2px solid var(--container-opposite-1);
+  background-color: var(--container-0);
+  color: var(--text-color-0);
+}
+
+input.invalid {
+  background-color: #f3919f;
+  border-color: #f13854;
+  color: black;
 }
 
 
