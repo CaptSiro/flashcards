@@ -203,6 +203,7 @@ async function load_decks() {
   }
   
   grid.textContent = "";
+  grid.style.setProperty("--grid-item--min-width", "230px");
   grid.append(add_button);
   
   for (const deck of decks) {
@@ -245,15 +246,19 @@ async function load_stacks(s) {
   }
   
   grid.textContent = "";
+  grid.style.setProperty("--grid-item--min-width", "260px");
   grid.append(add_button);
   
   for (const stack of stacks) {
     grid.append(
       Div("stack", [
-        Heading(3, _, stack.name)
+        Heading(3, _, stack.name),
+        Button("button-like", "Test", evt => {
+          evt.stopImmediatePropagation();
+        })
       ], {
         listeners: {
-          click: () => {
+          pointerdown: () => {
             load_cards({ stack })
           }
         }
@@ -287,6 +292,7 @@ async function load_cards(s) {
   }
   
   grid.textContent = "";
+  grid.style.setProperty("--grid-item--min-width", "300px");
   grid.append(add_button);
   
   for (const card of cards) {
