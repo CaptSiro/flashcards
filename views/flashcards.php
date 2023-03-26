@@ -22,6 +22,16 @@
   <title>Flash decks</title>
 </head>
 <body>
+  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="display-none">
+    <defs>
+      <g id="icon-options">
+        <circle fill="currentColor" cx="250" cy="85.9" r="55.1"/>
+        <circle fill="currentColor" cx="250" cy="245.6" r="55.1"/>
+        <circle fill="currentColor" cx="250" cy="405.2" r="55.1"/>
+      </g>
+    </defs>
+  </svg>
+  
   <div class="modals">
     <div class="window form" id="create-deck">
       <div class="wrapper">

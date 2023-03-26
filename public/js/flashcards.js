@@ -208,15 +208,23 @@ async function load_decks() {
   
   for (const deck of decks) {
     grid.append(
-      Div("deck", [
-        Heading(3, _, deck.name)
-      ], {
-        listeners: {
-          click: () => {
-            load_stacks({ deck })
-          }
-        }
-      })
+      Item(
+        "deck",
+        deck.name,
+        [],
+        [
+          Opt("Edit", () => {
+            console.log("edit: " + deck.name);
+          }),
+          Opt("Delete", () => {
+            console.log("delete: " + deck.name);
+          }),
+          Opt("Share", () => {
+            console.log("share: " + deck.name);
+          })
+        ],
+        () => load_stacks({ deck })
+      )
     )
   }
 }
@@ -251,20 +259,25 @@ async function load_stacks(s) {
   
   for (const stack of stacks) {
     grid.append(
-      Div("stack", [
-        Heading(3, _, stack.name),
-        Button("button-like", "Test", evt => {
+      Item(
+        "stack",
+        stack.name,
+        [Button("button-like", "Test", evt => {
           evt.stopImmediatePropagation();
-          
+  
           window.location.replace(AJAX.DOMAIN_HOME + "/exam/?stack=" + stack.id);
-        })
-      ], {
-        listeners: {
-          pointerdown: () => {
-            load_cards({ stack })
-          }
-        }
-      })
+        })],
+        [
+          Opt("Edit", () => {
+          
+          }),
+          Opt("Delete", () => {
+          
+          })
+        ],
+        () => load_cards({ stack }),
+        true
+      )
     )
   }
 }
@@ -299,16 +312,21 @@ async function load_cards(s) {
   
   for (const card of cards) {
     grid.append(
-      Div("card", [
-        Heading(3, _, card.question),
-        Span(_, card.answer)
-      ], {
-        listeners: {
-          click: () => {
-            edit_card(card)
-          }
-        }
-      })
+      Item(
+        "card",
+        card.question,
+        [Span(_, card.answer)],
+        [
+          Opt("Edit", () => {
+          
+          }),
+          Opt("Delete", () => {
+          
+          })
+        ],
+        _,
+        true
+      )
     )
   }
 }
@@ -353,4 +371,58 @@ function AddButton() {
       show_window("create-" + get_state().section)
     })
   )
+}
+
+
+/**
+ * @param {"deck" | "stack" | "card"} type
+ * @param {string} label
+ * @param {HTMLElement[]} additional
+ * @param {HTMLElement[] | undefined} options
+ * @param {(evt: Event)=>any | undefined} action
+ * @param {boolean} add_radius
+ * @returns {HTMLElement}
+ */
+function Item(type, label, additional = [], options = undefined, action = undefined, add_radius = false) {
+  return (
+    Div(type, [
+      Heading(3, _, label),
+      ...additional,
+      OptionalComponent(options !== undefined && options.length !== 0,
+        Div("abs" + (add_radius ? " border-radius" : ""), [
+          Div("visible",
+            SVG("icon-options", "icon")
+          ),
+          Div("options", options, {
+            listeners: {
+              pointerdown: evt => evt.stopImmediatePropagation()
+            }
+          })
+        ])
+      )
+    ], {
+      listeners: {
+        pointerdown: action
+      }
+    })
+  );
+}
+
+
+/**
+ * @param {string} label
+ * @param {(evt: Event)=>any | undefined} action
+ * @returns {HTMLElement}
+ */
+function Opt(label, action) {
+  return (
+    Div("option",
+      Span(_, label),
+      {
+        listeners: {
+          pointerdown: action
+        }
+      }
+    )
+  );
 }

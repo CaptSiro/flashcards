@@ -1,6 +1,8 @@
 body {
     display: flex;
     flex-direction: column;
+    height: 100vh;
+    width: 100vw;
 }
 
 nav {
@@ -99,15 +101,96 @@ main .card {
     gap: 16px;
 }
 
-main .deck :first-child,
-main .stack :first-child,
-main .card :first-child {
+main .deck > *:first-child,
+main .stack > *:first-child,
+main .card > *:first-child {
     margin-top: 50px;
 }
 
 main .deck:hover,
 main .stack:hover {
     cursor: pointer;
+}
+
+
+main > * {
+    position: relative;
+}
+main .abs {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    background-color: rgba(255, 255, 255, 0);
+    color: black;
+
+    transition: background-color linear 200ms 150ms, width ease-in-out 200ms 100ms, height ease-in-out 200ms;
+}
+main .abs.border-radius {
+    border-radius: 8px;
+}
+main .abs svg {
+    color: black !important;
+    width: 100%;
+    height: 100%;
+}
+main .abs .visible {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
+}
+main .abs .options {
+    height: 100%;
+    overflow: auto;
+    visibility: hidden;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+
+    transition: visibility 0ms 500ms, opacity linear 250ms;
+}
+
+main .abs:active,
+main .abs:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    width: 100%;
+    height: 100%;
+    cursor: default;
+    backdrop-filter: blur(5px);
+
+    transition: background-color linear 200ms, width ease-in-out 200ms, height ease-in-out 200ms 100ms;
+}
+
+main .abs:active .options,
+main .abs:hover .options {
+    visibility: visible;
+    opacity: 1;
+
+    transition: visibility 0ms, opacity linear 250ms 250ms;
+}
+
+main .option {
+    width: 100%;
+    display: grid;
+    place-items: center;
+    padding: 8px;
+    border-radius: 8px;
+    background-color: transparent;
+
+    transition: background-color 200ms linear;
+}
+main .option:active,
+main .option:hover {
+    background-color: rgba(221, 221, 221, 0.7);
+    cursor: pointer;
+
+    transition: background-color 20ms linear;
 }
 
 
