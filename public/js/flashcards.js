@@ -255,6 +255,8 @@ async function load_stacks(s) {
         Heading(3, _, stack.name),
         Button("button-like", "Test", evt => {
           evt.stopImmediatePropagation();
+          
+          window.location.replace(AJAX.DOMAIN_HOME + "/exam/?stack=" + stack.id);
         })
       ], {
         listeners: {
