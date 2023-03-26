@@ -5,6 +5,7 @@
   use function OakBase\param;
   
   require_once __DIR__ . "/Count.php";
+  require_once __DIR__ . "/Privilege.php";
   
   class Deck {
     public int $id;
@@ -33,10 +34,10 @@
         return fail(new NotUniqueValueExc("Could not create deck."));
       }
       
-      $deck_id = param($side_effect->last_inserted_ID());
-      Database::get()->statement(
-        "INSERT INTO privileges (`rank`, decks_id, users_id)
-            VALUE (0, $deck_id, $user_id)"
+      Privilege::insert(
+        param(0),
+        param($side_effect->last_inserted_ID()),
+        $user_id
       );
       
       return success($side_effect);
@@ -46,13 +47,14 @@
     
     static function by_id(Param $id): Result {
       $deck = Database::get()->fetch(
-        "SELECT id, name
+        "SELECT decks.id, `name`, p.rank
             FROM decks
-            WHERE id = $id",
+            JOIN privileges p ON decks.id = p.decks_id
+                AND p.decks_id = $id",
         self::class
       );
       
-      if ($deck === false) {
+      if ($deck === false || $deck === null) {
         return fail(new NotFoundExc("There are no decks for id: ". $id->value()));
       }
       

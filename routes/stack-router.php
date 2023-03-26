@@ -46,7 +46,8 @@
     function (Request $request, Response $response) {
       $response->json(
         Stack::in_deck(
-          param($request->param->get("id"))
+          param($request->param->get("id")),
+          param($request->session->get("user")->id)
         )
           ->forwardFailure($response)
           ->getSuccess()

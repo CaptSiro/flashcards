@@ -222,10 +222,11 @@ async function load_decks() {
           Opt("Edit", () => {
             console.log("edit: " + deck.name);
           }),
-          Opt("Share", () => {
-            console.log("share: " + deck.name);
-          }),
           ...OptionalComponents(deck.rank === CREATOR, [
+            Opt("Share", () => {
+              const win = show_window("share");
+              win.dataset.deck_id = deck.id;
+            }),
             Opt("Manage privileges", async () => {
               console.log("manage privileges")
             }),
@@ -245,6 +246,34 @@ async function load_decks() {
     )
   }
 }
+
+const share = $("#share");
+const share_control = new FormControl("share");
+const share_email = share.querySelector("#share-email");
+const share_privilege = share.querySelector("#share-privilege");
+share.querySelector("button[type=submit]").addEventListener("pointerdown", async () => {
+  const email = share_email.value.trim();
+  
+  if (email === "") {
+    share_control.invalidate("Email is required.");
+    return;
+  }
+  
+  const response = await AJAX.post("/privilege", JSONHandler(), {
+    body: JSON.stringify({
+      deck_id: share.dataset.deck_id,
+      email,
+      rank: +share_privilege.value
+    })
+  });
+  
+  if (response.error !== undefined) {
+    share_control.invalidate(response.error);
+    return;
+  }
+  
+  clear_windows();
+});
 
 
 

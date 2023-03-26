@@ -22,6 +22,7 @@
           param($request->body->get("question")),
           param($request->body->get("answer")),
           param($request->body->get("stack_id")),
+          param($request->session->get("user")->id)
         )
           ->forwardFailure($response)
           ->getSuccess()
@@ -47,7 +48,8 @@
     function (Request $request, Response $response) {
       $response->json(
         Card::in_stack(
-          param($request->param->get("id"))
+          param($request->param->get("id")),
+          param($request->session->get("user")->id),
         )
           ->forwardFailure($response)
           ->getSuccess()

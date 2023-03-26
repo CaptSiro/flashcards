@@ -11,19 +11,31 @@
   
   
     static function by_id (Param $id): Result {
-      return success(Database::get()->fetch(
+      $result = Database::get()->fetch(
         "SELECT id, email FROM users WHERE id = $id",
         self::class
-      ));
+      );
+  
+      if ($result === false || $result === null) {
+        return fail(new NotFoundExc("Can not find user with id: ". $id->value()));
+      }
+      
+      return success($result);
     }
     
     
     
     static function by_email (Param $email): Result {
-      return success(Database::get()->fetch(
+      $result = Database::get()->fetch(
         "SELECT id, email FROM users WHERE email = $email",
         self::class
-      ));
+      );
+      
+      if ($result === false || $result === null) {
+        return fail(new NotFoundExc("Can not find user with email: ". $email->value()));
+      }
+      
+      return success($result);
     }
     
     

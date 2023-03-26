@@ -16,7 +16,7 @@
     
     
     
-    static function insert(Param $question, Param $answer, Param $stack_id) {
+    static function insert(Param $question, Param $answer, Param $stack_id, Param $user_id) {
       $is_unique = Database::get()->fetch(
           "SELECT COUNT(id) as amount
             FROM cards
@@ -29,7 +29,7 @@
         return fail(new NotUniqueValueExc("Card must be unique."));
       }
       
-      $stack = Stack::by_id($stack_id);
+      $stack = Stack::by_id($stack_id, $user_id);
       
       if ($stack->isFailure()) {
         return $stack;
@@ -55,13 +55,14 @@
     
     
     
-    static function in_stack(Param $stack_id): Result {
+    static function in_stack(Param $stack_id, Param $user_id): Result {
       $cards = Database::get()->fetch_all(
         "SELECT c.id, question, answer, p.`rank`
             FROM cards_in_stacks
             JOIN cards c ON cards_in_stacks.cards_id = c.id
                 AND stacks_id = $stack_id
-            JOIN privileges p on c.decks_id = p.decks_id",
+            JOIN privileges p on c.decks_id = p.decks_id
+                AND p.users_id = $user_id",
         self::class
       );
       
@@ -74,6 +75,7 @@
     
     
     
+    // todo add privileges
     static function delete(Param $id): Result {
       Database::get()->statement(
         "DELETE FROM cards_in_stacks WHERE cards_id = $id"

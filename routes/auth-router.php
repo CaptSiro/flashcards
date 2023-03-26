@@ -7,7 +7,7 @@
   use function OakBase\param;
   
   require_once __DIR__ . "/../lib/routepass/routers.php";
-//  require_once __DIR__ . "/../lib/susmail/susmail.php";
+  require_once __DIR__ . "/../lib/susmail/susmail.php";
   require_once __DIR__ . "/../lib/phpmailer/phpmailer.php";
   require_once __DIR__ . "/../lib/regexes.php";
   
@@ -59,7 +59,7 @@
       InvitationLink::insert(param($arg), param($user->id));
       
       $mail = new PHPMailer(true);
-      
+
       $mail->IsSMTP();
       $mail->Host = "smtp.gmail.com";
       $mail->SMTPAuth = true;
@@ -67,30 +67,25 @@
       $mail->Password = 'wonsnuejsmdwjotb';
       $mail->SMTPSecure = 'ssl';
       $mail->Port = 465;
-  
+
       $mail->setFrom('captsiro@gmail.com');
       $mail->addAddress($user->email);
       $mail->addReplyTo('info@example.com', 'Information');
-  
+
       $mail->isHTML();
       $mail->Subject = 'Flash Cards login';
       $url = Response::createRedirectURL("/auth/login/?arg=$arg");
-      $mail->Body = "Hello,<br><br>
-        
-        To log in to Flash Cards click <a href=\"$url\" target=\"_blank\">here.</a><br><br>
-        
-        If you are not interested, just ignore or delete this email.
-
-        Do <b><i>NOT</i></b> share this email to anyone. It may put your account in danger.<br><br>
-        
-        Link in this email, will expire in 5 minutes.";
+      $mail->Body = "";
       $mail->AltBody = "Hello,\n\nTo log in to Flash Cards go to:\n$url\n\nIf you are not interested, just ignore or delete this email.\n\nDo NOT share this email to anyone. It may put your account in danger.\n\nLink in this email, will expire in 5 minutes.";
+
+//      $mail->send();
+
+//      MailTemplate::login($user, $url)->send();
       
-      $mail->send();
-      
-      
-      
-      $response->json(["message" => "Link has been sent."]);
+      $response->json([
+        "message" => "Link has been sent.",
+        "url" => $url // todo remove or security leak :)
+      ]);
     }
   ]);
   

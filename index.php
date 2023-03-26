@@ -57,6 +57,7 @@
   $router->use("/stack", new RouterPromise(__DIR__ . "/routes/stack-router.php"));
   $router->use("/card", new RouterPromise(__DIR__ . "/routes/card-router.php"));
   $router->use("/exam", new RouterPromise(__DIR__ . "/routes/exam-router.php"));
+  $router->use("/privilege", new RouterPromise(__DIR__ . "/routes/privilege-router.php"));
   
   
   

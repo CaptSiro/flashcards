@@ -91,6 +91,32 @@
         <p class="blockquote error error-modal"></p>
       </div>
     </div>
+    
+    <div class="window form" id="share">
+      <div class="wrapper">
+        <label for="share-email">Enter email:</label>
+        <input type="text" name="share-email" id="share-email">
+      </div>
+      
+      <div class="wrapper">
+        <label for="share-privilege">Select their privileges:</label>
+        <select name="share-privilege" id="share-privilege">
+          <option value="1" selected>Coworker</option>
+          <option value="2">Visitor</option>
+        </select>
+      </div>
+  
+      <div class="divider"></div>
+  
+      <div class="wrapper sideways-end">
+        <button class="cancel-modal">Cancel</button>
+        <button class="submit" type="submit">Share</button>
+      </div>
+  
+      <div class="wrapper">
+        <p class="blockquote error error-modal"></p>
+      </div>
+    </div>
   </div>
   
   <nav>

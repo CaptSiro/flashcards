@@ -32,11 +32,12 @@
     
     
     
-    static function in_deck(Param $deck_id): Result {
+    static function in_deck(Param $deck_id, Param $user_id): Result {
       $stacks = Database::get()->fetch_all(
         "SELECT stacks.id, name, p.`rank`
             FROM stacks
                 JOIN privileges p on stacks.decks_id = p.decks_id
+                    AND p.users_id = $user_id
             WHERE p.decks_id = $deck_id",
         self::class
       );
@@ -50,11 +51,12 @@
     
     
     
-    static function by_id(Param $id): Result {
+    static function by_id(Param $id, Param $user_id): Result {
       $stack = Database::get()->fetch(
         "SELECT stacks.id, name, p.`rank`, p.decks_id
             FROM stacks
                 JOIN privileges p on stacks.decks_id = p.decks_id
+                    AND p.users_id = $user_id
             WHERE stacks.id = $id",
         self::class
       );

@@ -4,7 +4,15 @@
 
   class MailTemplate {
     static function login (User $user, $url): MailTemplate {
-      return new MailTemplate($user, "", "");
+      return new MailTemplate($user, "Flash Cards login", "Hello,<br><br>
+        
+        To log in to Flash Cards click <a href=\"$url\" target=\"_blank\">here.</a><br><br>
+        
+        If you are not interested, just ignore or delete this email.
+
+        Do <b><i>NOT</i></b> share this email to anyone. It may put your account in danger.<br><br>
+        
+        Link in this email, will expire in 5 minutes.");
     }
     
     

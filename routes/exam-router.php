@@ -21,13 +21,19 @@
     function (Request $request, Response $response) {
       $stack_id = param($request->query->get("stack"));
     
-      $cards = Card::in_stack($stack_id);
+      $cards = Card::in_stack(
+        $stack_id,
+        param($request->session->get("user")->id)
+      );
       
       if ($cards->isFailure()) {
         $response->render("error", ["message" => $cards->getFailure()->getMessage()]);
       }
       
-      $stack = Stack::by_id($stack_id);
+      $stack = Stack::by_id(
+        $stack_id,
+        param($request->session->get("user")->id)
+      );
   
       if ($stack->isFailure()) {
         $response->render("error", ["message" => $stack->getFailure()->getMessage()]);
