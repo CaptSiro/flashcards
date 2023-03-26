@@ -708,6 +708,23 @@ function formatDate (date) {
 
 
 /**
+ * @template T
+ * @param {T[]} array
+ */
+function shuffle_mut(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = flatRNG(0, i + 1);
+    const temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+  
+  return array;
+}
+
+
+
+/**
  * @template T, R
  * @param {T[]} array1
  * @param {R[]}  array2
