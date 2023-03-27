@@ -29,6 +29,18 @@ nav .void {
     height: 100%;
     display: grid;
     grid-template-rows: 1fr 30vh;
+    position: relative;
+}
+
+.exam .top-abs {
+    position: absolute;
+    top: 3vh;
+    left: 4vw;
+}
+
+.exam .top-abs .bold {
+    font-family: 'Pacifico', cursive;
+    font-size: 32px;
 }
 
 
@@ -175,4 +187,16 @@ canvas {
     width: clamp(300px, 40vw, 600px);
     aspect-ratio: 16/10;
     margin: 32px;
+}
+
+
+
+@media only screen and (max-width: 400px) {
+    .exam .card {
+        width: 250px;
+    }
+
+    #answer-input {
+        width: 250px;
+    }
 }

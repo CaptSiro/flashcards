@@ -29,6 +29,10 @@
 
   
   <div class="exam">
+    <div class="top-abs">
+      <span class="bold">5</span><span>/10</span>
+    </div>
+    
     <div class="card"></div>
   
     <section class="controls">

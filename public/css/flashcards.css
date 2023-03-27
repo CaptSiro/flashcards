@@ -200,5 +200,15 @@ main .option:hover {
 @media only screen and (max-width: 470px) {
     main {
         grid-template-rows: 80px;
+        margin-right: unset;
+        margin-left: unset;
+    }
+
+    main .card {
+        width: 250px;
+    }
+
+    main .stack {
+        width: 250px;
     }
 }

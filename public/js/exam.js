@@ -42,6 +42,7 @@ const results = $(".results");
 const percentage_span = $(".percentage");
 const right_span = $(".right");
 const wrong_span = $(".wrong");
+const counter = $(".top-abs");
 
 const look_up = {
   "backspace": () => window.location.replace(AJAX.DOMAIN_HOME),
@@ -181,6 +182,12 @@ function next_card() {
   
   card = to_be_answered[++card_ptr];
   card_div.textContent = card.question;
+  
+  counter.textContent = "";
+  counter.append(
+    Span("bold", Number(card_ptr + 1).toLocaleString()),
+    Span(_, "/" + to_be_answered.length.toLocaleString())
+  );
 }
 
 if (cards.length !== 0) {
@@ -238,8 +245,8 @@ async function show_stats() {
     // return;
   }
   
-  // const stack_results = await AJAX.get("/exam/results/" + stack_id, JSONHandler());
-  // todo render graph
+  const stack_results = await AJAX.get("/exam/results/" + stack_id, JSONHandler());
+  
 }
 
 
