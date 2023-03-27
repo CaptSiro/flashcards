@@ -43,6 +43,28 @@ const percentage_span = $(".percentage");
 const right_span = $(".right");
 const wrong_span = $(".wrong");
 const counter = $(".top-abs");
+const canvas = $("canvas");
+const ctx = canvas.getContext("2d");
+let stack_results = JSON.parse(`[{"id":1,"fraction":30,"users_id":2,"stacks_id":1},{"id":3,"fraction":75,"users_id":2,"stacks_id":1},{"id":10,"fraction":100,"users_id":2,"stacks_id":1}]`);
+
+
+
+window.addEventListener("resize", () => {
+  resize_canvas();
+  draw_graph();
+});
+
+function resize_canvas() {
+  const w = clamp(300, 600, window.innerWidth * 0.4);
+  const h = w / 16 * 10;
+  
+  canvas.style.width = w + "px";
+  canvas.style.height = h + "px";
+  canvas.width = w;
+  canvas.height = h;
+}
+
+
 
 const look_up = {
   "backspace": () => window.location.replace(AJAX.DOMAIN_HOME),
@@ -194,6 +216,8 @@ if (cards.length !== 0) {
   next_card();
 }
 
+// show_stats();
+
 
 
 function answer_wrong() {
@@ -222,31 +246,120 @@ async function show_stats() {
   
   // [wrong, right]
   let outcomes = [0, 0];
-  
+
   for (const stat of stats) {
     outcomes[+stat] = outcomes[+stat] + 1;
   }
-  
+
   const percentage = (outcomes[1] / stats.length) * 100;
-  
-  right_span.textContent = String(outcomes[1]);
-  wrong_span.textContent = String(outcomes[0]);
-  percentage_span.textContent = Math.round(percentage * 100) / 100 + "%";
-  
+
+  right_span.textContent = Number(outcomes[1]).toLocaleString();
+  wrong_span.textContent = Number(outcomes[0]).toLocaleString();
+  percentage_span.textContent = Number(Math.round(percentage * 100) / 100).toLocaleString() + "%";
+
   const response = await AJAX.post("/exam/result", JSONHandler(), {
     body: JSON.stringify({
       fraction: percentage,
       stack_id
     })
   });
-  
+
   if (response.error !== undefined) {
+    alert("Unable to save result.");
     console.log(response.error);
-    // return;
+    return;
   }
   
-  const stack_results = await AJAX.get("/exam/results/" + stack_id, JSONHandler());
+  const response_results = await AJAX.get("/exam/results/" + stack_id, JSONHandler());
+  if (response_results.error !== undefined) {
+    alert("Unable to load results.");
+    console.log(response_results);
+    return;
+  }
+
+  stack_results = response_results;
+  resize_canvas();
+  draw_graph();
+}
+
+
+
+function draw_graph() {
+  if (stack_results === undefined || !stack_results instanceof Array) {
+    return;
+  }
   
+  if (stack_results.length === 0) {
+    return;
+  }
+  
+  const w = canvas.width;
+  const h = canvas.height;
+  
+  const offset = 48;
+  const font_size = 16;
+  const guides = 4;
+  
+  ctx.clearRect(0, 0, w, h);
+  
+  ctx.font = `normal ${font_size}px sans-serif`;
+  ctx.lineWidth = 1;
+  const text_color = ctx.strokeStyle = ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-color-2');
+  
+  for (let i = 0; i <= guides; i++) {
+    ctx.fillText(
+      Math.round(i / guides * 100).toLocaleString() + "%",
+      0,
+      h - (i / guides * (h - font_size))
+    );
+    
+    ctx.beginPath();
+    ctx.moveTo(
+      offset,
+      h - (i / guides * (h - font_size)) - font_size / 2
+    );
+    ctx.lineTo(
+      w,
+      h - (i / guides * (h - font_size)) - font_size / 2
+    );
+    ctx.stroke();
+  }
+  
+  const segment_len = (w - offset) / stack_results.length;
+  
+  ctx.beginPath();
+  ctx.moveTo(offset, font_size / 2);
+  ctx.lineTo(offset, h - font_size / 2);
+  ctx.stroke();
+  
+  ctx.lineWidth = 5;
+  const line_color = ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue("--container-opposite-0");
+  
+  ctx.beginPath();
+  ctx.moveTo(offset, h - font_size / 2);
+  
+  for (let i = 0; i < stack_results.length; i++) {
+    ctx.lineTo(
+      offset + segment_len * (i + 1),
+      h - (stack_results[i].fraction / 100 * (h - font_size)) - font_size / 2
+    );
+    ctx.strokeStyle = line_color;
+    ctx.lineWidth = 5;
+    ctx.stroke();
+    
+    ctx.beginPath();
+    ctx.moveTo(offset + segment_len * (i + 1), font_size / 2);
+    ctx.lineTo(offset + segment_len * (i + 1), h - font_size / 2);
+    ctx.strokeStyle = text_color;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  
+    ctx.beginPath();
+    ctx.moveTo(
+      offset + segment_len * (i + 1),
+      h - (stack_results[i].fraction / 100 * (h - font_size)) - font_size / 2
+    );
+  }
 }
 
 
