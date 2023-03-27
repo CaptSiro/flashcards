@@ -91,4 +91,21 @@
       
       return success($card);
     }
+    
+    
+    
+    static function by_id(Param $id): Result {
+      $card = Database::get()->fetch(
+        "SELECT id, question, answer, decks_id
+        FROM cards
+        WHERE id = $id",
+        Card::class
+      );
+      
+      if ($card === null || $card === false) {
+        return fail(new NotFoundExc("Could not find card with id: ". $id->value()));
+      }
+      
+      return success($card);
+    }
   }
