@@ -101,8 +101,8 @@
       <div class="wrapper">
         <label for="share-privilege">Select their privileges:</label>
         <select name="share-privilege" id="share-privilege">
-          <option value="1" selected>Coworker</option>
-          <option value="2">Visitor</option>
+          <option value="1" selected>Editor</option>
+          <option value="2">Guest</option>
         </select>
       </div>
   

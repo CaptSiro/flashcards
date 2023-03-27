@@ -1,6 +1,6 @@
 const CREATOR = 0;
-const COWORKER = 1;
-const VISITOR = 2;
+const EDITOR = 1;
+const GUEST = 2;
 
 
 
@@ -218,7 +218,7 @@ async function load_decks() {
         "deck",
         deck.name,
         [],
-        OptionalComponents(deck.rank === CREATOR || deck.rank === COWORKER, [
+        OptionalComponents(deck.rank === CREATOR || deck.rank === EDITOR, [
           Opt("Edit", () => {
             console.log("edit: " + deck.name);
           }),
@@ -313,7 +313,7 @@ async function load_stacks(s) {
   
           window.location.replace(AJAX.DOMAIN_HOME + "/exam/?stack=" + stack.id);
         })],
-        OptionalComponents(stack.rank === CREATOR || stack.rank === COWORKER, [
+        OptionalComponents(stack.rank === CREATOR || stack.rank === EDITOR, [
           Opt("Edit", () => {
     
           }),
@@ -368,7 +368,7 @@ async function load_cards(s) {
         "card",
         card.question,
         [Span(_, card.answer)],
-        OptionalComponents(card.rank === CREATOR || card.rank === COWORKER, [
+        OptionalComponents(card.rank === CREATOR || card.rank === EDITOR, [
           Opt("Edit", () => {
           
           }),
