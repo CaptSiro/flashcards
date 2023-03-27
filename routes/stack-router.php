@@ -21,7 +21,7 @@
       $deck_id = param($request->body->get("deck_id"));
     
       Privilege::check(
-        $request->session->get("user")->id,
+        param($request->session->get("user")->id),
         $deck_id,
         [Privilege::RANK_CREATOR, Privilege::RANK_EDITOR]
       )
@@ -44,18 +44,23 @@
   $stack_router->delete("/:id", [
     Middleware::requireToBeLoggedIn(),
     function (Request $request, Response $response) {
-      $deck_id = param($request->param->get("id"));
+      $stack_id = param($request->param->get("id"));
+      $user_id = param($request->session->get("user")->id);
+      
+      $stack = Stack::by_id($stack_id, $user_id)
+        ->forwardFailure($response)
+        ->getSuccess();
     
       Privilege::check(
-        $request->session->get("user")->id,
-        $deck_id,
+        $user_id,
+        param($stack->decks_id),
         [Privilege::RANK_CREATOR, Privilege::RANK_EDITOR]
       )
         ->forwardFailure($response)
         ->getSuccess();
     
       $response->json(Stack::delete(
-        $deck_id
+        $stack_id
       ));
     }
   ], ["id" => Router::REGEX_NUMBER]);
@@ -66,10 +71,13 @@
     Middleware::requireToBeLoggedIn(),
     function (Request $request, Response $response) {
       $deck_id = param($request->param->get("id"));
-      $user_id = param($request->session->get("user")->id);
   
-      $privilege = Privilege::check(
-        $user_id,
+      // todo possibility to create privilege provider endpoint:
+      // /privilege/deck/:deck_id - when showing stacks in deck
+      // /privilege/stack/:stack_id - when showing cards in stack
+
+      Privilege::check(
+        param($request->session->get("user")->id),
         $deck_id,
         [Privilege::RANK_CREATOR, Privilege::RANK_EDITOR, Privilege::RANK_QUEST]
       )
@@ -80,7 +88,7 @@
       $response->json(
         Stack::in_deck(
           $deck_id,
-          $user_id
+          param($request->session->get("user")->id)
         )
           ->forwardFailure($response)
           ->getSuccess()

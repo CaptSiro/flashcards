@@ -61,7 +61,7 @@
         self::class
       );
       
-      if ($stack === false) {
+      if ($stack === false || $stack === null) {
         return fail(new NotFoundExc("There are no stacks for id: ". $id->value()));
       }
       
