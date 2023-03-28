@@ -28,7 +28,7 @@ nav {
 
 
 main {
-    margin: calc(64px + 32px) 16px 16px 16px;
+    margin: 64px 16px 16px 16px;
     overflow: auto;
 
     --grid-layout-gap: 16px;
@@ -198,8 +198,11 @@ main .option:hover {
 
 
 @media only screen and (max-width: 470px) {
-    main {
+    main.add-able {
         grid-template-rows: 80px;
+    }
+
+    main {
         margin-right: unset;
         margin-left: unset;
     }

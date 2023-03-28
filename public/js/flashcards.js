@@ -210,6 +210,8 @@ async function load_decks() {
   
   grid.textContent = "";
   grid.style.setProperty("--grid-item--min-width", "250px");
+  grid.classList.add("add-able");
+  
   grid.append(add_button);
   
   for (const deck of decks) {
@@ -293,15 +295,28 @@ async function load_stacks(s) {
   
   const deck_id = s.deck.id;
   
-  const stacks = await AJAX.get("/stack/in-deck/" + deck_id, JSONHandler());
-  if (stacks.error !== undefined) {
-    console.log(stacks);
+  const responses = await Promise.all([
+    AJAX.get("/stack/in-deck/" + deck_id, JSONHandler()),
+    AJAX.get("/privilege/deck/" + deck_id, JSONHandler())
+  ]);
+  
+  for (const response of responses) {
+    if (response.error === undefined) continue;
+    
+    console.log(response);
     return;
   }
   
+  const [stacks, privilege] = responses;
+  const can_user_edit = privilege.rank === CREATOR || privilege.rank === EDITOR;
+  
   grid.textContent = "";
   grid.style.setProperty("--grid-item--min-width", "280px");
-  grid.append(add_button);
+  grid.classList.toggle("add-able", can_user_edit);
+  
+  if (can_user_edit) {
+    grid.append(add_button);
+  }
   
   for (const stack of stacks) {
     grid.append(
@@ -313,7 +328,7 @@ async function load_stacks(s) {
   
           window.location.replace(AJAX.DOMAIN_HOME + "/exam/?stack=" + stack.id);
         })],
-        OptionalComponents(stack.rank === CREATOR || stack.rank === EDITOR, [
+        OptionalComponents(can_user_edit, [
           Opt("Edit", () => {
     
           }),
@@ -352,15 +367,29 @@ async function load_cards(s) {
   
   const stack_id = s.stack.id;
   
-  const cards = await AJAX.get("/card/in-stack/" + stack_id, JSONHandler());
-  if (cards.error !== undefined) {
-    console.log(cards);
+  const responses = await Promise.all([
+    AJAX.get("/card/in-stack/" + stack_id, JSONHandler()),
+    AJAX.get("/privilege/stack/" + stack_id, JSONHandler())
+  ]);
+  
+  for (const response of responses) {
+    if (response.error === undefined) continue;
+
+    console.log(response);
     return;
   }
   
+  const [cards, privilege] = responses;
+  const can_user_edit = privilege.rank === CREATOR || privilege.rank === EDITOR;
+  
   grid.textContent = "";
   grid.style.setProperty("--grid-item--min-width", "300px");
-  grid.append(add_button);
+  grid.classList.toggle("add-able", can_user_edit);
+  
+  if (can_user_edit === true) {
+    grid.append(add_button);
+  }
+  
   
   for (const card of cards) {
     grid.append(
@@ -368,7 +397,7 @@ async function load_cards(s) {
         "card",
         card.question,
         [Span(_, card.answer)],
-        OptionalComponents(card.rank === CREATOR || card.rank === EDITOR, [
+        OptionalComponents(can_user_edit, [
           Opt("Edit", () => {
           
           }),
