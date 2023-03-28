@@ -24,7 +24,6 @@
     top: 50%;
     transform: translate(-50%, -50%);
 
-    max-height: 0;
     width: 250px;
     padding: 0 50px;
     overflow: hidden;
@@ -45,7 +44,7 @@
 }
 .window.form.show {
     max-height: 100%;
-    width: 350px;
+    width: min(350px, 90vw);
     padding: 32px;
     overflow: auto;
     animation: 300ms delay-overflow;
@@ -62,7 +61,7 @@
             visibility 0ms linear;
 }
 .window.form.show.large {
-    width: 500px;
+    width: min(500px, 90vw);
 }
 .window.form > * {
     white-space: nowrap;

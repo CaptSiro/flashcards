@@ -32,6 +32,8 @@
     </defs>
   </svg>
   
+  
+  
   <div class="modals">
     <div class="window form" id="create-deck">
       <div class="wrapper">
@@ -50,6 +52,8 @@
         <p class="blockquote error error-modal"></p>
       </div>
     </div>
+    
+    
   
     <div class="window form" id="create-stack">
       <div class="wrapper">
@@ -68,6 +72,8 @@
         <p class="blockquote error error-modal"></p>
       </div>
     </div>
+    
+    
   
     <div class="window form" id="create-card">
       <div class="wrapper">
@@ -92,12 +98,32 @@
       </div>
     </div>
     
+    
+    
+    <div class="window form" id="manage-privileges">
+      <div class="wrapper">
+        <p>Your team for deck: <span class="important" id="deck-name"></span></p>
+      </div>
+  
+      <div id="team"></div>
+  
+      <div class="wrapper sideways-end">
+        <button class="cancel-modal">Ok</button>
+      </div>
+  
+      <div class="wrapper">
+        <p class="blockquote error error-modal"></p>
+      </div>
+    </div>
+  
+  
+  
     <div class="window form" id="share">
       <div class="wrapper">
         <label for="share-email">Enter email:</label>
         <input type="text" name="share-email" id="share-email">
       </div>
-      
+    
       <div class="wrapper">
         <label for="share-privilege">Select their privileges:</label>
         <select name="share-privilege" id="share-privilege">
@@ -105,14 +131,14 @@
           <option value="2">Guest</option>
         </select>
       </div>
-  
+    
       <div class="divider"></div>
-  
+    
       <div class="wrapper sideways-end">
         <button class="cancel-modal">Cancel</button>
         <button class="submit" type="submit">Share</button>
       </div>
-  
+    
       <div class="wrapper">
         <p class="blockquote error error-modal"></p>
       </div>

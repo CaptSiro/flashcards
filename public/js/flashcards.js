@@ -230,7 +230,31 @@ async function load_decks() {
               win.dataset.deck_id = deck.id;
             }),
             Opt("Manage privileges", async () => {
-              console.log("manage privileges")
+              const win = show_window("manage-privileges");
+              const team = win.querySelector("#team");
+              team.textContent = "Loading members...";
+              
+              win.querySelector("#deck-name").textContent = deck.name;
+              
+              const controller = new FormControl("manage-privileges");
+              const members = await AJAX.get("/privilege/deck-team/" + deck.id, JSONHandler());
+              
+              if (members.error !== undefined) {
+                controller.invalidate("Failed to load members.");
+                team.textContent = "Failed to lead members.";
+                return;
+              }
+              
+              if (members.length === 0) {
+                team.textContent = "There are no members for this team.";
+              }
+  
+              console.log(members)
+              
+              team.textContent = "";
+              for (const member of members) {
+                team.append(Member(member, controller));
+              }
             }),
             Opt("Delete", async evt => {
               const response = await AJAX.delete("/deck/" + deck.id, JSONHandler());
@@ -512,4 +536,62 @@ function Opt(label, action) {
       }
     )
   );
+}
+
+
+
+/**
+ * @typedef Member
+ * @property {number} id
+ * @property {number} users_id
+ * @property {number} rank
+ * @property {number} decks_id
+ * @property {string} email
+ */
+
+/**
+ * @param {Member} member
+ * @param {FormControl} controller
+ * @returns {HTMLElement}
+ */
+function Member(member, controller) {
+  console.log(member)
+  
+  const element = (
+    Div("member", [
+      Span(_, member.email),
+      Component("select", _, [
+        new Option("Editor", "1", false, member.rank === EDITOR),
+        new Option("Guest", "2", true, member.rank === GUEST),
+      ], {
+        listeners: {
+          change: async evt => {
+            const response = await AJAX.patch("/privilege/" + member.id, JSONHandler(), {
+              body: JSON.stringify({
+                rank: evt.target.value,
+                deck_id: member.decks_id
+              })
+            });
+  
+            if (response.error) {
+              controller.invalidate(response.error);
+            }
+          }
+        }
+      }),
+      Button("button-like delete", "✕", async () => {
+        const response = await AJAX.delete("/privilege/" + member.id, JSONHandler(), {
+          body: JSON.stringify({ deck_id: member.decks_id })
+        });
+        
+        if (response.error) {
+          controller.invalidate(response.error);
+          return;
+        }
+        
+        element.remove();
+      })
+    ])
+  );
+  return element;
 }

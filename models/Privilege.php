@@ -2,6 +2,7 @@
   
   use OakBase\Database;
   use OakBase\Param;
+  use OakBase\SideEffect;
   use function OakBase\param;
   
   require_once __DIR__ . "/Count.php";
@@ -13,7 +14,7 @@
     
     public int $id;
     public int $rank;
-    public int $deks_id;
+    public int $decks_id;
     public int $users_id;
     
     
@@ -33,6 +34,22 @@
     
     
     
+    static function update(Param $id, Param $rank): SideEffect {
+      return Database::get()->statement(
+        "UPDATE privileges SET `rank` = $rank WHERE id = $id"
+      );
+    }
+    
+    
+    
+    static function delete(Param $id): SideEffect {
+      return Database::get()->statement(
+        "DELETE FROM privileges WHERE id = $id"
+      );
+    }
+    
+    
+    
     static function for_user(Param $user_id, Param $deck_id): Result {
       $result = Database::get()->fetch(
         "SELECT id, `rank`, decks_id, users_id
@@ -47,6 +64,27 @@
       }
       
       return success($result);
+    }
+    
+    
+    
+    static function team(Param $deck_id): Result {
+      $creator = param(self::RANK_CREATOR);
+      
+      $team_members = Database::get()->fetch_all(
+        "SELECT `privileges`.id, `rank`, decks_id, users_id, email
+        FROM privileges
+            JOIN users u ON u.id = `privileges`.users_id
+                AND `rank` != $creator
+                AND decks_id = $deck_id",
+        self::class
+      );
+      
+      if ($team_members === false) {
+        return fail(new Exc("Could not retrieve data about team."));
+      }
+      
+      return success($team_members);
     }
     
     

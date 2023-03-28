@@ -52,6 +52,66 @@
   
   
   
+  $privilege_router->patch("/:id", [
+    Middleware::requireToBeLoggedIn(),
+    function (Request $request, Response $response) {
+      $user_id = param($request->session->get("user")->id);
+      $id = param(intval($request->param->get("id")));
+      $deck_id = param(intval($request->body->get("deck_id")));
+      $rank = param($request->body->get("rank"));
+      
+      if (!(in_array($rank->value(), [Privilege::RANK_EDITOR, Privilege::RANK_QUEST]) && $rank->value() !== 0)) {
+        $response->fail(new InvalidArgumentExc("Invalid privilege rank."));
+      }
+      
+      Privilege::check($user_id, $deck_id, [Privilege::RANK_CREATOR])
+        ->forwardFailure($response);
+      
+      $response->json(
+        Privilege::update($id, $rank)
+      );
+    }
+  ], ["id" => Router::REGEX_NUMBER]);
+  
+  
+  
+  $privilege_router->delete("/:id", [
+    Middleware::requireToBeLoggedIn(),
+    function (Request $request, Response $response) {
+      $user_id = param($request->session->get("user")->id);
+      $id = param(intval($request->param->get("id")));
+      $deck_id = param(intval($request->body->get("deck_id")));
+      
+      Privilege::check($user_id, $deck_id, [Privilege::RANK_CREATOR])
+        ->forwardFailure($response);
+      
+      $response->json(
+        Privilege::delete($id)
+      );
+    }
+  ], ["id" => Router::REGEX_NUMBER]);
+  
+  
+  
+  $privilege_router->get("/deck-team/:id", [
+    Middleware::requireToBeLoggedIn(),
+    function (Request $request, Response $response) {
+      $user_id = param($request->session->get("user")->id);
+      $deck_id = param($request->param->get("id"));
+    
+      Privilege::check($user_id, $deck_id, [Privilege::RANK_CREATOR])
+        ->forwardFailure($response);
+      
+      $response->json(
+        Privilege::team($deck_id)
+          ->forwardFailure($response)
+          ->getSuccess()
+      );
+    }
+  ], ["id" => Router::REGEX_NUMBER]);
+  
+  
+  
   $privilege_router->get("/:table/:id", [
     Middleware::requireToBeLoggedIn(),
     function (Request $request, Response $response) {

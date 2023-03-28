@@ -28,7 +28,8 @@ nav {
 
 
 main {
-    margin: 64px 16px 16px 16px;
+    margin: 64px 16px 0 16px;
+    padding-top: 16px;
     overflow: auto;
 
     --grid-layout-gap: 16px;
@@ -191,6 +192,38 @@ main .option:hover {
     cursor: pointer;
 
     transition: background-color 20ms linear;
+}
+
+
+
+
+.window.form#manage-privileges {
+    width: min(700px, 90vw);
+}
+.window.form #team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 40vh;
+    border-bottom: 1px solid var(--text-color-2);
+    border-top: 1px solid var(--text-color-2);
+    overflow: auto;
+}
+.window.form #team .member {
+    display: grid;
+    grid-template-columns: 1fr 64px 64px;
+    place-items: center;
+    width: 100%;
+    padding: 8px 0;
+}
+.window.form #team .member:hover {
+    background-color: var(--container-1);
+}
+.window.form #team .member :first-child {
+    place-self: center start;
+}
+.window.form #team .member :last-child {
+    place-self: center end;
 }
 
 
