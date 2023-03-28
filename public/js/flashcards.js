@@ -247,9 +247,8 @@ async function load_decks() {
               
               if (members.length === 0) {
                 team.textContent = "There are no members for this team.";
+                return;
               }
-  
-              console.log(members)
               
               team.textContent = "";
               for (const member of members) {
@@ -555,8 +554,6 @@ function Opt(label, action) {
  * @returns {HTMLElement}
  */
 function Member(member, controller) {
-  console.log(member)
-  
   const element = (
     Div("member", [
       Span(_, member.email),
