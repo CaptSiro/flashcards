@@ -260,6 +260,34 @@ function parseComponentContent (content) {
 }
 
 /**
+ * @typedef KeyValuePair
+ * @property {string} text
+ * @property {string} value
+ * @property {boolean=} selected
+ */
+/**
+ * @param {KeyValuePair[]} options
+ * @param {string} value
+ * @param {string} defaultValue
+ * @return {KeyValuePair[]}
+ */
+function selectOption (options, value, defaultValue = undefined) {
+  let defaultOption;
+  for (const option of options) {
+    if (option.value === defaultValue) {
+      defaultOption = option;
+    }
+    if (option.value !== value) continue;
+    
+    option.selected = true;
+    return options;
+  }
+  
+  defaultOption.selected = true;
+  return options;
+}
+
+/**
  * @typedef {string | Node | ArrayLike.<HTMLElement | Node | string> | HTMLElement[] | HTMLCollection | undefined} ComponentContent
  */
 /**
