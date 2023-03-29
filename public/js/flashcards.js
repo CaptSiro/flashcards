@@ -96,6 +96,7 @@ const add_button = AddButton();
 
 
 
+const deck_win = $("#create-deck");
 const deck_name_input = $("#deck-name");
 const deck_control = new FormControl("create-deck");
 $("#create-deck button[type=submit]").addEventListener("pointerdown", async () => {
@@ -106,11 +107,13 @@ $("#create-deck button[type=submit]").addEventListener("pointerdown", async () =
     return;
   }
   
-  const response = await AJAX.post("/deck", JSONHandler(), {
-    body: JSON.stringify({
-      name: deck_name
-    })
+  const body = JSON.stringify({
+    name: deck_name
   });
+  
+  const response = deck_win.dataset.mode === "PUT"
+    ? await AJAX.put("/deck/" + deck_win.dataset.id, JSONHandler(), { body })
+    : await AJAX.post("/deck", JSONHandler(), { body });
   
   if (response.error !== undefined) {
     deck_control.invalidate(response.error);
@@ -124,6 +127,7 @@ $("#create-deck button[type=submit]").addEventListener("pointerdown", async () =
 
 
 
+const stack_win = $("#create-stack");
 const stack_name_input = $("#stack-name");
 const stack_control = new FormControl("create-stack");
 $("#create-stack button[type=submit]").addEventListener("pointerdown", async () => {
@@ -139,12 +143,14 @@ $("#create-stack button[type=submit]").addEventListener("pointerdown", async () 
     return;
   }
   
-  const response = await AJAX.post("/stack", JSONHandler(), {
-    body: JSON.stringify({
-      name: stack_name,
-      deck_id: s?.deck.id
-    })
+  const body = JSON.stringify({
+    name: stack_name,
+    deck_id: s?.deck.id
   });
+  
+  const response = stack_win.dataset.mode = "PUT"
+    ? await AJAX.put("/stack/" + stack_win.dataset.id, JSONHandler(), { body })
+    : await AJAX.post("/stack", JSONHandler(), { body });
   
   if (response.error !== undefined) {
     stack_control.invalidate(response.error);
@@ -158,6 +164,7 @@ $("#create-stack button[type=submit]").addEventListener("pointerdown", async () 
 
 
 
+const card_win = $("#create-card");
 const card_question_input = $("#card-question");
 const card_answer_input = $("#card-answer");
 const card_control = new FormControl("create-card");
@@ -181,13 +188,15 @@ $("#create-card button[type=submit]").addEventListener("pointerdown", async () =
     return;
   }
   
-  const response = await AJAX.post("/card", JSONHandler(), {
-    body: JSON.stringify({
-      question: card_question,
-      answer: card_answer,
-      stack_id: s.stack.id
-    })
+  const body = JSON.stringify({
+    question: card_question,
+    answer: card_answer,
+    stack_id: s.stack.id
   });
+  
+  const response = card_win.dataset.mode = "PUT"
+    ? await AJAX.put("/card/" + card_win.dataset.id, JSONHandler(), { body })
+    : await AJAX.post("/card", JSONHandler(), { body });
   
   if (response.error !== undefined) {
     card_control.invalidate(response.error);
@@ -222,7 +231,11 @@ async function load_decks() {
         [],
         OptionalComponents(deck.rank === CREATOR || deck.rank === EDITOR, [
           Opt("Edit", () => {
-            console.log("edit: " + deck.name);
+            const win = show_window("create-deck");
+            win.dataset.mode = "PUT";
+            win.dataset.id = deck.id;
+            win.querySelector("button[type=submit]").textContent = "Edit";
+            win.querySelector("#deck-name").value = deck.name;
           }),
           ...OptionalComponents(deck.rank === CREATOR, [
             Opt("Share", () => {
@@ -353,7 +366,11 @@ async function load_stacks(s) {
         })],
         OptionalComponents(can_user_edit, [
           Opt("Edit", () => {
-    
+            const win = show_window("create-stack");
+            win.dataset.mode = "PUT";
+            win.dataset.id = stack.id;
+            win.querySelector("button[type=submit]").textContent = "Edit";
+            win.querySelector("#stack-name").value = stack.name;
           }),
           Opt("Delete", async evt => {
             const response = await AJAX.delete("/stack/" + stack.id, JSONHandler());
@@ -422,7 +439,12 @@ async function load_cards(s) {
         [Span(_, card.answer)],
         OptionalComponents(can_user_edit, [
           Opt("Edit", () => {
-          
+            const win = show_window("create-card");
+            win.dataset.mode = "PUT";
+            win.dataset.id = card.id;
+            win.querySelector("button[type=submit]").textContent = "Edit";
+            win.querySelector("#card-question").value = card.question;
+            win.querySelector("#card-answer").value = card.answer;
           }),
           Opt("Delete", async evt => {
             const response = await AJAX.delete("/card/" + card.id, JSONHandler());
@@ -478,14 +500,16 @@ function AddButton() {
     Button("add button-like", [
       Span("mono", "+")
     ], () => {
-      show_window("create-" + get_state().section)
+      const win = show_window("create-" + get_state().section);
+      win.dataset.mode = "POST";
+      win.querySelector("button[type=submit]").textContent = "Create";
     })
   )
 }
 
 
 /**
- * @param {"deck" | "stack" | "card"} type
+ * @param {string} type
  * @param {string} label
  * @param {HTMLElement[]} additional
  * @param {HTMLElement[] | undefined} options

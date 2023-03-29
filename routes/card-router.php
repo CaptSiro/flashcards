@@ -105,4 +105,35 @@
   
   
   
+  $card_router->put("/:id", [
+    Middleware::requireToBeLoggedIn(),
+    function (Request $request, Response $response) {
+      $card_id = param(intval($request->param->get("id")));
+      
+      /**
+       * @var Card $card
+       */
+      $card = Card::by_id($card_id)
+        ->forwardFailure($response)
+        ->getSuccess();
+      
+      Privilege::check(
+        param($request->session->get("user")->id),
+        param($card->decks_id),
+        [Privilege::RANK_CREATOR, Privilege::RANK_EDITOR]
+      )
+        ->forwardFailure($response);
+      
+      $response->json(
+        Card::update(
+          $card_id,
+          param($request->body->get("question")),
+          param($request->body->get("answer"))
+        )
+      );
+    }
+  ]);
+  
+  
+  
   return $card_router;

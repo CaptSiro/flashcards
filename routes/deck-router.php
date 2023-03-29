@@ -30,6 +30,26 @@
   
   
   
+  $deck_router->put("/:id", [
+    Middleware::requireToBeLoggedIn(),
+    function (Request $request, Response $response) {
+      $deck_id = param(intval($request->param->get("id")));
+    
+      Privilege::check(
+        param($request->session->get("user")->id),
+        $deck_id,
+        [Privilege::RANK_CREATOR, Privilege::RANK_EDITOR]
+      )
+        ->forwardFailure($response);
+      
+      $response->json(
+        Deck::update($deck_id, param($request->body->get("name")))
+      );
+    }
+  ]);
+  
+  
+  
   $deck_router->get("/users/", [
     Middleware::requireToBeLoggedIn(),
     function (Request $request, Response $response) {

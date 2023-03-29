@@ -2,6 +2,7 @@
   
   use OakBase\Database;
   use OakBase\Param;
+  use OakBase\SideEffect;
   
   require_once __DIR__ . "/Count.php";
   
@@ -95,5 +96,13 @@
       }
   
       return success($stack);
+    }
+    
+    
+    
+    static function update(Param $id, Param $name): SideEffect {
+      return Database::get()->statement(
+        "UPDATE stacks SET name = $name WHERE id = $id"
+      );
     }
   }

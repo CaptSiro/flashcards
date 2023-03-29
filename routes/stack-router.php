@@ -98,4 +98,34 @@
   
   
   
+  $stack_router->put("/:id", [
+    Middleware::requireToBeLoggedIn(),
+    function (Request $request, Response $response) {
+      $stack_id = param(intval($request->param->get("id")));
+  
+      /**
+       * @var Stack $stack
+       */
+      $stack = Stack::by_id(
+        $stack_id,
+        param($request->session->get("user")->id)
+      )
+        ->forwardFailure($response)
+        ->getSuccess();
+      
+      Privilege::check(
+        param($request->session->get("user")->id),
+        param($stack->decks_id),
+        [Privilege::RANK_CREATOR, Privilege::RANK_EDITOR]
+      )
+        ->forwardFailure($response);
+      
+      $response->json(
+        Stack::update($stack_id, param($request->body->get("name")))
+      );
+    }
+  ]);
+  
+  
+  
   return $stack_router;

@@ -2,6 +2,7 @@
   
   use OakBase\Database;
   use OakBase\Param;
+  use OakBase\SideEffect;
   use function OakBase\param;
   
   require_once __DIR__ . "/Count.php";
@@ -107,5 +108,13 @@
       }
       
       return success($card);
+    }
+    
+    
+    
+    static function update(Param $id, Param $question, Param $answer): SideEffect {
+      return Database::get()->statement(
+        "UPDATE cards SET question = $question, answer = $answer WHERE id = $id"
+      );
     }
   }
