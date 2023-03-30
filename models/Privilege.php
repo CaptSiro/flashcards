@@ -72,7 +72,7 @@
       $creator = param(self::RANK_CREATOR);
       
       $team_members = Database::get()->fetch_all(
-        "SELECT `privileges`.id, `rank`, decks_id, users_id, email
+        "SELECT `privileges`.id, `rank`, decks_id, users_id, username
         FROM privileges
             JOIN users u ON u.id = `privileges`.users_id
                 AND `rank` != $creator

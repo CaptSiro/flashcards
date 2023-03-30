@@ -19,28 +19,71 @@
   <script src="<?= $GLOBALS["__HOME__"] ?>/public/js/auth.js" defer></script>
 </head>
 <body class="center">
-  <div class="form login">
+  <div class="form login" id="login">
     <div class="wrapper">
-      <label for="l-email">Email:</label>
-      <input type="text" name="l-email" id="l-email">
+      <label for="l-username">Username:</label>
+      <input type="text" name="l-username" id="l-username">
     </div>
-  
+    
     <div class="wrapper">
-      <p class="blockquote note">This site uses email only authentication. Submit your email and log in via invitation link that will be sent to your address. If you don't have an account, it will be created automatically.</p>
+      <label for="l-password">Password:</label>
+      <input type="password" name="l-password" id="l-password">
     </div>
-  
+    
+    <div class="divider"></div>
+    
     <div class="wrapper">
-      <button class="submit" type="submit">Submit</button>
+      <button class="submit" type="submit">Login</button>
     </div>
     
     <div class="wrapper">
       <p class="blockquote error"></p>
     </div>
+    
+    <div class="hline"></div>
+    
+    <div class="wrapper">
+      <p>Don't have an account? <button class="link" link-to="register">Sign up.</button></p>
+    </div>
+  
+    <div class="wrapper">
+      <p class="blockquote error error-modal"></p>
+    </div>
   </div>
   
-  <div class="form confirmation hide">
+  
+  
+  <div class="form register hide" id="register">
     <div class="wrapper">
-      <p class="blockquote note">Email with invitation link has been sent.</p>
+      <label for="r-username">Username:</label>
+      <input type="text" name="r-username" id="r-username">
+    </div>
+  
+    <div class="wrapper">
+      <label for="r-password">Password:</label>
+      <input type="password" name="r-password" id="r-password">
+    </div>
+  
+    <div class="wrapper">
+      <label for="r-password-again">Password again:</label>
+      <input type="password" name="r-password-again" id="r-password-again">
+    </div>
+    
+    <div class="divider"></div>
+    
+    <div class="wrapper">
+      <button class="submit" type="submit">Register</button>
+      <p class="blockquote error"></p>
+    </div>
+    
+    <div class="hline"></div>
+    
+    <div class="wrapper">
+      <p>Already have an account? <button class="link" link-to="login">Login.</button></p>
+    </div>
+  
+    <div class="wrapper">
+      <p class="blockquote error error-modal"></p>
     </div>
   </div>
 </body>

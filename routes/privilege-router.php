@@ -19,13 +19,13 @@
   $privilege_router->post("/", [
     Middleware::requireToBeLoggedIn(),
     function (Request $request, Response $response) {
-      $email = $request->body->get("email");
+      $username = $request->body->get("username");
       $user = $request->session->get("user");
-      if ($email === $user->email) {
+      if ($username === $user->username) {
         $response->fail(new IllegalArgumentExc("Cannot share with your-self."));
       }
       
-      $share_to = User::by_email(param($email))
+      $share_to = User::by_username(param($username))
         ->forwardFailure($response)
         ->getSuccess();
       

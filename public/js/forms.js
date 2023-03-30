@@ -22,7 +22,7 @@ $$(".form").forEach(form => {
 
 $$("button[link-to]").forEach(e => {
   const linkTo = e.getAttribute("link-to");
-  e.addEventListener("pointerdown", () => {
+  e.addEventListener("pointerup", () => {
     e.closest(".form").classList.add("hide");
     forms.get(linkTo).classList.remove("hide");
   });

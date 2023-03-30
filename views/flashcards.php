@@ -120,8 +120,8 @@
   
     <div class="window form" id="share">
       <div class="wrapper">
-        <label for="share-email">Enter email:</label>
-        <input type="text" name="share-email" id="share-email">
+        <label for="share-username">Enter username:</label>
+        <input type="text" name="share-username" id="share-username">
       </div>
     
       <div class="wrapper">

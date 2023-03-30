@@ -148,7 +148,7 @@ $("#create-stack button[type=submit]").addEventListener("pointerdown", async () 
     deck_id: s?.deck.id
   });
   
-  const response = stack_win.dataset.mode = "PUT"
+  const response = stack_win.dataset.mode === "PUT"
     ? await AJAX.put("/stack/" + stack_win.dataset.id, JSONHandler(), { body })
     : await AJAX.post("/stack", JSONHandler(), { body });
   
@@ -194,7 +194,7 @@ $("#create-card button[type=submit]").addEventListener("pointerdown", async () =
     stack_id: s.stack.id
   });
   
-  const response = card_win.dataset.mode = "PUT"
+  const response = card_win.dataset.mode === "PUT"
     ? await AJAX.put("/card/" + card_win.dataset.id, JSONHandler(), { body })
     : await AJAX.post("/card", JSONHandler(), { body });
   
@@ -287,20 +287,20 @@ async function load_decks() {
 
 const share = $("#share");
 const share_control = new FormControl("share");
-const share_email = share.querySelector("#share-email");
+const share_username = share.querySelector("#share-username");
 const share_privilege = share.querySelector("#share-privilege");
 share.querySelector("button[type=submit]").addEventListener("pointerdown", async () => {
-  const email = share_email.value.trim();
+  const username = share_username.value.trim();
   
-  if (email === "") {
-    share_control.invalidate("Email is required.");
+  if (username === "") {
+    share_control.invalidate("Username is required.");
     return;
   }
   
   const response = await AJAX.post("/privilege", JSONHandler(), {
     body: JSON.stringify({
       deck_id: share.dataset.deck_id,
-      email,
+      username,
       rank: +share_privilege.value
     })
   });
@@ -569,7 +569,7 @@ function Opt(label, action) {
  * @property {number} users_id
  * @property {number} rank
  * @property {number} decks_id
- * @property {string} email
+ * @property {string} username
  */
 
 /**
@@ -580,7 +580,7 @@ function Opt(label, action) {
 function Member(member, controller) {
   const element = (
     Div("member", [
-      Span(_, member.email),
+      Span(_, member.username),
       Component("select", _, [
         new Option("Editor", "1", false, member.rank === EDITOR),
         new Option("Guest", "2", true, member.rank === GUEST),

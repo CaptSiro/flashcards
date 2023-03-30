@@ -78,23 +78,23 @@
   $card_router->get("/in-stack/:id", [
     Middleware::requireToBeLoggedIn(),
     function (Request $request, Response $response) {
-      $card_id = param($request->param->get("id"));
+      $stack_id = param($request->param->get("id"));
       $user_id = param($request->session->get("user")->id);
   
-      $card = Card::by_id($card_id)
+      $stack = Stack::by_id($stack_id, $user_id)
         ->forwardFailure($response)
         ->getSuccess();
       
       Privilege::check(
         $user_id,
-        param($card->decks_id),
+        param($stack->decks_id),
         [Privilege::RANK_CREATOR, Privilege::RANK_EDITOR, Privilege::RANK_QUEST]
       )
         ->forwardFailure($response);
     
       $response->json(
         Card::in_stack(
-          param($request->param->get("id")),
+          $stack_id,
           $user_id,
         )
           ->forwardFailure($response)
