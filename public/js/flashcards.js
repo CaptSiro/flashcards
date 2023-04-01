@@ -4,7 +4,7 @@ const GUEST = 2;
 
 
 
-$(".logout").addEventListener("pointerdown", async () => {
+$(".logout").addEventListener("pointerup", async () => {
   const response = await AJAX.delete("/auth", JSONHandler());
   
   if (response.error !== undefined || response.next === undefined) {
@@ -30,7 +30,7 @@ const states = [{
   label: Span()
 }];
 
-$(".back").addEventListener("pointerdown", () => {
+$(".back").addEventListener("pointerup", () => {
   states.pop();
   state_change();
 });
@@ -92,6 +92,13 @@ state_change();
 
 
 const grid = $("main");
+let did_user_scroll = false;
+grid.addEventListener("pointerdown", () => {
+  did_user_scroll = false;
+});
+grid.addEventListener("pointermove", () => {
+  did_user_scroll = true;
+});
 const add_button = AddButton();
 
 
@@ -99,7 +106,7 @@ const add_button = AddButton();
 const deck_win = $("#create-deck");
 const deck_name_input = $("#deck-name");
 const deck_control = new FormControl("create-deck");
-$("#create-deck button[type=submit]").addEventListener("pointerdown", async () => {
+$("#create-deck button[type=submit]").addEventListener("pointerup", async () => {
   const deck_name = deck_name_input.value.trim();
   
   if (deck_name === "") {
@@ -130,7 +137,7 @@ $("#create-deck button[type=submit]").addEventListener("pointerdown", async () =
 const stack_win = $("#create-stack");
 const stack_name_input = $("#stack-name");
 const stack_control = new FormControl("create-stack");
-$("#create-stack button[type=submit]").addEventListener("pointerdown", async () => {
+$("#create-stack button[type=submit]").addEventListener("pointerup", async () => {
   const stack_name = stack_name_input.value.trim();
   
   if (stack_name === "") {
@@ -168,7 +175,7 @@ const card_win = $("#create-card");
 const card_question_input = $("#card-question");
 const card_answer_input = $("#card-answer");
 const card_control = new FormControl("create-card");
-$("#create-card button[type=submit]").addEventListener("pointerdown", async () => {
+$("#create-card button[type=submit]").addEventListener("pointerup", async () => {
   const card_question = card_question_input.value.trim();
   
   if (card_question === "") {
@@ -205,6 +212,36 @@ $("#create-card button[type=submit]").addEventListener("pointerdown", async () =
   
   card_control.clear();
   load_cards(get_state());
+  clear_windows();
+});
+
+
+
+const share = $("#share");
+const share_control = new FormControl("share");
+const share_username = share.querySelector("#share-username");
+const share_privilege = share.querySelector("#share-privilege");
+share.querySelector("button[type=submit]").addEventListener("pointerup", async () => {
+  const username = share_username.value.trim();
+  
+  if (username === "") {
+    share_control.invalidate("Username is required.");
+    return;
+  }
+  
+  const response = await AJAX.post("/privilege", JSONHandler(), {
+    body: JSON.stringify({
+      deck_id: share.dataset.deck_id,
+      username,
+      rank: +share_privilege.value
+    })
+  });
+  
+  if (response.error !== undefined) {
+    share_control.invalidate(response.error);
+    return;
+  }
+  
   clear_windows();
 });
 
@@ -274,7 +311,7 @@ async function load_decks() {
                 console.log(response);
                 return;
               }
-    
+              
               evt.target.closest(".deck").remove();
             })
           ])
@@ -284,34 +321,6 @@ async function load_decks() {
     )
   }
 }
-
-const share = $("#share");
-const share_control = new FormControl("share");
-const share_username = share.querySelector("#share-username");
-const share_privilege = share.querySelector("#share-privilege");
-share.querySelector("button[type=submit]").addEventListener("pointerdown", async () => {
-  const username = share_username.value.trim();
-  
-  if (username === "") {
-    share_control.invalidate("Username is required.");
-    return;
-  }
-  
-  const response = await AJAX.post("/privilege", JSONHandler(), {
-    body: JSON.stringify({
-      deck_id: share.dataset.deck_id,
-      username,
-      rank: +share_privilege.value
-    })
-  });
-  
-  if (response.error !== undefined) {
-    share_control.invalidate(response.error);
-    return;
-  }
-  
-  clear_windows();
-});
 
 
 
@@ -465,12 +474,6 @@ async function load_cards(s) {
 
 
 
-function edit_card(card) {
-  // todo edit card
-}
-
-
-
 function stay_logged_in() {
   const setting = localStorage.getItem("stay_logged_in");
   
@@ -529,14 +532,17 @@ function Item(type, label, additional = [], options = undefined, action = undefi
           ),
           Div("options", options, {
             listeners: {
-              pointerdown: evt => evt.stopImmediatePropagation()
+              pointerup: evt => evt.stopImmediatePropagation()
             }
           })
         ])
       )
     ], {
       listeners: {
-        pointerdown: action
+        pointerup: evt => {
+          if (did_user_scroll) return;
+          action(evt);
+        }
       }
     })
   );
@@ -554,7 +560,7 @@ function Opt(label, action) {
       Span(_, label),
       {
         listeners: {
-          pointerdown: action
+          pointerup: action
         }
       }
     )

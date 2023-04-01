@@ -566,7 +566,7 @@ function Button (className = undefined, content = undefined, action = undefined,
       options.listeners = {};
     }
     
-    options.listeners.pointerdown = action;
+    options.listeners.pointerup = action;
     options.listeners.submit = action;
   }
   

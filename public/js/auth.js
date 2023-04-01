@@ -1,7 +1,7 @@
 const login_controller = new FormControl("login");
 const login_username = $("#l-username");
 const login_password = $("#l-password");
-$(".form.login button[type=submit]").addEventListener("pointerdown", async () => {
+$(".form.login button[type=submit]").addEventListener("pointerup", async () => {
   const username = login_username.value.trim();
   const password = login_password.value.trim();
   
@@ -29,7 +29,7 @@ const register_controller = new FormControl("register");
 const register_username = $("#r-username");
 const register_password = $("#r-password");
 const register_password_again = $("#r-password-again");
-$(".form.register button[type=submit]").addEventListener("pointerdown", async () => {
+$(".form.register button[type=submit]").addEventListener("pointerup", async () => {
   const username = register_username.value.trim();
   const password = register_password.value.trim();
   const password_again = register_password_again.value.trim();

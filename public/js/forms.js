@@ -16,7 +16,7 @@ $$(".form").forEach(form => {
     
     submitter.dispatchEvent(new Event("submit"));
     submitter.dispatchEvent(new Event("click"));
-    submitter.dispatchEvent(new Event("pointerdown"));
+    submitter.dispatchEvent(new Event("pointerup"));
   });
 });
 

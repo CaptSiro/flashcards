@@ -110,10 +110,10 @@ function handle_text_input() {
 }
 
 
-text_answer_div.querySelector(".next").addEventListener("pointerdown", handle_next);
+text_answer_div.querySelector(".next").addEventListener("pointerup", handle_next);
 
 
-initial_div.querySelector(".next").addEventListener("pointerdown", () => {
+initial_div.querySelector(".next").addEventListener("pointerup", () => {
   if (answer_input.value.trim() !== "") {
     handle_text_input();
     return;
@@ -145,7 +145,7 @@ function handle_next() {
 }
 
 
-thought_answer_div.querySelector("#answer-right").addEventListener("pointerdown", handle_right);
+thought_answer_div.querySelector("#answer-right").addEventListener("pointerup", handle_right);
 function handle_right() {
   if (thought_answer_div.classList.contains("display-none")) {
     return;
@@ -161,7 +161,7 @@ function handle_right() {
 }
 
 
-thought_answer_div.querySelector("#answer-wrong").addEventListener("pointerdown", handle_wrong);
+thought_answer_div.querySelector("#answer-wrong").addEventListener("pointerup", handle_wrong);
 function handle_wrong() {
   if (thought_answer_div.classList.contains("display-none")) {
     return;
@@ -365,4 +365,4 @@ function draw_graph() {
 
 
 
-$(".back").addEventListener("pointerdown", () => window.location.replace(AJAX.DOMAIN_HOME))
+$(".back").addEventListener("pointerup", () => window.location.replace(AJAX.DOMAIN_HOME + "/"))
