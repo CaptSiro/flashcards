@@ -400,7 +400,6 @@ async function load_stacks(s) {
       true
     );
   
-    console.log(stack)
     if (stack.fraction !== undefined && stack.fraction !== null) {
       item.style.backgroundColor = `hsl(${stack.fraction / 100 * 120}, ${55 - stack.fraction / 100 * 15}%, ${40 - stack.fraction / 100 * 10}%)`;
     }
