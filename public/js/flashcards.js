@@ -100,6 +100,12 @@ grid.addEventListener("pointermove", () => {
   did_user_scroll = true;
 });
 const add_button = AddButton();
+window.addEventListener("keydown", evt => {
+  if (evt.key.toLowerCase() === "a" && evt.altKey) {
+    add_button.dispatchEvent(new Event("pointerup"));
+    evt.preventDefault();
+  }
+});
 
 
 
@@ -501,7 +507,7 @@ stay_logged_in();
 
 
 /**
- * @return {HTMLElement}
+ * @return {HTMLButtonElement}
  */
 function AddButton() {
   return (
