@@ -112,6 +112,10 @@ main .deck:hover,
 main .stack:hover {
     cursor: pointer;
 }
+main > div h3,
+main > div span {
+    text-align: center;
+}
 
 
 main > * {

@@ -53,7 +53,7 @@ nav .void {
     display: grid;
     place-items: center;
     color: black;
-
+    text-align: center;
     justify-self: center;
     align-self: center;
     font-family: var(--font-1);
