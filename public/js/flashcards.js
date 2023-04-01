@@ -364,37 +364,42 @@ async function load_stacks(s) {
   }
   
   for (const stack of stacks) {
-    grid.append(
-      Item(
-        "stack",
-        stack.name,
-        [Button("button-like", "Test", evt => {
-          evt.stopImmediatePropagation();
-  
-          window.location.replace(AJAX.DOMAIN_HOME + "/exam/?stack=" + stack.id);
-        })],
-        OptionalComponents(can_user_edit, [
-          Opt("Edit", () => {
-            const win = show_window("create-stack");
-            win.dataset.mode = "PUT";
-            win.dataset.id = stack.id;
-            win.querySelector("button[type=submit]").textContent = "Edit";
-            win.querySelector("#stack-name").value = stack.name;
-          }),
-          Opt("Delete", async evt => {
-            const response = await AJAX.delete("/stack/" + stack.id, JSONHandler());
-            if (response.error !== undefined) {
-              console.log(response);
-              return;
-            }
+    const item = Item(
+      "stack",
+      stack.name,
+      [Button("button-like", "Test", evt => {
+        evt.stopImmediatePropagation();
     
-            evt.target.closest(".stack").remove();
-          })
-        ]),
-        () => load_cards({ stack }),
-        true
-      )
-    )
+        window.location.replace(AJAX.DOMAIN_HOME + "/exam/?stack=" + stack.id);
+      })],
+      OptionalComponents(can_user_edit, [
+        Opt("Edit", () => {
+          const win = show_window("create-stack");
+          win.dataset.mode = "PUT";
+          win.dataset.id = stack.id;
+          win.querySelector("button[type=submit]").textContent = "Edit";
+          win.querySelector("#stack-name").value = stack.name;
+        }),
+        Opt("Delete", async evt => {
+          const response = await AJAX.delete("/stack/" + stack.id, JSONHandler());
+          if (response.error !== undefined) {
+            console.log(response);
+            return;
+          }
+      
+          evt.target.closest(".stack").remove();
+        })
+      ]),
+      () => load_cards({ stack }),
+      true
+    );
+  
+    console.log(stack)
+    if (stack.fraction !== undefined && stack.fraction !== null) {
+      item.style.backgroundColor = `hsl(${stack.fraction / 100 * 120}, ${55 - stack.fraction / 100 * 15}%, ${40 - stack.fraction / 100 * 10}%)`;
+    }
+    
+    grid.append(item);
   }
 }
 

@@ -36,11 +36,16 @@
     
     static function in_deck(Param $deck_id, Param $user_id): Result {
       $stacks = Database::get()->fetch_all(
-        "SELECT stacks.id, name, p.`rank`
-            FROM stacks
-                JOIN privileges p on stacks.decks_id = p.decks_id
-                    AND p.users_id = $user_id
-            WHERE p.decks_id = $deck_id",
+        "SELECT stacks.id, name, p.`rank`, fractions.fraction
+        FROM stacks
+            JOIN privileges p on stacks.decks_id = p.decks_id
+                AND p.users_id = $user_id
+            LEFT JOIN (
+                SELECT stacks_id, MAX(fraction) as fraction
+                FROM results
+                GROUP BY stacks_id
+            ) as fractions ON fractions.stacks_id = stacks.id
+        WHERE p.decks_id = $deck_id",
         self::class
       );
       
@@ -76,7 +81,8 @@
       $stack = Database::get()->fetch_all(
         "SELECT stacks.id, name, p.`rank`, p.decks_id
             FROM stacks
-                JOIN privileges p on stacks.decks_id = p.decks_id",
+                JOIN privileges p on stacks.decks_id = p.decks_id
+                    AND p.decks_id = $deck_id",
         self::class
       );
     
