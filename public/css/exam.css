@@ -84,6 +84,13 @@ nav .void {
     gap: 16px;
 }
 
+.controls .thought-answer {
+    height: 136px;
+    align-items: flex-end;
+}
+.controls .thought-answer button {
+    max-height: 60px;
+}
 .controls .row {
     display: flex;
     gap: 16px;
@@ -192,6 +199,10 @@ canvas {
 
 
 @media only screen and (max-width: 400px) {
+    .exam {
+        grid-template-rows: 1fr 40vh;
+    }
+
     .exam .card {
         width: 250px;
     }
