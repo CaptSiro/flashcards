@@ -101,7 +101,7 @@ grid.addEventListener("pointermove", () => {
 });
 const add_button = AddButton();
 window.addEventListener("keydown", evt => {
-  if (evt.key.toLowerCase() === "a" && evt.altKey) {
+  if (evt.key !== undefined && evt.key.toLowerCase() === "a" && evt.altKey) {
     add_button.dispatchEvent(new Event("pointerup"));
     evt.preventDefault();
   }
@@ -531,22 +531,34 @@ function AddButton() {
  * @returns {HTMLElement}
  */
 function Item(type, label, additional = [], options = undefined, action = undefined, add_radius = false) {
+  const abs = (
+    Div("abs" + (add_radius ? " border-radius" : ""), [
+      Div("visible",
+        SVG("icon-options", "icon")
+      ),
+      Div("options", options, {
+        listeners: {
+          pointerup: evt => evt.stopImmediatePropagation()
+        }
+      })
+    ], {
+      listeners: {
+        mouseenter: () => abs.classList.add("hover"),
+        mouseleave: () => abs.classList.remove("hover"),
+        pointerup: evt => {
+          evt.stopImmediatePropagation();
+          if (evt.pointerType === "mouse") return;
+          abs.classList.toggle("hover");
+        }
+      }
+    })
+  );
+  
   return (
     Div(type, [
       Heading(3, _, label),
       ...additional,
-      OptionalComponent(options !== undefined && options.length !== 0,
-        Div("abs" + (add_radius ? " border-radius" : ""), [
-          Div("visible",
-            SVG("icon-options", "icon")
-          ),
-          Div("options", options, {
-            listeners: {
-              pointerup: evt => evt.stopImmediatePropagation()
-            }
-          })
-        ])
-      )
+      OptionalComponent(options !== undefined && options.length !== 0, abs)
     ], {
       listeners: {
         pointerup: evt => {
@@ -557,6 +569,15 @@ function Item(type, label, additional = [], options = undefined, action = undefi
     })
   );
 }
+
+
+
+window.addEventListener("pointerup", () => {
+  for (const item of document.querySelectorAll("main .hover")) {
+    item.classList.remove("hover");
+  }
+});
+
 
 
 /**

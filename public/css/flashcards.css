@@ -161,8 +161,7 @@ main .abs .options {
     transition: visibility 0ms 500ms, opacity linear 250ms;
 }
 
-main .abs:active,
-main .abs:hover {
+main .abs.hover {
     background-color: rgba(255, 255, 255, 0.3);
     width: 100%;
     height: 100%;
@@ -172,8 +171,7 @@ main .abs:hover {
     transition: background-color linear 200ms, width ease-in-out 200ms, height ease-in-out 200ms 100ms;
 }
 
-main .abs:active .options,
-main .abs:hover .options {
+main .abs.hover .options {
     visibility: visible;
     opacity: 1;
 
@@ -190,7 +188,6 @@ main .option {
 
     transition: background-color 200ms linear;
 }
-main .option:active,
 main .option:hover {
     background-color: rgba(221, 221, 221, 0.7);
     cursor: pointer;
