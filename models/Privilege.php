@@ -47,6 +47,14 @@
         "DELETE FROM privileges WHERE id = $id"
       );
     }
+  
+  
+  
+    static function delete_for_deck(Param $deck_id): SideEffect {
+      return Database::get()->statement(
+        "DELETE FROM privileges WHERE decks_id = $deck_id"
+      );
+    }
     
     
     

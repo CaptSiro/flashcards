@@ -7,6 +7,7 @@
   
   require_once __DIR__ . "/Count.php";
   require_once __DIR__ . "/Privilege.php";
+  require_once __DIR__ . "/Stack.php";
   
   class Deck {
     public int $id;
@@ -86,5 +87,30 @@
       return Database::get()->statement(
         "UPDATE decks SET `name` = $name WHERE id = $id"
       );
+    }
+    
+    
+    
+    static function delete(Param $deck_id): Result {
+      $stacks = Stack::by_deck_id($deck_id);
+      
+      if ($stacks->isFailure()) {
+        return $stacks;
+      }
+      
+      /**
+       * @var Stack $stack
+       */
+      foreach ($stacks->getSuccess() as $stack) {
+        Stack::delete(param($stack->id));
+      }
+  
+      Privilege::delete_for_deck($deck_id);
+  
+      return success(Database::get()->statement(
+        "DELETE FROM decks
+        WHERE id = $deck_id
+        LIMIT 1"
+      ));
     }
   }

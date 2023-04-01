@@ -2,6 +2,7 @@
   
   use OakBase\Database;
   use OakBase\Param;
+  use OakBase\PrimitiveParam;
   use OakBase\SideEffect;
   
   require_once __DIR__ . "/Count.php";
@@ -68,6 +69,23 @@
       
       return success($stack);
     }
+  
+  
+  
+    static function by_deck_id(Param $deck_id): Result {
+      $stack = Database::get()->fetch_all(
+        "SELECT stacks.id, name, p.`rank`, p.decks_id
+            FROM stacks
+                JOIN privileges p on stacks.decks_id = p.decks_id",
+        self::class
+      );
+    
+      if ($stack === false) {
+        return fail(new NotFoundExc("There are no stacks for deck with id: ". $deck_id->value()));
+      }
+    
+      return success($stack);
+    }
     
     
     
@@ -96,6 +114,14 @@
       }
   
       return success($stack);
+    }
+    
+    
+    
+    function delete_self(): Result {
+      return self::delete(
+        new PrimitiveParam($this->id)
+      );
     }
     
     

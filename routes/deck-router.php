@@ -30,6 +30,25 @@
   
   
   
+  $deck_router->delete("/:id", [
+    Middleware::requireToBeLoggedIn(),
+    function (Request $request, Response $response) {
+      $user_id = param($request->session->get("user")->id);
+      $deck_id = param($request->param->get("id"));
+      
+      Privilege::check($user_id, $deck_id, [Privilege::RANK_CREATOR])
+        ->forwardFailure($response);
+      
+      $response->json(
+        Deck::delete($deck_id)
+          ->forwardFailure($response)
+          ->getSuccess()
+      );
+    }
+  ]);
+  
+  
+  
   $deck_router->put("/:id", [
     Middleware::requireToBeLoggedIn(),
     function (Request $request, Response $response) {
