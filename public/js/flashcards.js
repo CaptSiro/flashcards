@@ -312,6 +312,10 @@ async function load_decks() {
               }
             }),
             Opt("Delete", async evt => {
+              if (!confirm("Do you really want to remove deck: '" + deck.name + "'?")) {
+                return;
+              }
+              
               const response = await AJAX.delete("/deck/" + deck.id, JSONHandler());
               if (response.error !== undefined) {
                 console.log(response);
@@ -387,6 +391,10 @@ async function load_stacks(s) {
           win.querySelector("#stack-name").value = stack.name;
         }),
         Opt("Delete", async evt => {
+          if (!confirm("Do you really want to remove stack: '" + stack.name + "'?")) {
+            return;
+          }
+          
           const response = await AJAX.delete("/stack/" + stack.id, JSONHandler());
           if (response.error !== undefined) {
             console.log(response);
@@ -401,7 +409,7 @@ async function load_stacks(s) {
     );
   
     if (stack.fraction !== undefined && stack.fraction !== null) {
-      item.style.backgroundColor = `hsl(${stack.fraction / 100 * 120}, ${55 - stack.fraction / 100 * 15}%, ${40 - stack.fraction / 100 * 10}%)`;
+      item.style.backgroundColor = `hsl(${stack.fraction / 100 * 120}, ${50 - stack.fraction / 100 * 10}%, ${40 - stack.fraction / 100 * 10}%)`;
     }
     
     grid.append(item);
@@ -466,6 +474,10 @@ async function load_cards(s) {
             win.querySelector("#card-answer").value = card.answer;
           }),
           Opt("Delete", async evt => {
+            if (!confirm("Do you really want to remove card: '" + card.question + "'?")) {
+              return;
+            }
+            
             const response = await AJAX.delete("/card/" + card.id, JSONHandler());
             if (response.error !== undefined) {
               console.log(response);
