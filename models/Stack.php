@@ -43,6 +43,7 @@
             LEFT JOIN (
                 SELECT stacks_id, MAX(fraction) as fraction
                 FROM results
+                WHERE users_id = $user_id
                 GROUP BY stacks_id
             ) as fractions ON fractions.stacks_id = stacks.id
         WHERE p.decks_id = $deck_id",
