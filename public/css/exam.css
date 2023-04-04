@@ -52,7 +52,7 @@ nav .void {
 
 .exam .progress-bar > div {
     border-radius: 999px;
-    background-color: var(--container-1);
+    background-color: var(--container-3);
 }
 
 .exam .progress-bar div.current {
