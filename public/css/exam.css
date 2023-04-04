@@ -32,15 +32,39 @@ nav .void {
     position: relative;
 }
 
-.exam .top-abs {
+.exam .progress-bar {
+    /*! dependence on padding (left, right), gap size, and minimum cell width (js) */
+
     position: absolute;
-    top: 3vh;
-    left: 4vw;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 0 16px;
+    margin-top: 8px;
+    display: grid;
+    grid-auto-rows: 8px;
+    grid-template-columns: repeat(22, 1fr);
+    gap: 4px;
+
+    max-height: calc(2 * 4px + 3 * 8px);
+    overflow: hidden;
 }
 
-.exam .top-abs .bold {
-    font-family: 'Pacifico', cursive;
-    font-size: 32px;
+.exam .progress-bar > div {
+    border-radius: 999px;
+    background-color: var(--container-1);
+}
+
+.exam .progress-bar div.current {
+    background-color: #0F5298;
+}
+
+.exam .progress-bar div.wrong {
+    background-color: #881347;
+}
+
+.exam .progress-bar div.right {
+    background-color: #007541;
 }
 
 

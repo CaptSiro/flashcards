@@ -42,7 +42,7 @@ const results = $(".results");
 const percentage_span = $(".percentage");
 const right_span = $(".right");
 const wrong_span = $(".wrong");
-const counter = $(".top-abs");
+const progress_bar = $(".progress-bar");
 const canvas = $("canvas");
 const ctx = canvas.getContext("2d");
 let stack_results = JSON.parse(`[{"id":1,"fraction":30,"users_id":2,"stacks_id":1},{"id":3,"fraction":75,"users_id":2,"stacks_id":1},{"id":10,"fraction":100,"users_id":2,"stacks_id":1}]`);
@@ -50,6 +50,8 @@ let stack_results = JSON.parse(`[{"id":1,"fraction":30,"users_id":2,"stacks_id":
 
 
 window.addEventListener("resize", () => {
+  reset_progress_bar(true);
+  
   resize_canvas();
   draw_graph();
 });
@@ -198,6 +200,8 @@ function next_card() {
 
     card_ptr = -1;
     to_be_answered = wrong;
+    reset_progress_bar();
+    
     wrong = [];
     save_stats = false;
   }
@@ -205,14 +209,29 @@ function next_card() {
   card = to_be_answered[++card_ptr];
   card_div.textContent = card.question;
   
-  counter.textContent = "";
-  counter.append(
-    Span("bold", Number(card_ptr + 1).toLocaleString()),
-    Span(_, "/" + to_be_answered.length.toLocaleString())
-  );
+  const current_cell = progress_bar.children[card_ptr];
+  if (current_cell !== undefined) {
+    current_cell.classList.add("current");
+    current_cell.scrollIntoView({ behavior: "smooth" });
+  }
+}
+
+function reset_progress_bar(do_styles_only = false) {
+  const max_cells = (window.innerWidth - 36) / 12; //! dependence on padding (left, right), gap size, and minimum cell width (css)
+  progress_bar.style.gridTemplateColumns = "repeat(" + Math.min(to_be_answered.length, Math.floor(max_cells)) + ", 1fr)";
+  
+  if (do_styles_only === true) {
+    return;
+  }
+  
+  progress_bar.textContent = "";
+  for (let i = 0; i < to_be_answered.length; i++) {
+    progress_bar.append(document.createElement("div"));
+  }
 }
 
 if (cards.length !== 0) {
+  reset_progress_bar();
   next_card();
 }
 
@@ -221,6 +240,8 @@ if (cards.length !== 0) {
 
 
 function answer_wrong() {
+  progress_bar.children[card_ptr]?.classList.add("wrong");
+  
   if (save_stats === true) {
     stats.push(false);
   }
@@ -231,6 +252,8 @@ function answer_wrong() {
 
 
 function answer_right() {
+  progress_bar.children[card_ptr]?.classList.add("right");
+  
   if (save_stats === false) {
     return;
   }
