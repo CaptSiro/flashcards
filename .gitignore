@@ -1,3 +1,5 @@
 /.env
 
 /sql/temp.sql
+
+/files/*

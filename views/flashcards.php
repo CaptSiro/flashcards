@@ -19,7 +19,7 @@
   <script src="<?= $GLOBALS["__HOME__"] ?>/public/js/forms.js" defer></script>
   <script src="<?= $GLOBALS["__HOME__"] ?>/public/js/flashcards.js" defer></script>
   
-  <title>Flash decks</title>
+  <title>Flash Cards</title>
 </head>
 <body>
   <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="display-none">
@@ -76,21 +76,42 @@
     
   
     <div class="window form" id="create-card">
-      <div class="wrapper">
-        <label for="card-question">Question:</label>
-        <input type="text" name="card-question" id="card-question">
-      </div>
+      <div id="question">
+        <div class="wrapper">
+          <label for="card-question">Question:</label>
+          <textarea name="card-question" id="card-question" cols="30" rows="5"></textarea>
+        </div>
+        
+        <div class="wrapper">
+          <label for="card-question-images">Or upload question images:</label>
+          <input type="file" name="card-question-images" id="card-question-images" accept="image/*" multiple>
+        </div>
   
-      <div class="wrapper">
-        <label for="card-answer">Answer:</label>
-        <textarea name="card-answer" id="card-answer" cols="30" rows="10"></textarea>
+        <div class="divider"></div>
+  
+        <div class="wrapper sideways-end">
+          <button class="cancel-modal">Cancel</button>
+          <button class="next">Next</button>
+        </div>
       </div>
-    
-      <div class="divider"></div>
-    
-      <div class="wrapper sideways-end">
-        <button class="cancel-modal">Cancel</button>
-        <button class="submit" type="submit">Create</button>
+      
+      <div id="answer" class="display-none">
+        <div class="wrapper">
+          <label for="card-answer">Answer:</label>
+          <textarea name="card-answer" id="card-answer" cols="30" rows="5"></textarea>
+        </div>
+  
+        <div class="wrapper">
+          <label for="card-answer-images">Or upload answer images:</label>
+          <input type="file" name="card-answer-images" id="card-answer-images" accept="image/*" multiple>
+        </div>
+  
+        <div class="divider"></div>
+        
+        <div class="wrapper sideways-end">
+          <button class="previous">Previous</button>
+          <button class="submit" type="submit">Create</button>
+        </div>
       </div>
     
       <div class="wrapper">

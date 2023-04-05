@@ -18,18 +18,6 @@
     
     
     static function insert(Param $question, Param $answer, Param $stack_id, Param $user_id) {
-      $is_unique = Database::get()->fetch(
-        "SELECT COUNT(id) as amount
-        FROM cards
-        WHERE question = $question
-            AND answer = $answer",
-        Count::class
-      )->amount === 0;
-  
-      if (!$is_unique) {
-        return fail(new NotUniqueValueExc("Card must be unique."));
-      }
-      
       $stack = Stack::by_id($stack_id, $user_id);
       
       if ($stack->isFailure()) {
@@ -47,11 +35,13 @@
       );
       
       $card_id = param($side_effect->last_inserted_ID());
-      
-      return success(Database::get()->statement(
+  
+      Database::get()->statement(
         "INSERT INTO cards_in_stacks (cards_id, stacks_id)
             VALUE ($card_id, $stack_id)"
-      ));
+      );
+      
+      return success($side_effect);
     }
     
     

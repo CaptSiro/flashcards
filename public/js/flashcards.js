@@ -178,34 +178,54 @@ $("#create-stack button[type=submit]").addEventListener("pointerup", async () =>
 
 
 const card_win = $("#create-card");
+const card_question = card_win.querySelector("#question");
 const card_question_input = $("#card-question");
+const card_question_images = $("#card-question-images");
+const card_answer = card_win.querySelector("#answer");
 const card_answer_input = $("#card-answer");
+const card_answer_images = $("#card-answer-images");
 const card_control = new FormControl("create-card");
+
+$("#create-card .next").addEventListener("pointerup", view_answer_form);
+
+$("#create-card .previous").addEventListener("pointerup", view_question_form);
+
 $("#create-card button[type=submit]").addEventListener("pointerup", async () => {
-  const card_question = card_question_input.value.trim();
+  const question = card_question_input.value.trim();
+  const question_images = card_question_images.files;
   
-  if (card_question === "") {
-    deck_control.invalidate("Card question must not be left empty.");
+  if (question === "" && question_images.length === 0) {
+    card_control.invalidate("You must ask a question. Either type it in or append image with the question.");
     return;
   }
   
-  const card_answer = card_answer_input.value.trim();
+  const answer = card_answer_input.value.trim();
+  const answer_images = card_answer_images.files;
   
-  if (card_answer === "") {
-    deck_control.invalidate("Card answer must not be left empty.");
+  if (answer === "" && answer_images.length === 0) {
+    card_control.invalidate("You must answer the question. Either type it in or append image with the answer.");
     return;
   }
   
   const s = get_state();
+  console.log(s);
   if (s?.stack.id === undefined) {
     return;
   }
   
-  const body = JSON.stringify({
-    question: card_question,
-    answer: card_answer,
+  const body = toFormData({
+    question,
+    answer,
     stack_id: s.stack.id
   });
+  
+  for (const file of question_images) {
+    body.append("question_images[]", file);
+  }
+  
+  for (const file of answer_images) {
+    body.append("answer_images[]", file);
+  }
   
   const response = card_win.dataset.mode === "PUT"
     ? await AJAX.put("/card/" + card_win.dataset.id, JSONHandler(), { body })
@@ -217,9 +237,24 @@ $("#create-card button[type=submit]").addEventListener("pointerup", async () => 
   }
   
   card_control.clear();
+  
+  view_question_form();
+  card_question_images.value = "";
+  card_answer_images.value = "";
+  
   load_cards(get_state());
   clear_windows();
 });
+
+function view_answer_form() {
+  card_question.classList.add("display-none");
+  card_answer.classList.remove("display-none");
+}
+
+function view_question_form() {
+  card_answer.classList.add("display-none");
+  card_question.classList.remove("display-none");
+}
 
 
 
