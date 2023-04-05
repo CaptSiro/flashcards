@@ -212,7 +212,10 @@ function next_card() {
   const current_cell = progress_bar.children[card_ptr];
   if (current_cell !== undefined) {
     current_cell.classList.add("current");
-    current_cell.scrollIntoView({ behavior: "smooth" });
+    
+    if (current_cell.offsetTop >= progress_bar.scrollTop + progress_bar.getBoundingClientRect().height) {
+      progress_bar.scrollTo({ behavior: "smooth", top: progress_bar.scrollTop + 12 }); //! gap + line height
+    }
   }
 }
 
