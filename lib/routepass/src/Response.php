@@ -442,13 +442,13 @@
     /**
      * Optimal image size depends on query parameters in request.
      *
-     * <b>`width`<b> - in pixels
+     * <b>`width`</b> - in pixels
      *
-     * <b>`height`<b> - in pixels (if left undefined, the image will be scaled by width, and it will retain same aspect ratio)
+     * <b>`height`</b> - in pixels (if left undefined, the image will be scaled by width, and it will retain same aspect ratio)
      *
-     * <b>`crop=true`<b> - cropping will be used instead of default scaling
+     * <b>`crop=true`</b> - cropping will be used instead of default scaling
      *
-     * <b>`cropAndScale=true`<b> - before cropping the image, the image is scaled down
+     * <b>`cropAndScale=true`</b> - before cropping the image, the image is scaled down
      *
      * @param $filePath
      * @param Request $request
@@ -458,7 +458,9 @@
       $this->fileExists($filePath);
       
       $areDimensionsSet = $request->query->isset("width") || $request->query->isset("height");
-      if (!$areDimensionsSet) {
+      $type = Response::getMimeType($filePath)->getSuccess();
+      
+      if (!$areDimensionsSet || $type === "image/gif") {
         $this->setHeader(
           "Content-Type",
           Response::getMimeType($filePath)
