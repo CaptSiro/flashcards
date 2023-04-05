@@ -17,14 +17,10 @@
   $deck_router->post("/", [
     Middleware::requireToBeLoggedIn(),
     function (Request $request, Response $response) {
-      $response->json(
-        Deck::insert(
-          param($request->body->get("name")),
-          param($request->session->get("user")->id)
-        )
-          ->forwardFailure($response)
-          ->getSuccess()
-      );
+      $response->json(Deck::insert(
+        param($request->body->get("name")),
+        param($request->session->get("user")->id)
+      ));
     }
   ]);
   
@@ -39,11 +35,7 @@
       Privilege::check($user_id, $deck_id, [Privilege::RANK_CREATOR])
         ->forwardFailure($response);
       
-      $response->json(
-        Deck::delete($deck_id)
-          ->forwardFailure($response)
-          ->getSuccess()
-      );
+      $response->json(Deck::delete($deck_id));
     }
   ]);
   
@@ -72,13 +64,9 @@
   $deck_router->get("/users/", [
     Middleware::requireToBeLoggedIn(),
     function (Request $request, Response $response) {
-      $response->json(
-        Deck::users(
-          param($request->session->get("user")->id)
-        )
-          ->forwardFailure($response)
-          ->getSuccess()
-      );
+      $response->json(Deck::users(
+        param($request->session->get("user")->id)
+      ));
     }
   ]);
   

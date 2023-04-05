@@ -43,8 +43,6 @@
           $stack_id,
           $user_id
         )
-          ->forwardFailure($response)
-          ->getSuccess()
       );
     }
   ]);
@@ -92,14 +90,10 @@
       )
         ->forwardFailure($response);
     
-      $response->json(
-        Card::in_stack(
-          $stack_id,
-          $user_id,
-        )
-          ->forwardFailure($response)
-          ->getSuccess()
-      );
+      $response->json(Card::in_stack(
+        $stack_id,
+        $user_id,
+      ));
     }
   ], ["id" => Router::REGEX_NUMBER]);
   
@@ -124,13 +118,11 @@
       )
         ->forwardFailure($response);
       
-      $response->json(
-        Card::update(
-          $card_id,
-          param($request->body->get("question")),
-          param($request->body->get("answer"))
-        )
-      );
+      $response->json(Card::update(
+        $card_id,
+        param($request->body->get("question")),
+        param($request->body->get("answer"))
+      ));
     }
   ]);
   

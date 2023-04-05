@@ -67,9 +67,7 @@
       Privilege::check($user_id, $deck_id, [Privilege::RANK_CREATOR])
         ->forwardFailure($response);
       
-      $response->json(
-        Privilege::update($id, $rank)
-      );
+      $response->json(Privilege::update($id, $rank));
     }
   ], ["id" => Router::REGEX_NUMBER]);
   
@@ -85,9 +83,7 @@
       Privilege::check($user_id, $deck_id, [Privilege::RANK_CREATOR])
         ->forwardFailure($response);
       
-      $response->json(
-        Privilege::delete($id)
-      );
+      $response->json(Privilege::delete($id));
     }
   ], ["id" => Router::REGEX_NUMBER]);
   
@@ -102,11 +98,7 @@
       Privilege::check($user_id, $deck_id, [Privilege::RANK_CREATOR])
         ->forwardFailure($response);
       
-      $response->json(
-        Privilege::team($deck_id)
-          ->forwardFailure($response)
-          ->getSuccess()
-      );
+      $response->json(Privilege::team($deck_id));
     }
   ], ["id" => Router::REGEX_NUMBER]);
   
@@ -119,11 +111,7 @@
       $id = param($request->param->get("id"));
       
       if ($request->param->get("table") === "deck") {
-        $response->json(
-          Privilege::for_user($user_id, $id)
-            ->forwardFailure($response)
-            ->getSuccess()
-        );
+        $response->json(Privilege::for_user($user_id, $id));
       }
       
       $stack = Stack::by_id(
@@ -133,14 +121,10 @@
         ->forwardFailure($response)
         ->getSuccess();
       
-      $response->json(
-        Privilege::for_user(
-          $user_id,
-          param($stack->decks_id)
-        )
-          ->forwardFailure($response)
-          ->getSuccess()
-      );
+      $response->json(Privilege::for_user(
+        $user_id,
+        param($stack->decks_id)
+      ));
     }
   ], [
     "id" => Router::REGEX_NUMBER,

@@ -25,17 +25,12 @@
         $deck_id,
         [Privilege::RANK_CREATOR, Privilege::RANK_EDITOR]
       )
-        ->forwardFailure($response)
-        ->getSuccess();
+        ->forwardFailure($response);
       
-      $response->json(
-        Stack::insert(
-          param($request->body->get("name")),
-          $deck_id
-        )
-          ->forwardFailure($response)
-          ->getSuccess()
-      );
+      $response->json(Stack::insert(
+        param($request->body->get("name")),
+        $deck_id
+      ));
     }
   ]);
   
@@ -85,14 +80,10 @@
         ->getSuccess();
     
       // todo change from: `[]` to: `{stacks: [], privilege: Rank}`
-      $response->json(
-        Stack::in_deck(
-          $deck_id,
-          param($request->session->get("user")->id)
-        )
-          ->forwardFailure($response)
-          ->getSuccess()
-      );
+      $response->json(Stack::in_deck(
+        $deck_id,
+        param($request->session->get("user")->id)
+      ));
     }
   ], ["id" => Router::REGEX_NUMBER]);
   
@@ -120,9 +111,10 @@
       )
         ->forwardFailure($response);
       
-      $response->json(
-        Stack::update($stack_id, param($request->body->get("name")))
-      );
+      $response->json(Stack::update(
+        $stack_id,
+        param($request->body->get("name"))
+      ));
     }
   ]);
   
