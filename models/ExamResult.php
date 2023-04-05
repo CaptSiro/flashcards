@@ -29,8 +29,8 @@
     static function in_stack(Param $stack_id, Param $user_id): Result {
       $results = Database::get()->fetch_all(
         "SELECT id, fraction, users_id, stacks_id FROM results
-            WHERE users_id = $user_id
-                AND stacks_id = $stack_id",
+        WHERE users_id = $user_id
+            AND stacks_id = $stack_id",
         self::class
       );
       

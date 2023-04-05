@@ -19,12 +19,12 @@
     
     static function insert(Param $question, Param $answer, Param $stack_id, Param $user_id) {
       $is_unique = Database::get()->fetch(
-          "SELECT COUNT(id) as amount
-            FROM cards
-            WHERE question = $question
-                AND answer = $answer",
-          Count::class
-        )->amount === 0;
+        "SELECT COUNT(id) as amount
+        FROM cards
+        WHERE question = $question
+            AND answer = $answer",
+        Count::class
+      )->amount === 0;
   
       if (!$is_unique) {
         return fail(new NotUniqueValueExc("Card must be unique."));

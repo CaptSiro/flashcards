@@ -19,8 +19,8 @@
     static function insert(Param $name, Param $user_id): Result {
       $is_unique = Database::get()->fetch(
         "SELECT COUNT(id) as amount
-            FROM decks
-            WHERE `name` = $name",
+        FROM decks
+        WHERE `name` = $name",
         Count::class
       )->amount === 0;
       
@@ -50,7 +50,7 @@
     static function by_id(Param $id): Result {
       $deck = Database::get()->fetch(
         "SELECT decks.id, `name`, p.rank
-            FROM decks
+        FROM decks
             JOIN privileges p ON decks.id = p.decks_id
                 AND p.decks_id = $id",
         self::class
@@ -68,7 +68,7 @@
     static function users(Param $user_id): Result {
       $deck = Database::get()->fetch_all(
         "SELECT decks.id, name, p.rank
-            FROM decks
+        FROM decks
             JOIN privileges p ON decks.id = p.decks_id
                 AND p.users_id = $user_id",
         self::class

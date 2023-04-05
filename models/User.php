@@ -22,7 +22,9 @@
   
     static function by_id (Param $id): Result {
       $result = Database::get()->fetch(
-        "SELECT id, username, password FROM users WHERE id = $id",
+        "SELECT id, username, password
+        FROM users
+        WHERE id = $id",
         self::class
       );
   
@@ -37,7 +39,9 @@
     
     static function by_username (Param $username): Result {
       $result = Database::get()->fetch(
-        "SELECT id, username, password FROM users WHERE username = $username",
+        "SELECT id, username, password
+        FROM users
+        WHERE username = $username",
         self::class
       );
       
@@ -53,7 +57,7 @@
     static function insert (Param $username, Param $hashed_password): Result {
       return success(Database::get()->statement(
         "INSERT INTO users (username, password)
-        VALUE ($username, $hashed_password)"
+            VALUE ($username, $hashed_password)"
       ));
     }
   }

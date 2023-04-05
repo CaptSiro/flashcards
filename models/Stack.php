@@ -17,11 +17,11 @@
   
     static function insert(Param $name, Param $deck_id): Result {
       $is_unique = Database::get()->fetch(
-          "SELECT COUNT(id) as amount
+        "SELECT COUNT(id) as amount
             FROM stacks
             WHERE `name` = $name",
-          Count::class
-        )->amount === 0;
+        Count::class
+      )->amount === 0;
   
       if (!$is_unique) {
         return fail(new NotUniqueValueExc("Name must be unique."));
@@ -62,10 +62,10 @@
     static function by_id(Param $id, Param $user_id): Result {
       $stack = Database::get()->fetch(
         "SELECT stacks.id, name, p.`rank`, p.decks_id
-            FROM stacks
-                JOIN privileges p on stacks.decks_id = p.decks_id
-                    AND p.users_id = $user_id
-            WHERE stacks.id = $id",
+        FROM stacks
+            JOIN privileges p on stacks.decks_id = p.decks_id
+                AND p.users_id = $user_id
+        WHERE stacks.id = $id",
         self::class
       );
       
@@ -81,9 +81,9 @@
     static function by_deck_id(Param $deck_id): Result {
       $stack = Database::get()->fetch_all(
         "SELECT stacks.id, name, p.`rank`, p.decks_id
-            FROM stacks
-                JOIN privileges p on stacks.decks_id = p.decks_id
-                    AND p.decks_id = $deck_id",
+        FROM stacks
+            JOIN privileges p on stacks.decks_id = p.decks_id
+                AND p.decks_id = $deck_id",
         self::class
       );
     
@@ -103,9 +103,9 @@
   
       Database::get()->statement(
         "DELETE c
-            FROM cards c
+        FROM cards c
             LEFT JOIN cards_in_stacks cis on c.id = cis.cards_id
-            WHERE cis.stacks_id IS NULL"
+        WHERE cis.stacks_id IS NULL"
       );
       
       Database::get()->statement(
@@ -121,14 +121,6 @@
       }
   
       return success($stack);
-    }
-    
-    
-    
-    function delete_self(): Result {
-      return self::delete(
-        new PrimitiveParam($this->id)
-      );
     }
     
     

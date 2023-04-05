@@ -17,7 +17,7 @@
   
       return success(Database::get()->statement(
         "INSERT INTO invitation_links (arg, users_id, expires)
-          VALUE ($arg, $user_id, $expires)"
+            VALUE ($arg, $user_id, $expires)"
       ));
     }
     
@@ -28,8 +28,8 @@
       
       return success(Database::get()->fetch(
         "SELECT id, arg, expires, users_id
-          FROM invitation_links
-          WHERE arg = $arg
+        FROM invitation_links
+        WHERE arg = $arg
             AND expires > UNIX_TIMESTAMP()"
       ));
     }
@@ -41,7 +41,7 @@
     
       return success(Database::get()->statement(
         "DELETE FROM invitation_links
-          WHERE users_id = $user_id"
+            WHERE users_id = $user_id"
       ));
     }
     
