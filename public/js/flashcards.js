@@ -228,7 +228,7 @@ $("#create-card button[type=submit]").addEventListener("pointerup", async () => 
   }
   
   const response = card_win.dataset.mode === "PUT"
-    ? await AJAX.put("/card/" + card_win.dataset.id, JSONHandler(), { body })
+    ? await AJAX.post("/card/put/" + card_win.dataset.id, JSONHandler(), { body })
     : await AJAX.post("/card", JSONHandler(), { body });
   
   if (response.error !== undefined) {

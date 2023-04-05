@@ -79,4 +79,37 @@
     
       return fail(new Exc("Source generation timeout."));
     }
+    
+    
+    
+    static function delete_for_card(Param $card_id) {
+      Database::get()->statement(
+        "DELETE FROM question_images WHERE cards_id = $card_id"
+      );
+  
+      Database::get()->statement(
+        "DELETE FROM answer_images WHERE cards_id = $card_id"
+      );
+      
+      $unused_images = Database::get()->fetch_all(
+        "SELECT i.src, i.ext
+        FROM images as i
+            LEFT JOIN answer_images ai ON i.src = ai.images_src
+            LEFT JOIN question_images qi ON i.src = qi.images_src
+        WHERE ai.id IS NULL AND qi.id IS NULL",
+        self::class
+      );
+      
+      foreach ($unused_images as $image) {
+        unlink(FILES_DIR . "/$image->src$image->ext");
+      }
+      
+      success(Database::get()->statement(
+        "DELETE i
+        FROM images as i
+            LEFT JOIN answer_images ai ON i.src = ai.images_src
+            LEFT JOIN question_images qi ON i.src = qi.images_src
+        WHERE ai.id IS NULL AND qi.id IS NULL"
+      ));
+    }
   }
