@@ -48,12 +48,28 @@
     
     static function in_stack(Param $stack_id, Param $user_id): Result {
       $cards = Database::get()->fetch_all(
-        "SELECT c.id, question, answer, p.`rank`
-            FROM cards_in_stacks
+        "SELECT c.id, question, answer, p.`rank`, question_images.sources as question_images, answer_images.sources as answer_images
+        FROM cards_in_stacks
             JOIN cards c ON cards_in_stacks.cards_id = c.id
                 AND stacks_id = $stack_id
             JOIN privileges p on c.decks_id = p.decks_id
-                AND p.users_id = $user_id",
+                AND p.users_id = $user_id
+            LEFT JOIN (
+                SELECT
+                    ai.cards_id,
+                    GROUP_CONCAT(CONCAT(i.src, i.ext) SEPARATOR '/') sources
+                FROM images as i
+                    LEFT JOIN answer_images ai ON i.src = ai.images_src
+                GROUP BY ai.cards_id
+            ) as answer_images ON answer_images.cards_id = c.id
+            LEFT JOIN (
+                SELECT
+                    qi.cards_id,
+                    GROUP_CONCAT(CONCAT(i.src, i.ext) SEPARATOR '/') sources
+                FROM images as i
+                    LEFT JOIN question_images qi ON i.src = qi.images_src
+                GROUP BY qi.cards_id
+            ) as question_images ON question_images.cards_id = c.id",
         self::class
       );
       

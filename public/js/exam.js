@@ -1,7 +1,11 @@
 /**
  * @typedef Card
  * @property {string} question
+ * @property {string | null} question_images
+ * @property {string[]} question_images_array
  * @property {string} answer
+ * @property {string | null} answer_images
+ * @property {string[]} answer_images_array
  * @property {number} id
  * @property {number} decks_id
  */
@@ -35,6 +39,39 @@ if (cards.length === 0) {
 
 
 const card_div = $(".card");
+let image_ptr = -1;
+card_div.addEventListener("pointerup", cycle_attachments);
+
+function cycle_attachments() {
+  if (!card_div.classList.contains("attachment")) {
+    return;
+  }
+  
+  image_ptr++;
+  if (image_ptr === card[card_div.dataset.array].length) {
+    image_ptr = -1;
+  }
+  
+  const image = card[card_div.dataset.array][image_ptr];
+  
+  if (image === undefined) {
+    card_div.textContent = card_div.dataset.array === "question_images_array"
+      ? card.question
+      : card.answer;
+    
+    if (card_div.textContent === "") {
+      cycle_attachments();
+    }
+    
+    return;
+  }
+  
+  card_div.textContent = "";
+  card_div.append(
+    Img(AJAX.DOMAIN_HOME + "/file/" + image, "card-attachment")
+  );
+}
+
 const initial_div = $(".initial");
 const text_answer_div = $(".text-answer");
 const thought_answer_div = $(".thought-answer");
@@ -131,6 +168,18 @@ function handle_next() {
     thought_answer_div.classList.remove("display-none");
   
     card_div.textContent = card.answer;
+    card_div.dataset.array = "answer_images_array";
+    card_div.classList.toggle("attachment", card.answer_images !== null);
+    image_ptr = -1;
+    
+    if (card.answer_images !== null && card.answer_images_array === undefined) {
+      card.answer_images_array = card.answer_images.split("/");
+    }
+    
+    if (card.answer === "") {
+      cycle_attachments();
+    }
+    
     return;
   }
   
@@ -208,6 +257,18 @@ function next_card() {
   
   card = to_be_answered[++card_ptr];
   card_div.textContent = card.question;
+  
+  card_div.dataset.array = "question_images_array";
+  card_div.classList.toggle("attachment", card.question_images !== null);
+  image_ptr = -1;
+  
+  if (card.question_images !== null && card.question_images_array === undefined) {
+    card.question_images_array = card.question_images.split("/");
+  }
+  
+  if (card.question === "") {
+    cycle_attachments();
+  }
   
   const current_cell = progress_bar.children[card_ptr];
   if (current_cell !== undefined) {

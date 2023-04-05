@@ -82,6 +82,29 @@ nav .void {
     align-self: center;
     font-family: var(--font-1);
     font-size: 18px;
+    overflow: hidden;
+
+    box-shadow: #70351b 0 0;
+    transition: box-shadow 150ms ease-in-out;
+}
+
+.exam .card.attachment {
+    box-shadow: #70351b 16px 16px;
+
+    transition: box-shadow 150ms ease-in-out;
+}
+
+.exam .card.attachment:hover {
+    box-shadow: #70351b 20px 20px;
+    cursor: pointer;
+
+    transition: box-shadow 150ms ease-in-out;
+}
+
+.exam .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .exam .card.wrong {
