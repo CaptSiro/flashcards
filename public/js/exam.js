@@ -68,7 +68,7 @@ function cycle_attachments() {
   
   card_div.textContent = "";
   card_div.append(
-    Img(AJAX.DOMAIN_HOME + "/file/" + image, "card-attachment")
+    Img(AJAX.DOMAIN_HOME + "/file/" + image + "?width=420", "card-attachment")
   );
 }
 
