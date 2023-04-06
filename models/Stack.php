@@ -6,6 +6,7 @@
   use OakBase\SideEffect;
   
   require_once __DIR__ . "/Count.php";
+  require_once __DIR__ . "/Card.php";
   
   class Stack {
     public int $id;
@@ -96,24 +97,36 @@
     
     
     
-    static function delete(Param $id): Result {
+    static function delete(Param $stack_id): Result {
       Database::get()->statement(
-        "DELETE FROM cards_in_stacks WHERE stacks_id = $id"
-      );
-  
-      Database::get()->statement(
-        "DELETE c
-        FROM cards c
-            LEFT JOIN cards_in_stacks cis on c.id = cis.cards_id
-        WHERE cis.stacks_id IS NULL"
+        "DELETE FROM cards_in_stacks WHERE stacks_id = $stack_id"
       );
       
+      $result = Card::in_stack($stack_id);
+      if ($result->isFailure()) {
+        return $result;
+      }
+      
+      foreach ($result->getSuccess() as $card) {
+        /**
+         * @var Card $card
+         */
+        Card::delete(new PrimitiveParam($card->id));
+      }
+  
+//      Database::get()->statement(
+//        "DELETE c
+//        FROM cards c
+//            LEFT JOIN cards_in_stacks cis on c.id = cis.cards_id
+//        WHERE cis.stacks_id IS NULL"
+//      );
+      
       Database::get()->statement(
-        "DELETE FROM results WHERE stacks_id = $id"
+        "DELETE FROM results WHERE stacks_id = $stack_id"
       );
   
       $stack = Database::get()->statement(
-        "DELETE FROM stacks WHERE id = $id"
+        "DELETE FROM stacks WHERE id = $stack_id"
       );
   
       if ($stack->row_count() === 0) {

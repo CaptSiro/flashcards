@@ -21,10 +21,7 @@
     function (Request $request, Response $response) {
       $stack_id = param($request->query->get("stack"));
     
-      $cards = Card::in_stack(
-        $stack_id,
-        param($request->session->get("user")->id)
-      );
+      $cards = Card::in_stack($stack_id);
       
       if ($cards->isFailure()) {
         $response->render("error", ["message" => $cards->getFailure()->getMessage()]);

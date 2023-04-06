@@ -7,6 +7,7 @@
   
   require_once __DIR__ . "/Count.php";
   require_once __DIR__ . "/Stack.php";
+  require_once __DIR__ . "/Image.php";
   
   class Card {
     public int $id;
@@ -46,14 +47,12 @@
     
     
     
-    static function in_stack(Param $stack_id, Param $user_id): Result {
+    static function in_stack(Param $stack_id): Result {
       $cards = Database::get()->fetch_all(
-        "SELECT c.id, question, answer, p.`rank`, question_images.sources as question_images, answer_images.sources as answer_images
+        "SELECT c.id, question, answer, question_images.sources as question_images, answer_images.sources as answer_images
         FROM cards_in_stacks
             JOIN cards c ON cards_in_stacks.cards_id = c.id
                 AND stacks_id = $stack_id
-            JOIN privileges p on c.decks_id = p.decks_id
-                AND p.users_id = $user_id
             LEFT JOIN (
                 SELECT
                     ai.cards_id,
@@ -82,14 +81,15 @@
     
     
     
-    // todo add privileges
-    static function delete(Param $id): Result {
+    static function delete(Param $card_id): Result {
       Database::get()->statement(
-        "DELETE FROM cards_in_stacks WHERE cards_id = $id"
+        "DELETE FROM cards_in_stacks WHERE cards_id = $card_id"
       );
       
+      Image::delete_for_card($card_id);
+      
       $card = Database::get()->statement(
-        "DELETE FROM cards WHERE id = $id LIMIT 1"
+        "DELETE FROM cards WHERE id = $card_id LIMIT 1"
       );
       
       if ($card->row_count() === 0) {

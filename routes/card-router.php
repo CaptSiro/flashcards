@@ -138,9 +138,7 @@
       )
         ->forwardFailure($response);
       
-      $response->json(Card::delete(
-        $card_id
-      ));
+      $response->json(Card::delete($card_id));
     }
   ], ["id" => Router::REGEX_NUMBER]);
   
@@ -163,10 +161,7 @@
       )
         ->forwardFailure($response);
     
-      $response->json(Card::in_stack(
-        $stack_id,
-        $user_id,
-      ));
+      $response->json(Card::in_stack($stack_id));
     }
   ], ["id" => Router::REGEX_NUMBER]);
   
