@@ -38,7 +38,7 @@
         ->forwardFailure($response)
         ->getSuccess();
       
-      if ($deck->rank !== 0) {
+      if ($deck->rank !== Privilege::RANK_CREATOR) {
         $response->fail(new IllegalArgumentExc("You do not have the privileges to share this deck."));
       }
       

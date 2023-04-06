@@ -98,11 +98,12 @@
     
     
     static function delete(Param $stack_id): Result {
+      $result = Card::in_stack($stack_id);
+      
       Database::get()->statement(
         "DELETE FROM cards_in_stacks WHERE stacks_id = $stack_id"
       );
       
-      $result = Card::in_stack($stack_id);
       if ($result->isFailure()) {
         return $result;
       }

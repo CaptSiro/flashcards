@@ -4,6 +4,8 @@
   use OakBase\Param;
   use OakBase\PrimitiveParam;
   
+  require_once __DIR__ . "/../lib/path.php";
+  
   class Image {
     public string $src;
     public string $ext;
