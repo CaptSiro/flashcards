@@ -494,9 +494,12 @@ async function load_cards(s) {
   
   
   for (const card of cards) {
+    const has_attachment = (card.answer_images !== null && card.answer_images !== undefined)
+      || (card.question_images !== null && card.question_images !== undefined);
+    
     grid.append(
       Item(
-        "card",
+        "card" + (has_attachment ? " attachment" : ""),
         card.question,
         [Span(_, card.answer)],
         OptionalComponents(can_user_edit, [

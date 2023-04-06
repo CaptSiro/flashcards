@@ -102,6 +102,10 @@ main .card {
     gap: 16px;
 }
 
+main .card.attachment {
+    box-shadow: #70351b 16px 16px;
+}
+
 main .deck > *:first-child,
 main .stack > *:first-child,
 main .card > *:first-child {
