@@ -67,10 +67,11 @@
     
     static function users(Param $user_id): Result {
       $deck = Database::get()->fetch_all(
-        "SELECT decks.id, name, p.rank
+        "SELECT decks.id, `name`, p.rank
         FROM decks
             JOIN privileges p ON decks.id = p.decks_id
-                AND p.users_id = $user_id",
+                AND p.users_id = $user_id
+        ORDER BY `name`",
         self::class
       );
   
