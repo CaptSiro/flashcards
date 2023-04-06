@@ -109,7 +109,7 @@ main .card.attachment {
 main .deck > *:first-child,
 main .stack > *:first-child,
 main .card > *:first-child {
-    margin-top: 50px;
+    margin-top: 40px;
 }
 
 main .deck:hover,
@@ -251,5 +251,11 @@ main .option:hover {
 
     main .stack {
         width: 250px;
+    }
+
+    main .deck > *:first-child,
+    main .stack > *:first-child,
+    main .card > *:first-child {
+        margin-top: 32px;
     }
 }
