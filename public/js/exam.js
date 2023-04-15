@@ -1,3 +1,175 @@
+class Signal {
+  /** @type {(()=>{})[]} */
+  #subs;
+  
+  /** @type {S} */
+  #value;
+  
+  get value() {
+    return this.#value;
+  }
+  
+  /**
+   * @param {S} value
+   */
+  set value(value) {
+    this.#value = value;
+    this.notify();
+  }
+  
+  /**
+   * @template S
+   * @param {S} value
+   */
+  constructor(value) {
+    this.#value = value;
+    this.#subs = [];
+  }
+  
+  subscribe(callback) {
+    this.#subs.push(callback);
+  }
+  
+  notify() {
+    for (let i = 0; i < this.#subs.length; i++) {
+      this.#subs[i]();
+    }
+  }
+}
+
+
+
+class GraphicalEffect {
+  /** @type {Signal<boolean>} */
+  #cancel_signal;
+  
+  get cancel_signal() {
+    return this.#cancel_signal;
+  }
+  
+  /** @type {Signal<boolean>} */
+  #finish_signal;
+  
+  get finish_signal() {
+    return this.#finish_signal;
+  }
+  
+  #render_function;
+  #params;
+  #bound_update;
+  #start_timestamp;
+  #duration;
+  
+  /**
+   * @param {(duration: number, ...params: any)=>{}} render_function
+   * @param {number} duration
+   * @param {any} params
+   */
+  constructor(render_function, duration, ...params) {
+    this.#cancel_signal = new Signal(false);
+    this.#finish_signal = new Signal(false);
+    this.#render_function = render_function;
+    this.#duration = duration;
+    this.#params = params;
+    
+    this.#bound_update = this.#update.bind(this);
+  }
+  
+  start() {
+    this.#start_timestamp = window.performance.now();
+    GraphicalEffect.#attach();
+    requestAnimationFrame(this.#bound_update);
+  }
+  
+  cancel() {
+    if (this.#cancel_signal.value === false && this.#finish_signal.value === false) {
+      GraphicalEffect.#detach();
+    }
+  
+    this.#cancel_signal.value = true;
+  }
+  
+  finish() {
+    if (this.#cancel_signal.value === false && this.#finish_signal.value === false) {
+      GraphicalEffect.#detach();
+    }
+  
+    this.#finish_signal.value = true;
+  }
+  
+  #update() {
+    if (this.#cancel_signal.value === true || this.finish_signal.value === true) {
+      return;
+    }
+    
+    const delta = (window.performance.now() - this.#start_timestamp) / this.#duration;
+    if (delta > 1) {
+      this.finish();
+      return;
+    }
+    
+    this.#render_function(delta, ...this.#params);
+    
+    requestAnimationFrame(this.#bound_update);
+  }
+  
+  
+  
+  static #attached = 0;
+  static #ctx;
+  
+  /**
+   * @returns {CanvasRenderingContext2D}
+   */
+  static get ctx() {
+    return this.#ctx;
+  }
+  static #canvas;
+  static #do_clear = false;
+  
+  /**
+   * @param {HTMLCanvasElement} canvas
+   */
+  static canvas(canvas) {
+    this.#canvas = canvas;
+    this.#ctx = canvas.getContext("2d");
+  }
+  
+  static #attach() {
+    this.#do_clear = true;
+  
+  
+    if (this.#attached === 0) {
+      requestAnimationFrame(this.#clear.bind(this));
+    }
+    
+    this.#attached++;
+  }
+  
+  static #detach() {
+    this.#attached--;
+  
+    if (this.#attached === 0) {
+      this.#do_clear = false;
+    }
+  }
+  
+  static #clear() {
+    if (this.#ctx !== undefined) {
+      this.#ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
+    }
+    
+    if (this.#do_clear !== true) {
+      return;
+    }
+  
+    requestAnimationFrame(this.#clear.bind(this));
+  }
+}
+
+
+
+
 /**
  * @typedef Card
  * @property {string} question
@@ -37,16 +209,60 @@ if (cards.length === 0) {
 }
 
 
+/** @type {HTMLCanvasElement} */
+const effects = $(".effects");
+GraphicalEffect.canvas(effects);
+resize_canvas_effects();
 
 const card_div = $(".card");
-let image_ptr = -1;
-card_div.addEventListener("pointerup", cycle_attachments);
+const image_showcase = $(".image-showcase");
+const image_display = image_showcase.querySelector("img");
+image_showcase.querySelector(".exit").addEventListener("pointerup", () => image_showcase.classList.add("display-none"));
 
-function cycle_attachments() {
-  if (!card_div.classList.contains("attachment")) {
+let image_ptr = -1;
+let timestamp;
+let timeout_id;
+/** @type {GraphicalEffect} */
+let loading_animation;
+const LOADING_DURATION = 900;
+const LOADING_TIMEOUT = 100;
+
+
+
+
+card_div.addEventListener("pointerdown", evt => {
+  timestamp = window.performance.now();
+  card_div.dataset.ptrdown = "true";
+  
+  timeout_id = setTimeout(() => {
+    if (card_div.dataset.content_type !== "image") {
+      return;
+    }
+  
+    loading_animation = effect_loading(evt.width + 32, evt.x, evt.y, LOADING_DURATION);
+    loading_animation.start();
+    loading_animation.finish_signal.subscribe(upscale_image);
+  }, LOADING_TIMEOUT);
+});
+card_div.addEventListener("pointerup", () => {
+  clearTimeout(timeout_id);
+  loading_animation?.cancel();
+  
+  if (card_div.dataset.ptrdown !== "true" || !card_div.classList.contains("attachment")) {
     return;
   }
   
+  card_div.dataset.ptrdown = "false";
+  
+  const now = window.performance.now();
+  if (now - timestamp >= LOADING_TIMEOUT + LOADING_DURATION && card_div.dataset.content_type === "image") {
+    return;
+  }
+  
+  cycle_attachments();
+});
+
+function cycle_attachments() {
   image_ptr++;
   if (image_ptr === card[card_div.dataset.array].length) {
     image_ptr = -1;
@@ -55,6 +271,7 @@ function cycle_attachments() {
   const image = card[card_div.dataset.array][image_ptr];
   
   if (image === undefined) {
+    card_div.dataset.content_type = "text";
     card_div.textContent = card_div.dataset.array === "question_images_array"
       ? card.question
       : card.answer;
@@ -67,10 +284,26 @@ function cycle_attachments() {
   }
   
   card_div.textContent = "";
+  card_div.dataset.content_type = "image";
   card_div.append(
-    Img(AJAX.DOMAIN_HOME + "/file/" + image + "?width=420", "card-attachment")
+    Img(AJAX.DOMAIN_HOME + "/file/" + image + "?width=420", "card-attachment", _, {
+      attributes: {
+        draggable: "false"
+      }
+    })
   );
 }
+
+function upscale_image() {
+  const src = new URL(card_div.querySelector("img").src);
+  src.search = "";
+  src.searchParams.set("width", String(Math.floor((window.innerWidth * 0.8) + 50)));
+  image_display.src = src.href;
+  
+  image_showcase.classList.remove("display-none");
+}
+
+
 
 const initial_div = $(".initial");
 const text_answer_div = $(".text-answer");
@@ -80,27 +313,34 @@ const percentage_span = $(".percentage");
 const right_span = $(".right");
 const wrong_span = $(".wrong");
 const progress_bar = $(".progress-bar");
-const canvas = $("canvas");
-const ctx = canvas.getContext("2d");
-let stack_results = JSON.parse(`[{"id":1,"fraction":30,"users_id":2,"stacks_id":1},{"id":3,"fraction":75,"users_id":2,"stacks_id":1},{"id":10,"fraction":100,"users_id":2,"stacks_id":1}]`);
+const graph = $(".graph");
+const graph_ctx = graph.getContext("2d");
+let stack_results = [];
 
 
 
 window.addEventListener("resize", () => {
   reset_progress_bar(true);
   
-  resize_canvas();
+  resize_canvas_effects();
+  
+  resize_canvas_graph();
   draw_graph();
 });
 
-function resize_canvas() {
+function resize_canvas_graph() {
   const w = clamp(300, 600, window.innerWidth * 0.4);
   const h = w / 16 * 10;
   
-  canvas.style.width = w + "px";
-  canvas.style.height = h + "px";
-  canvas.width = w;
-  canvas.height = h;
+  graph.style.width = w + "px";
+  graph.style.height = h + "px";
+  graph.width = w;
+  graph.height = h;
+}
+
+function resize_canvas_effects() {
+  effects.width = window.innerWidth;
+  effects.height = window.innerHeight;
 }
 
 
@@ -118,6 +358,9 @@ window.addEventListener("keydown", evt => {
     evt.stopPropagation();
   }
 });
+
+
+
 
 const answer_input = $("#answer-input");
 answer_input.addEventListener("keydown", evt => {
@@ -365,7 +608,7 @@ async function show_stats() {
   }
 
   stack_results = response_results;
-  resize_canvas();
+  resize_canvas_graph();
   draw_graph();
 }
 
@@ -380,69 +623,69 @@ function draw_graph() {
     return;
   }
   
-  const w = canvas.width;
-  const h = canvas.height;
+  const w = graph.width;
+  const h = graph.height;
   
   const offset = 48;
   const font_size = 16;
   const guides = 4;
   
-  ctx.clearRect(0, 0, w, h);
+  graph_ctx.clearRect(0, 0, w, h);
   
-  ctx.font = `normal ${font_size}px sans-serif`;
-  ctx.lineWidth = 1;
-  const text_color = ctx.strokeStyle = ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-color-2');
+  graph_ctx.font = `normal ${font_size}px sans-serif`;
+  graph_ctx.lineWidth = 1;
+  const text_color = graph_ctx.strokeStyle = graph_ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-color-2');
   
   for (let i = 0; i <= guides; i++) {
-    ctx.fillText(
+    graph_ctx.fillText(
       Math.round(i / guides * 100).toLocaleString() + "%",
       0,
       h - (i / guides * (h - font_size))
     );
     
-    ctx.beginPath();
-    ctx.moveTo(
+    graph_ctx.beginPath();
+    graph_ctx.moveTo(
       offset,
       h - (i / guides * (h - font_size)) - font_size / 2
     );
-    ctx.lineTo(
+    graph_ctx.lineTo(
       w,
       h - (i / guides * (h - font_size)) - font_size / 2
     );
-    ctx.stroke();
+    graph_ctx.stroke();
   }
   
   const segment_len = (w - offset) / stack_results.length;
   
-  ctx.beginPath();
-  ctx.moveTo(offset, font_size / 2);
-  ctx.lineTo(offset, h - font_size / 2);
-  ctx.stroke();
+  graph_ctx.beginPath();
+  graph_ctx.moveTo(offset, font_size / 2);
+  graph_ctx.lineTo(offset, h - font_size / 2);
+  graph_ctx.stroke();
   
-  ctx.lineWidth = 5;
-  const line_color = ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue("--container-opposite-0");
+  graph_ctx.lineWidth = 5;
+  const line_color = graph_ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue("--container-opposite-0");
   
-  ctx.beginPath();
-  ctx.moveTo(offset, h - font_size / 2);
+  graph_ctx.beginPath();
+  graph_ctx.moveTo(offset, h - font_size / 2);
   
   for (let i = 0; i < stack_results.length; i++) {
-    ctx.lineTo(
+    graph_ctx.lineTo(
       offset + segment_len * (i + 1),
       h - (stack_results[i].fraction / 100 * (h - font_size)) - font_size / 2
     );
-    ctx.strokeStyle = line_color;
-    ctx.lineWidth = 5;
-    ctx.stroke();
+    graph_ctx.strokeStyle = line_color;
+    graph_ctx.lineWidth = 5;
+    graph_ctx.stroke();
     
-    ctx.beginPath();
-    ctx.moveTo(offset + segment_len * (i + 1), font_size / 2);
-    ctx.lineTo(offset + segment_len * (i + 1), h - font_size / 2);
-    ctx.strokeStyle = text_color;
-    ctx.lineWidth = 1;
-    ctx.stroke();
+    graph_ctx.beginPath();
+    graph_ctx.moveTo(offset + segment_len * (i + 1), font_size / 2);
+    graph_ctx.lineTo(offset + segment_len * (i + 1), h - font_size / 2);
+    graph_ctx.strokeStyle = text_color;
+    graph_ctx.lineWidth = 1;
+    graph_ctx.stroke();
   
-    ctx.beginPath();
-    ctx.moveTo(
+    graph_ctx.beginPath();
+    graph_ctx.moveTo(
       offset + segment_len * (i + 1),
       h - (stack_results[i].fraction / 100 * (h - font_size)) - font_size / 2
     );
@@ -451,5 +694,26 @@ function draw_graph() {
 
 
 
+function effect_loading(radius, x, y, duration) {
+  return new GraphicalEffect(delta => {
+    GraphicalEffect.ctx.beginPath();
+    GraphicalEffect.ctx.strokeStyle = "black";
+    GraphicalEffect.ctx.lineWidth = 3;
+    GraphicalEffect.ctx.arc(x, y, radius - 2, 0, Math.PI * 2 * delta);
+    GraphicalEffect.ctx.stroke();
+  
+    GraphicalEffect.ctx.beginPath();
+    GraphicalEffect.ctx.arc(x, y, radius + 2, 0, Math.PI * 2 * delta);
+    GraphicalEffect.ctx.stroke();
+    
+    GraphicalEffect.ctx.beginPath();
+    GraphicalEffect.ctx.strokeStyle = "white";
+    GraphicalEffect.ctx.lineWidth = 5;
+    GraphicalEffect.ctx.arc(x, y, radius, 0, Math.PI * 2 * delta);
+    GraphicalEffect.ctx.stroke();
+  }, duration);
+}
 
-$(".back").addEventListener("pointerup", () => window.location.replace(AJAX.DOMAIN_HOME + "/"))
+
+
+$(".back").addEventListener("pointerup", () => window.location.replace(AJAX.DOMAIN_HOME + "/"));

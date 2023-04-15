@@ -2,6 +2,7 @@
 
 
 body {
+    position: relative;
     display: grid;
     grid-template-rows: 64px 1fr;
     width: 100vw;
@@ -20,6 +21,65 @@ nav {
 
 nav .void {
     width: 43px;
+}
+
+
+
+.fixed {
+    z-index: 100;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+
+canvas.effects {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: transparent;
+    pointer-events: none;
+}
+
+
+.image-showcase {
+    pointer-events: all;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+
+    display: grid;
+    place-items: center;
+}
+
+.image-showcase .exit {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background-color: transparent;
+    border: none;
+    color: #bbb;
+    font-size: 24px;
+}
+
+.image-showcase .exit:hover {
+    color: #eee;
+    cursor: pointer;
+}
+
+.image-showcase img {
+    width: 80vw;
+    height: 80vh;
+    object-fit: contain;
 }
 
 
@@ -83,6 +143,7 @@ nav .void {
     font-family: var(--font-1);
     font-size: 18px;
     overflow: hidden;
+    user-select: none;
 
     box-shadow: #70351b 0 0;
     transition: box-shadow 150ms ease-in-out;
@@ -237,7 +298,7 @@ nav .void {
 
 
 
-canvas {
+canvas.graph {
     width: clamp(300px, 40vw, 600px);
     aspect-ratio: 16/10;
     margin: 32px;

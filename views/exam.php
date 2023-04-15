@@ -19,6 +19,17 @@
   <script src="<?= $GLOBALS["__HOME__"] ?>/public/js/exam.js" defer></script>
 </head>
 <body>
+  <div class="fixed">
+    <canvas class="effects"></canvas>
+    
+    <div class="image-showcase display-none">
+      <button class="exit">✕</button>
+      <img src="" alt="showcase" draggable="false">
+    </div>
+  </div>
+  
+  
+  
   <nav>
     <button class="button-like back"><span class="mono">&lt;</span></button>
     <div class="state-label">
