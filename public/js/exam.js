@@ -230,6 +230,9 @@ const LOADING_TIMEOUT = 100;
 
 
 
+card_div.addEventListener("contextmenu", evt => {
+  evt.preventDefault();
+});
 card_div.addEventListener("pointerdown", evt => {
   timestamp = window.performance.now();
   card_div.dataset.ptrdown = "true";
