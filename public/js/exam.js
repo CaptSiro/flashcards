@@ -298,7 +298,10 @@ function upscale_image() {
   const src = new URL(card_div.querySelector("img").src);
   src.search = "";
   src.searchParams.set("width", String(Math.floor((window.innerWidth * 0.8) + 50)));
-  image_display.src = src.href;
+  
+  if (image_display.src !== src.href) {
+    image_display.src = src.href;
+  }
   
   image_showcase.classList.remove("display-none");
 }
