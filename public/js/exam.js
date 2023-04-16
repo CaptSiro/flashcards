@@ -710,17 +710,17 @@ function effect_loading(radius, x, y, duration) {
     GraphicalEffect.ctx.beginPath();
     GraphicalEffect.ctx.strokeStyle = "black";
     GraphicalEffect.ctx.lineWidth = 3;
-    GraphicalEffect.ctx.arc(x, y, radius - 2, 0, Math.PI * 2 * delta);
+    GraphicalEffect.ctx.arc(x, y, radius - 2, -Math.PI / 2, (Math.PI * 2 * delta) - Math.PI / 2);
     GraphicalEffect.ctx.stroke();
   
     GraphicalEffect.ctx.beginPath();
-    GraphicalEffect.ctx.arc(x, y, radius + 2, 0, Math.PI * 2 * delta);
+    GraphicalEffect.ctx.arc(x, y, radius + 2, -Math.PI / 2, (Math.PI * 2 * delta) - Math.PI / 2);
     GraphicalEffect.ctx.stroke();
     
     GraphicalEffect.ctx.beginPath();
     GraphicalEffect.ctx.strokeStyle = "white";
     GraphicalEffect.ctx.lineWidth = 5;
-    GraphicalEffect.ctx.arc(x, y, radius, 0, Math.PI * 2 * delta);
+    GraphicalEffect.ctx.arc(x, y, radius, -Math.PI / 2, (Math.PI * 2 * delta) - Math.PI / 2);
     GraphicalEffect.ctx.stroke();
   }, duration);
 }
