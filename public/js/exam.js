@@ -242,7 +242,12 @@ card_div.addEventListener("pointerdown", evt => {
       return;
     }
   
-    loading_animation = effect_loading(evt.width + 32, evt.x, evt.y, LOADING_DURATION);
+    loading_animation = effect_loading(
+      evt.pointerType === "touch" ? 64 : 32,
+      evt.x,
+      evt.y,
+      LOADING_DURATION
+    );
     loading_animation.start();
     loading_animation.finish_signal.subscribe(upscale_image);
   }, LOADING_TIMEOUT);
@@ -300,7 +305,7 @@ function cycle_attachments() {
 function upscale_image() {
   const src = new URL(card_div.querySelector("img").src);
   src.search = "";
-  src.searchParams.set("width", String(Math.floor((window.innerWidth * 0.8) + 50)));
+  src.searchParams.set("width", String(Math.floor((document.body.clientWidth * 0.8) + 50)));
   
   if (image_display.src !== src.href) {
     image_display.src = src.href;
@@ -335,7 +340,7 @@ window.addEventListener("resize", () => {
 });
 
 function resize_canvas_graph() {
-  const w = clamp(300, 600, window.innerWidth * 0.4);
+  const w = clamp(300, 600, document.body.clientWidth * 0.4);
   const h = w / 16 * 10;
   
   graph.style.width = w + "px";
@@ -345,8 +350,8 @@ function resize_canvas_graph() {
 }
 
 function resize_canvas_effects() {
-  effects.width = window.innerWidth;
-  effects.height = window.innerHeight;
+  effects.width = document.body.clientWidth;
+  effects.height = document.body.clientHeight;
 }
 
 
@@ -530,7 +535,7 @@ function next_card() {
 }
 
 function reset_progress_bar(do_styles_only = false) {
-  const max_cells = (window.innerWidth - 36) / 12; //! dependence on padding (left, right), gap size, and minimum cell width (css)
+  const max_cells = (document.body.clientWidth - 36) / 12; //! dependence on padding (left, right), gap size, and minimum cell width (css)
   progress_bar.style.gridTemplateColumns = "repeat(" + Math.min(to_be_answered.length, Math.floor(max_cells)) + ", 1fr)";
   
   if (do_styles_only === true) {
