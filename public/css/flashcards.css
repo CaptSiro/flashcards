@@ -26,7 +26,6 @@ nav {
 }
 
 
-
 main {
     margin: 64px 16px 0 16px;
     padding-top: 16px;
@@ -49,16 +48,12 @@ main {
 }
 
 
-
-
-
-
 main .deck {
     box-shadow: rgba(240, 46, 170, 0.4) 5px 5px,
-        rgba(240, 46, 170, 0.3) 10px 10px,
-        rgba(240, 46, 170, 0.2) 15px 15px,
-        rgba(240, 46, 170, 0.1) 20px 20px,
-        rgba(240, 46, 170, 0.05) 25px 25px;
+    rgba(240, 46, 170, 0.3) 10px 10px,
+    rgba(240, 46, 170, 0.2) 15px 15px,
+    rgba(240, 46, 170, 0.1) 20px 20px,
+    rgba(240, 46, 170, 0.05) 25px 25px;
 
     width: 240px;
     aspect-ratio: 16/10;
@@ -71,11 +66,11 @@ main .deck {
 
     transition: opacity 250ms linear;
 }
+
 main .deck:hover {
     opacity: 1;
     transition: opacity 0ms linear;
 }
-
 
 
 main .stack {
@@ -88,7 +83,6 @@ main .stack {
     align-items: center;
     gap: 16px;
 }
-
 
 
 main .card {
@@ -116,6 +110,7 @@ main .deck:hover,
 main .stack:hover {
     cursor: pointer;
 }
+
 main > div h3,
 main > div span {
     text-align: center;
@@ -125,6 +120,7 @@ main > div span {
 main > * {
     position: relative;
 }
+
 main .abs {
     position: absolute;
     top: 0;
@@ -136,14 +132,17 @@ main .abs {
 
     transition: background-color linear 200ms 150ms, width ease-in-out 200ms 100ms, height ease-in-out 200ms;
 }
+
 main .abs.border-radius {
     border-radius: 8px;
 }
+
 main .abs svg {
     color: black !important;
     width: 100%;
     height: 100%;
 }
+
 main .abs .visible {
     position: absolute;
     top: 0;
@@ -151,6 +150,7 @@ main .abs .visible {
     width: 32px;
     height: 32px;
 }
+
 main .abs .options {
     height: 100%;
     overflow: auto;
@@ -192,6 +192,7 @@ main .option {
 
     transition: background-color 200ms linear;
 }
+
 main .option:hover {
     background-color: rgba(221, 221, 221, 0.7);
     cursor: pointer;
@@ -200,11 +201,10 @@ main .option:hover {
 }
 
 
-
-
 .window.form#manage-privileges {
     width: min(700px, 90vw);
 }
+
 .window.form #team {
     display: flex;
     flex-direction: column;
@@ -214,6 +214,7 @@ main .option:hover {
     border-top: 1px solid var(--text-color-2);
     overflow: auto;
 }
+
 .window.form #team .member {
     display: grid;
     grid-template-columns: 1fr 64px 64px;
@@ -221,18 +222,18 @@ main .option:hover {
     width: 100%;
     padding: 8px 0;
 }
+
 .window.form #team .member:hover {
     background-color: var(--container-1);
 }
+
 .window.form #team .member :first-child {
     place-self: center start;
 }
+
 .window.form #team .member :last-child {
     place-self: center end;
 }
-
-
-
 
 
 @media only screen and (max-width: 470px) {

@@ -1,55 +1,72 @@
 <?php
-  
-  use OakBase\Database;
-  use OakBase\Param;
-  use OakBase\SideEffect;
-  use function OakBase\param;
-  
-  require_once __DIR__ . "/Count.php";
-  require_once __DIR__ . "/Stack.php";
-  require_once __DIR__ . "/Image.php";
-  
-  class Card {
+
+use OakBase\Database;
+use OakBase\Param;
+use OakBase\SideEffect;
+use function OakBase\param;
+
+require_once __DIR__ . "/Count.php";
+require_once __DIR__ . "/Stack.php";
+require_once __DIR__ . "/Image.php";
+
+
+
+class Card {
     public int $id;
     public string $question;
+    public $question_images;
+    public $answer_images;
     public string $answer;
     public int $decks_id;
     public int $rank;
-    
-    
-    
+
+
+
     static function insert(Param $question, Param $answer, Param $stack_id, Param $user_id) {
-      $stack = Stack::by_id($stack_id, $user_id);
-      
-      if ($stack->isFailure()) {
-        return $stack;
-      }
-      
-      $stack = $stack->getSuccess();
-      /**
-       * @var Stack $stack
-       */
-      
-      $side_effect = Database::get()->statement(
-        "INSERT INTO cards (question, answer, decks_id)
-            VALUE ($question, $answer, ". param($stack->decks_id) .")",
-      );
-      
-      $card_id = param($side_effect->last_inserted_ID());
-  
-      Database::get()->statement(
-        "INSERT INTO cards_in_stacks (cards_id, stacks_id)
+        $stack = Stack::by_id($stack_id, $user_id);
+
+        if ($stack->isFailure()) {
+            return $stack;
+        }
+
+        $stack = $stack->getSuccess();
+        /**
+         * @var Stack $stack
+         */
+
+        $side_effect = Database::get()->statement(
+            "INSERT INTO cards (question, answer, decks_id)
+            VALUE ($question, $answer, " . param($stack->decks_id) . ")",
+        );
+
+        $card_id = param($side_effect->last_inserted_ID());
+
+        Database::get()->statement(
+            "INSERT INTO cards_in_stacks (cards_id, stacks_id)
             VALUE ($card_id, $stack_id)"
-      );
-      
-      return success($side_effect);
+        );
+
+        return success($side_effect);
     }
-    
-    
-    
+
+    static function by_id(Param $id): Result {
+        $card = Database::get()->fetch(
+            "SELECT id, question, answer, decks_id
+        FROM cards
+        WHERE id = $id",
+            Card::class
+        );
+
+        if ($card === null || $card === false) {
+            return fail(new NotFoundExc("Could not find card with id: " . $id->value()));
+        }
+
+        return success($card);
+    }
+
     static function in_stack(Param $stack_id): Result {
-      $cards = Database::get()->fetch_all(
-        "SELECT c.id, question, answer, question_images.sources as question_images, answer_images.sources as answer_images
+        $cards = Database::get()->fetch_all(
+            "SELECT c.id, question, answer, question_images.sources as question_images, answer_images.sources as answer_images
         FROM cards_in_stacks
             JOIN cards c ON cards_in_stacks.cards_id = c.id
                 AND stacks_id = $stack_id
@@ -69,58 +86,37 @@
                     LEFT JOIN question_images qi ON i.src = qi.images_src
                 GROUP BY qi.cards_id
             ) as question_images ON question_images.cards_id = c.id",
-        self::class
-      );
-      
-      if ($cards === false) {
-        return fail(new NotFoundExc("There are no cards in stack with id: ". $stack_id->value()));
-      }
-      
-      return success($cards);
+            self::class
+        );
+
+        if ($cards === false) {
+            return fail(new NotFoundExc("There are no cards in stack with id: " . $stack_id->value()));
+        }
+
+        return success($cards);
     }
-    
-    
-    
+
     static function delete(Param $card_id): Result {
-      Database::get()->statement(
-        "DELETE FROM cards_in_stacks WHERE cards_id = $card_id"
-      );
-      
-      Image::delete_for_card($card_id);
-      
-      $card = Database::get()->statement(
-        "DELETE FROM cards WHERE id = $card_id LIMIT 1"
-      );
-      
-      if ($card->row_count() === 0) {
-        return fail(new Exc("Could not remove card."));
-      }
-      
-      return success($card);
+        Database::get()->statement(
+            "DELETE FROM cards_in_stacks WHERE cards_id = $card_id"
+        );
+
+        Image::delete_for_card($card_id);
+
+        $card = Database::get()->statement(
+            "DELETE FROM cards WHERE id = $card_id LIMIT 1"
+        );
+
+        if ($card->row_count() === 0) {
+            return fail(new Exc("Could not remove card."));
+        }
+
+        return success($card);
     }
-    
-    
-    
-    static function by_id(Param $id): Result {
-      $card = Database::get()->fetch(
-        "SELECT id, question, answer, decks_id
-        FROM cards
-        WHERE id = $id",
-        Card::class
-      );
-      
-      if ($card === null || $card === false) {
-        return fail(new NotFoundExc("Could not find card with id: ". $id->value()));
-      }
-      
-      return success($card);
-    }
-    
-    
-    
+
     static function update(Param $id, Param $question, Param $answer): SideEffect {
-      return Database::get()->statement(
-        "UPDATE cards SET question = $question, answer = $answer WHERE id = $id"
-      );
+        return Database::get()->statement(
+            "UPDATE cards SET question = $question, answer = $answer WHERE id = $id"
+        );
     }
-  }
+}

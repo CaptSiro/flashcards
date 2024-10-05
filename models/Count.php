@@ -1,5 +1,7 @@
 <?php
 
-  class Count {
+
+
+class Count {
     public int $amount;
-  }
+}

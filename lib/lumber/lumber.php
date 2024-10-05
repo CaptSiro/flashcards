@@ -1,3 +1,3 @@
 <?php
-  
-  require_once __DIR__ . "/src/Console.php";
+
+require_once __DIR__ . "/src/Console.php";

@@ -28,18 +28,16 @@ namespace PHPMailer\PHPMailer;
  *
  * @author Oleg Voronkovich <oleg-voronkovich@yandex.ru>
  */
-class DSNConfigurator
-{
+class DSNConfigurator {
     /**
      * Create new PHPMailer instance configured by DSN.
      *
-     * @param string $dsn        DSN
-     * @param bool   $exceptions Should we throw external exceptions?
+     * @param string $dsn DSN
+     * @param bool $exceptions Should we throw external exceptions?
      *
      * @return PHPMailer
      */
-    public static function mailer($dsn, $exceptions = null)
-    {
+    public static function mailer($dsn, $exceptions = null) {
         static $configurator = null;
 
         if (null === $configurator) {
@@ -53,12 +51,11 @@ class DSNConfigurator
      * Configure PHPMailer instance with DSN string.
      *
      * @param PHPMailer $mailer PHPMailer instance
-     * @param string    $dsn    DSN
+     * @param string $dsn DSN
      *
      * @return PHPMailer
      */
-    public function configure(PHPMailer $mailer, $dsn)
-    {
+    public function configure(PHPMailer $mailer, $dsn) {
         $config = $this->parseDSN($dsn);
 
         $this->applyConfig($mailer, $config);
@@ -71,12 +68,11 @@ class DSNConfigurator
      *
      * @param string $dsn DSN
      *
+     * @return array Configuration
      * @throws Exception If DSN is malformed
      *
-     * @return array Configuration
      */
-    private function parseDSN($dsn)
-    {
+    private function parseDSN($dsn) {
         $config = $this->parseUrl($dsn);
 
         if (false === $config || !isset($config['scheme']) || !isset($config['host'])) {
@@ -96,12 +92,11 @@ class DSNConfigurator
      * Apply configuration to mailer.
      *
      * @param PHPMailer $mailer PHPMailer instance
-     * @param array     $config Configuration
+     * @param array $config Configuration
      *
      * @throws Exception If scheme is invalid
      */
-    private function applyConfig(PHPMailer $mailer, $config)
-    {
+    private function applyConfig(PHPMailer $mailer, $config) {
         switch ($config['scheme']) {
             case 'mail':
                 $mailer->isMail();
@@ -132,13 +127,37 @@ class DSNConfigurator
     }
 
     /**
+     * Parse a URL.
+     * Wrapper for the built-in parse_url function to work around a bug in PHP 5.5.
+     *
+     * @param string $url URL
+     *
+     * @return array|false
+     */
+    protected function parseUrl($url) {
+        if (\PHP_VERSION_ID >= 50600 || false === strpos($url, '?')) {
+            return parse_url($url);
+        }
+
+        $chunks = explode('?', $url);
+        if (is_array($chunks)) {
+            $result = parse_url($chunks[0]);
+            if (is_array($result)) {
+                $result['query'] = $chunks[1];
+            }
+            return $result;
+        }
+
+        return false;
+    }
+
+    /**
      * Configure SMTP.
      *
      * @param PHPMailer $mailer PHPMailer instance
-     * @param array     $config Configuration
+     * @param array $config Configuration
      */
-    private function configureSMTP($mailer, $config)
-    {
+    private function configureSMTP($mailer, $config) {
         $isSMTPS = 'smtps' === $config['scheme'];
 
         if ($isSMTPS) {
@@ -149,7 +168,7 @@ class DSNConfigurator
 
         if (isset($config['port'])) {
             $mailer->Port = $config['port'];
-        } elseif ($isSMTPS) {
+        } else if ($isSMTPS) {
             $mailer->Port = SMTP::DEFAULT_SECURE_PORT;
         }
 
@@ -167,13 +186,12 @@ class DSNConfigurator
     /**
      * Configure options.
      *
-     * @param PHPMailer $mailer  PHPMailer instance
-     * @param array     $options Options
+     * @param PHPMailer $mailer PHPMailer instance
+     * @param array $options Options
      *
      * @throws Exception If option is unknown
      */
-    private function configureOptions(PHPMailer $mailer, $options)
-    {
+    private function configureOptions(PHPMailer $mailer, $options) {
         $allowedOptions = get_object_vars($mailer);
 
         unset($allowedOptions['Mailer']);
@@ -205,43 +223,17 @@ class DSNConfigurator
                 case 'UseSendmailOptions':
                 case 'do_verp':
                 case 'DKIM_copyHeaderFields':
-                    $mailer->$key = (bool) $value;
+                    $mailer->$key = (bool)$value;
                     break;
                 case 'Priority':
                 case 'SMTPDebug':
                 case 'WordWrap':
-                    $mailer->$key = (int) $value;
+                    $mailer->$key = (int)$value;
                     break;
                 default:
                     $mailer->$key = $value;
                     break;
             }
         }
-    }
-
-    /**
-     * Parse a URL.
-     * Wrapper for the built-in parse_url function to work around a bug in PHP 5.5.
-     *
-     * @param string $url URL
-     *
-     * @return array|false
-     */
-    protected function parseUrl($url)
-    {
-        if (\PHP_VERSION_ID >= 50600 || false === strpos($url, '?')) {
-            return parse_url($url);
-        }
-
-        $chunks = explode('?', $url);
-        if (is_array($chunks)) {
-            $result = parse_url($chunks[0]);
-            if (is_array($result)) {
-                $result['query'] = $chunks[1];
-            }
-            return $result;
-        }
-
-        return false;
     }
 }

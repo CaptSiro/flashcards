@@ -1,7 +1,7 @@
 <?php
-  
-  namespace OakBase;
-  
-  use Exception;
 
-  class ImplementationException extends Exception {}
+namespace OakBase;
+
+use Exception;
+
+class ImplementationException extends Exception { }

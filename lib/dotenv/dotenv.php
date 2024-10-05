@@ -1,3 +1,3 @@
 <?php
-  
-  require_once __DIR__ . "/src/Env.php";
+
+require_once __DIR__ . "/src/Env.php";
