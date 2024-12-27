@@ -139,6 +139,13 @@ class Request {
         return true;
     }
 
+    /**
+     * Execute server-to-server POST request
+     * @param $url
+     * @param array|null $post
+     * @param array $options
+     * @return bool|string
+     */
     static function POST($url, array $post = null, array $options = []) {
         $defaults = [
             CURLOPT_POST => 1,
@@ -160,6 +167,13 @@ class Request {
         return $result;
     }
 
+    /**
+     * Execute server-to-server GET request
+     * @param $url
+     * @param array|null $get
+     * @param array $options
+     * @return bool|string
+     */
     static function GET($url, array $get = null, array $options = []) {
         $defaults = [
             CURLOPT_URL => $url . ((strpos($url, '?') === false) ? '?' : '') . http_build_query($get),

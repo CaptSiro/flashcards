@@ -182,8 +182,6 @@ class PathNode extends Node {
         }
 
         //* parametric
-//      var_dump("___new___");
-//      var_dump($part, $regex);
         $node = new ParametricPathNode($regex, $this);
         $node->assign($httpMethod, $uriParts, $callbacks, $paramCaptureGroupMap);
         $node->setRegex($regex);
@@ -209,7 +207,6 @@ class PathNode extends Node {
         }
 
         // breaking chars [-.~]
-//      var_dump($this->parametric);
         foreach ($this->parametric as $node) {
             if (!preg_match($node->getRegex(), $part, $matches)) continue;
 
@@ -271,11 +268,6 @@ class PathNode extends Node {
         if (!$request->getState() == HomeRouter::REQUEST_SERVED) {
             $request->setState(HomeRouter::ERROR_ENDPOINT_DOES_NOT_EXISTS);
         }
-
-//      $request->homeRouter->dispathError(
-//        HomeRouter::ERROR_ENDPOINT_DOES_NOT_EXISTS,
-//        new RequestError("Endpoint does not exist for '$request->fullURI'", $request, $response)
-//      );
     }
 
     private function callHandlesClosures(Request $request, Response $response) {

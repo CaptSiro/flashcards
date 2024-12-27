@@ -28,6 +28,13 @@ class ExamResult {
 
 
 
+    /**
+     * Get all exam results in stack
+     * @param Param $stack_id
+     * @param Param $user_id
+     * @return Result
+     * @throws \OakBase\MixedIndexingException
+     */
     static function in_stack(Param $stack_id, Param $user_id): Result {
         $results = Database::get()->fetch_all(
             "SELECT id, fraction, users_id, stacks_id FROM results

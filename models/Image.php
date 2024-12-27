@@ -38,6 +38,11 @@ class Image {
         );
     }
 
+    /**
+     * Generate unique source for image
+     * @return Result
+     * @throws \Random\RandomException
+     */
     static function src_gen(): Result {
         $src = "";
         $try = 0;

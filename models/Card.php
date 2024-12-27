@@ -64,6 +64,13 @@ class Card {
         return success($card);
     }
 
+    /**
+     * Get all cards in stack by stack id
+     *
+     * @param Param $stack_id
+     * @return Result
+     * @throws \OakBase\MixedIndexingException
+     */
     static function in_stack(Param $stack_id): Result {
         $cards = Database::get()->fetch_all(
             "SELECT c.id, question, answer, question_images.sources as question_images, answer_images.sources as answer_images

@@ -20,6 +20,11 @@ class QueryBuilder {
 
 
 
+    /**
+     * Provide SQL query that should be parametrized
+     * @param string $query
+     * @return Query
+     */
     public function use(string $query): Query {
         $this->params->load(
             ParamBuffer::get()->dump()

@@ -122,13 +122,6 @@ class Stack {
             Card::delete(new PrimitiveParam($card->id));
         }
 
-//      Database::get()->statement(
-//        "DELETE c
-//        FROM cards c
-//            LEFT JOIN cards_in_stacks cis on c.id = cis.cards_id
-//        WHERE cis.stacks_id IS NULL"
-//      );
-
         Database::get()->statement(
             "DELETE FROM results WHERE stacks_id = $stack_id"
         );

@@ -5,6 +5,9 @@ require_once __DIR__ . "/RouterPromise.php";
 
 
 
+/**
+ * Used for bigger projects where all paths do not need to be loaded at start. Router is loaded when it is first accessed
+ */
 class RouterPromise extends RouterLike implements Parametric {
     private string $fileName;
     private Router $router;

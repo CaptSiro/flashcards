@@ -538,6 +538,8 @@ function stringToSVGDef(svgStringRepresentation, id) {
 }
 
 /**
+ * Create new `<img>` element
+ *
  * @param {string} src
  * @param {string} alt
  * @param {string} className
@@ -558,6 +560,8 @@ function Img(src, alt, className = undefined, options = {}) {
 
 
 /**
+ * Create new `<button>` element
+ *
  * @param {string} className
  * @param {ComponentContent} content
  * @param {(evt: Event)=>any | undefined} action
@@ -578,6 +582,8 @@ function Button(className = undefined, content = undefined, action = undefined, 
 }
 
 /**
+ * Create new `<label>` element
+ *
  * @param {string} className
  * @param {ComponentContent} content
  * @param {ComponentOptions} options
@@ -591,6 +597,8 @@ function Label(className = undefined, content = undefined, options = {}) {
  * @typedef {"button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file" | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset" | "search" | "submit" | "tel" | "text" | "time" | "url" | "week"} InputTypes
  */
 /**
+ * Create new `<input>` element
+ *
  * @param {InputTypes} type
  * @param {string} className
  * @param {ComponentOptions} options
@@ -607,6 +615,8 @@ function Input(type, className = undefined, options = {}) {
 }
 
 /**
+ * Create new `<input type="checkbox">` element
+ *
  * @param {string} label
  * @param {string} className
  * @param {string | any} id
@@ -635,6 +645,8 @@ function Checkbox(label = "", className = undefined, id = undefined, checkboxOpt
 }
 
 /**
+ * Create new `<input type="radio">` element
+ *
  * @param {string} label
  * @param {string} value
  * @param {string} name
@@ -682,6 +694,8 @@ function Blockquote(type, content = undefined) {
 
 
 /**
+ * Parse html string into elements
+ *
  * @param {string} content
  * @param {boolean} isCollection
  * @returns {NodeListOf<ChildNode> | ChildNode}
@@ -723,6 +737,11 @@ const DIVISIONS = [{
     name: "years"
 }];
 
+/**
+ * Format date relatively to now
+ * @param date
+ * @return {string}
+ */
 function formatDate(date) {
     let duration = (date - new Date()) / 1000;
 
@@ -738,6 +757,8 @@ function formatDate(date) {
 
 
 /**
+ * Shuffle given array. The array is mutated and returned
+ *
  * @template T
  * @param {T[]} array
  */
@@ -755,6 +776,8 @@ function shuffle_mut(array) {
 
 
 /**
+ * Check if arrays are deeply equal
+ *
  * @template T, R
  * @param {T[]} array1
  * @param {R[]}  array2
@@ -774,6 +797,7 @@ function arrayEqual(array1, array2, compareFunction = ((a, b) => a === b)) {
 
 
 /**
+ * Check if objects are deeply equal
  *
  * @param {*} object1
  * @param {*} object2
@@ -876,6 +900,7 @@ function flatRNG(from, to) {
 
 
 /**
+ * Convert object to `FormData` object
  * @param {Object.<string, string | Blob>} object
  * @returns {FormData}
  */

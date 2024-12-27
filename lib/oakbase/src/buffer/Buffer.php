@@ -15,9 +15,18 @@ interface Buffer {
 
 
 
+    /**
+     * Get whole content of buffer
+     * @return mixed
+     */
     function dump();
 
 
 
+    /**
+     * Load all values into buffer. Whether the buffer is cleaned beforehand is implementation dependant
+     * @param $values
+     * @return mixed
+     */
     function load($values);
 }

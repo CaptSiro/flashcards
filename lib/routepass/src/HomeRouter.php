@@ -76,6 +76,11 @@ class HomeRouter extends Router {
         $this->setBodyParser(self::BODY_PARSER_URLENCODED());
     }
 
+    /**
+     * Add handler to all error events
+     * @param Closure $handler
+     * @return void
+     */
     public function onAnyErrorEvent(Closure $handler) {
         $this->onErrorEvent(self::ERROR_HTTP_METHOD_NOT_IMPLEMENTED, $handler);
         $this->onErrorEvent(self::ERROR_ENDPOINT_DOES_NOT_EXISTS, $handler);
@@ -83,6 +88,11 @@ class HomeRouter extends Router {
         $this->onErrorEvent(self::ERROR_REQUEST_OUT_OF_STATIC_DIRECTORY, $handler);
     }
 
+    /**
+     * Set global parser of request body. You may use default body parsers on `self::BODY_PARSER_*`
+     * @param Closure $bodyParser
+     * @return void
+     */
     public function setBodyParser(Closure $bodyParser) {
         $this->bodyParser = $bodyParser;
     }
@@ -106,6 +116,12 @@ class HomeRouter extends Router {
         };
     }
 
+    /**
+     * Add handler to specific error event
+     * @param $errorID `static::ERROR_*`
+     * @param Closure $handler
+     * @return void
+     */
     public function onErrorEvent($errorID, Closure $handler) {
         $this->errorHandlers[$errorID] = $handler;
     }
@@ -230,6 +246,14 @@ class HomeRouter extends Router {
         $router->setParent($this);
     }
 
+    /**
+     * Set directory as static. All directory contents will be read only publicly visible
+     *
+     * @param string $urlPattern
+     * @param string $absoluteDirectoryPath
+     * @param array $paramCaptureGroupMap
+     * @return void
+     */
     public function static(string $urlPattern, string $absoluteDirectoryPath, array $paramCaptureGroupMap = []) {
         $realAbsoluteDirectoryPath = realpath($absoluteDirectoryPath);
 
@@ -296,10 +320,21 @@ class HomeRouter extends Router {
         parent::use($urlPattern, $staticRouter, $paramCaptureGroupMap);
     }
 
+    /**
+     * Dispatch a specific error event
+     * @param $errorID `static::ERROR_*`
+     * @param $errorEvent
+     * @return void
+     */
     public function dispatchError($errorID, $errorEvent) {
         $this->errorHandlers[$errorID]->call($errorEvent, $errorEvent);
     }
 
+    /**
+     * Entry function after all path handlers have been loaded. Parses user request and dispatches appropriate path
+     * handler
+     * @return void
+     */
     public function serve() {
         if (preg_match("/[a-z]+:\/\/[a-zA-Z-_.]+(.*)/", $_SERVER["REQUEST_URI"], $groups)) {
             $_SERVER["REQUEST_URI"] = $groups[1];
@@ -432,6 +467,11 @@ class HomeRouter extends Router {
         };
     }
 
+    /**
+     * Set directory for views. This directory will be used for Response::render($view) as base directory.
+     * @param $directory
+     * @return void
+     */
     public function setViewDirectory($directory) {
         $_SERVER["VIEW_DIR"] = $directory;
     }

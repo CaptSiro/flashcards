@@ -96,8 +96,7 @@ class Result implements JsonSerializable {
     }
 
     /**
-     * @template R
-     * @param Closure $function (T $success)->R
+     * @param Closure $function (T $success)->Result Called when this result is successful
      * @return Result
      */
     public function succeeded(Closure $function): Result {
@@ -113,7 +112,7 @@ class Result implements JsonSerializable {
     }
 
     /**
-     * @param Closure $function (Exc $exception)->Result
+     * @param Closure $function (Exc $exception)->Result Called when this result has failed
      * @return Result
      */
     public function failed(Closure $function): Result {

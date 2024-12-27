@@ -38,6 +38,11 @@ class InvitationLink {
         Database::get()->statement("DELETE FROM invitation_links WHERE expires < UNIX_TIMESTAMP()");
     }
 
+    /**
+     * Generate unique argument
+     * @return Result
+     * @throws \Random\RandomException
+     */
     static function arg_gen(): Result {
         $arg = "";
         $try = 0;

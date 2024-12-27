@@ -67,6 +67,12 @@ class Deck {
 
 
 
+    /**
+     * Get all decks that user may access
+     * @param Param $user_id
+     * @return Result
+     * @throws \OakBase\MixedIndexingException
+     */
     static function users(Param $user_id): Result {
         $deck = Database::get()->fetch_all(
             "SELECT decks.id, `name`, p.rank

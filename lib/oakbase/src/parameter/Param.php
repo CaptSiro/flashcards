@@ -3,15 +3,15 @@
 namespace OakBase;
 
 interface Param {
-    /**
-     * Return
-     *
-     * @return string
-     */
     function __toString(): string;
 
 
 
+    /**
+     * `__toString` function is overloaded with custom behaviour that adds it current buffer. Use this function to print
+     * contents of Param
+     * @return string
+     */
     function to_string(): string;
 
 

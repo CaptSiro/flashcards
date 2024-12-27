@@ -58,6 +58,13 @@ class Privilege {
         );
     }
 
+    /**
+     * Get privileges for all team members
+     *
+     * @param Param $deck_id
+     * @return Result
+     * @throws \OakBase\MixedIndexingException
+     */
     static function team(Param $deck_id): Result {
         $creator = param(self::RANK_CREATOR);
 

@@ -26,10 +26,17 @@ class Signal {
         this.notify();
     }
 
+    /**
+     * Add listener for value change
+     * @param callback
+     */
     subscribe(callback) {
         this.#subs.push(callback);
     }
 
+    /**
+     * Notify all subscribers
+     */
     notify() {
         for (let i = 0; i < this.#subs.length; i++) {
             this.#subs[i]();
@@ -94,7 +101,6 @@ class GraphicalEffect {
 
     static #attach() {
         this.#do_clear = true;
-
 
         if (this.#attached === 0) {
             requestAnimationFrame(this.#clear.bind(this));
@@ -353,8 +359,10 @@ const look_up = {
     "backspace": () => window.location.replace(AJAX.DOMAIN_HOME),
     " ": handle_next,
     "enter": handle_next,
-    "a": handle_right,
-    "s": handle_wrong
+    "a": handle_correct,
+    "y": handle_correct,
+    "s": handle_wrong,
+    "n": handle_wrong,
 };
 window.addEventListener("keydown", evt => {
     if (look_up[evt.key.toLowerCase()] !== undefined) {
@@ -386,7 +394,7 @@ function handle_text_input() {
 
     if (answer_input.value.trim() === card.answer) {
         card_div.classList.add("right");
-        answer_right();
+        answer_correct();
     } else {
         card_div.classList.add("wrong");
         answer_wrong();
@@ -444,14 +452,14 @@ function handle_next() {
 }
 
 
-thought_answer_div.querySelector("#answer-right").addEventListener("pointerup", handle_right);
+thought_answer_div.querySelector("#answer-right").addEventListener("pointerup", handle_correct);
 
-function handle_right() {
+function handle_correct() {
     if (thought_answer_div.classList.contains("display-none")) {
         return;
     }
 
-    answer_right();
+    answer_correct();
     next_card();
 
     text_answer_div.classList.add("display-none");
@@ -538,8 +546,6 @@ if (cards.length !== 0) {
     next_card();
 }
 
-// show_stats();
-
 
 
 function answer_wrong() {
@@ -554,7 +560,7 @@ function answer_wrong() {
 
 
 
-function answer_right() {
+function answer_correct() {
     progress_bar.children[card_ptr]?.classList.add("right");
 
     if (save_stats === false) {
@@ -690,6 +696,14 @@ function draw_graph() {
 
 
 
+/**
+ * Create new loading GFX
+ * @param radius
+ * @param x
+ * @param y
+ * @param duration
+ * @return {GraphicalEffect}
+ */
 function effect_loading(radius, x, y, duration) {
     return new GraphicalEffect(delta => {
         GraphicalEffect.ctx.beginPath();

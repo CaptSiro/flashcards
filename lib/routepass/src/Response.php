@@ -203,12 +203,6 @@ class Response {
     }
 
     /**
-     * @param string $id must follow file name guidelines
-     * @return void
-     */
-    public static function createEventStream(string $id) {}
-
-    /**
      * @return array
      */
     public function getHeaders(): array {
