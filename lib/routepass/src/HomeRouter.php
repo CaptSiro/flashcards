@@ -247,14 +247,20 @@ class HomeRouter extends Router {
     }
 
     /**
-     * Set directory as static. All directory contents will be read only publicly visible
+     * Set directory as static. All directory contents will be read-only publicly visible
      *
      * @param string $urlPattern
      * @param string $absoluteDirectoryPath
      * @param array $paramCaptureGroupMap
+     * @param bool $showExplorerOnDirectory If set to false then navigating to directory will lead to error
      * @return void
      */
-    public function static(string $urlPattern, string $absoluteDirectoryPath, array $paramCaptureGroupMap = []) {
+    public function static(
+        string $urlPattern,
+        string $absoluteDirectoryPath,
+        array $paramCaptureGroupMap = [],
+        bool $showExplorerOnDirectory = true
+    ) {
         $realAbsoluteDirectoryPath = realpath($absoluteDirectoryPath);
 
         $staticRouter = new Router();
@@ -265,7 +271,7 @@ class HomeRouter extends Router {
             $response->setHeader(Response::HEADER_CORS_ORIGIN, "*");
             $response->flush();
         }]);
-        $staticRouter->get("/*", [function (Request $request, Response $response) use ($absoluteDirectoryPath, $realAbsoluteDirectoryPath) {
+        $staticRouter->get("/*", [function (Request $request, Response $response) use ($absoluteDirectoryPath, $realAbsoluteDirectoryPath, $showExplorerOnDirectory) {
             $filePath = realpath("$absoluteDirectoryPath/$request->remainingURI");
 
             if (strpos($filePath, $realAbsoluteDirectoryPath) === false) {
@@ -277,7 +283,11 @@ class HomeRouter extends Router {
             }
 
             if (is_dir($filePath)) {
-                $basenameMapper = function ($item) {
+                if (!$showExplorerOnDirectory) {
+                    $response->error("Rendering directory explorer is not allowed");
+                }
+
+                $basenameMapper = function($item) {
                     return basename($item);
                 };
 

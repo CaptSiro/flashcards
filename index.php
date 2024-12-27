@@ -33,6 +33,7 @@ $router->setViewDirectory(__DIR__ . "/views");
 $router->setFlag(HomeRouter::FLAG_MAIN_SERVER_HOST_NAME, $env->get_or_crash("DOMAIN"));
 
 $router->static("/public", __DIR__ . "/public");
+$router->static("/docs", __DIR__ . "/docs", showExplorerOnDirectory: false);
 
 $router->onAnyErrorEvent(function (RequestError $requestError) {
     $requestError->response->render("error", ["message" => htmlspecialchars($requestError->message)]);
