@@ -4,8 +4,6 @@ use OakBase\SideEffect;
 use function OakBase\param;
 
 require_once __DIR__ . "/../lib/routepass/routers.php";
-require_once __DIR__ . "/../lib/susmail/susmail.php";
-require_once __DIR__ . "/../lib/phpmailer/phpmailer.php";
 require_once __DIR__ . "/../lib/regexes.php";
 
 require_once __DIR__ . "/../models/User.php";

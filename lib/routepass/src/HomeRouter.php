@@ -346,17 +346,22 @@ class HomeRouter extends Router {
      * @return void
      */
     public function serve() {
+        global $env;
         if (preg_match("/[a-z]+:\/\/[a-zA-Z-_.]+(.*)/", $_SERVER["REQUEST_URI"], $groups)) {
             $_SERVER["REQUEST_URI"] = $groups[1];
         }
 
         $home = "";
-        $dir = dirname($_SERVER["SCRIPT_FILENAME"]);
+        $dir = $env->looselyGet("HOME") ?? dirname($_SERVER["SCRIPT_FILENAME"]);
 
         for ($i = 0; $i < strlen($dir); $i++) {
             if (!(isset($_SERVER["DOCUMENT_ROOT"][$i]) && $_SERVER["DOCUMENT_ROOT"][$i] == $dir[$i])) {
                 $home .= $dir[$i];
             }
+        }
+
+        if (isset($home[0]) && $home[0] != '/') {
+            $home = '/' . $home;
         }
 
         $_SERVER["HOME_DIR"] = $home;
@@ -379,7 +384,12 @@ class HomeRouter extends Router {
 
 
         if ($this->getFlag(HomeRouter::FLAG_MAIN_SERVER_HOST_NAME) !== null) {
-            $_SERVER["SERVER_HOME"] = "$req->protocol://" . $this->getFlag(HomeRouter::FLAG_MAIN_SERVER_HOST_NAME) . "$_SERVER[HOME_DIR]";
+            $dir = $_SERVER["HOME_DIR"];
+            if (isset($dir[0]) && $dir[0] != '/') {
+                $dir = '/' . $dir;
+            }
+
+            $_SERVER["SERVER_HOME"] = "$req->protocol://" . $this->getFlag(HomeRouter::FLAG_MAIN_SERVER_HOST_NAME) . $dir;
         }
 
         $this->bodyParser->call($this, file_get_contents('php://input'), $req);

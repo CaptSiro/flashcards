@@ -3,5 +3,6 @@
 /sql/temp.sql
 
 /files/*
+!/files/.git-create
 
 /.phpdoc

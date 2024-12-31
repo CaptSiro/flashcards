@@ -260,3 +260,66 @@ main .option:hover {
         margin-top: 32px;
     }
 }
+
+
+
+@media print {
+    :root {
+        --text-color-0: black;
+        --text-color-1: #111;
+        --text-color-2: #222;
+        --text-color-opposite-0: black;
+        --text-color-opposite-1: #111;
+        --container-0: white;
+        --container-1: white;
+        --container-2: white;
+        --container-3: white;
+        --container-4: white;
+        --container-opposite-0: white;
+        --container-opposite-1: white;
+        --container-opposite-2: white;
+        --container-opposite-3: white;
+
+        --font-0: 'Inter', sans-serif;
+        --font-1: 'Crete Round', serif;
+        --font-2: "Ubuntu Mono", monospace;
+    }
+
+    button,
+    .card.attachment,
+    .card > div.abs,
+    .stack > div.abs,
+    .deck > div.abs {
+        display: none !important;
+    }
+
+    .deck {
+        box-shadow: unset !important;
+    }
+
+    main.add-able {
+        grid-gap: 0 !important;
+        place-items: unset !important;
+    }
+
+    main {
+        margin-right: unset;
+        margin-left: unset;
+    }
+
+    main .card {
+        aspect-ratio: unset !important;
+        background-color: transparent !important;
+        align-items: unset !important;
+    }
+
+    main .stack {
+        width: 250px;
+    }
+
+    main .deck > *:first-child,
+    main .stack > *:first-child,
+    main .card > *:first-child {
+        margin-top: 32px;
+    }
+}
