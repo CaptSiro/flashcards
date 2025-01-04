@@ -26,6 +26,17 @@ class Middleware {
         self::$defaultResponseType = $defaultResponseType;
     }
 
+    public static function stringLengthGuard(string $property, int $length, string $label) {
+        return function (Request $request, Response $response, Closure $next) use ($property, $length, $label) {
+            $value = $request->body->get($property);
+            if (strlen($value) > $length) {
+                $response->fail(new InvalidArgumentExc("$label is too long. Maximum length is $length"));
+            }
+
+            $next();
+        };
+    }
+
     public static function sessionStart($id = null, array $sessionParams = []) {
         return function (Request $request, Response $response, Closure $next) use ($id, $sessionParams) {
             if ($request->loadSession($id, $sessionParams)) $next();

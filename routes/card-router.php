@@ -64,6 +64,8 @@ function valid_images(Request $request) {
 
 $card_router->post("/", [
     Middleware::requireToBeLoggedIn(),
+    Middleware::stringLengthGuard("question", 128, "Question"),
+    Middleware::stringLengthGuard("answer", 1024, "Answer"),
     function (Request $request, Response $response) {
         $user_id = param($request->session->get("user")->id);
         $stack_id = param($request->body->get("stack_id"));
@@ -207,6 +209,8 @@ function insert_q_and_a_images($valid_question_files, $valid_answer_files, Param
 
 $card_router->post("/put/:id", [
     Middleware::requireToBeLoggedIn(),
+    Middleware::stringLengthGuard("question", 128, "Question"),
+    Middleware::stringLengthGuard("answer", 1024, "Answer"),
     function (Request $request, Response $response) {
         $card_id = param(intval($request->param->get("id")));
 

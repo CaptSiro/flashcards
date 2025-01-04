@@ -17,6 +17,7 @@ $stack_router = new Router();
 
 $stack_router->post("/", [
     Middleware::requireToBeLoggedIn(),
+    Middleware::stringLengthGuard("name", 128, "Stack's name"),
     function (Request $request, Response $response) {
         $deck_id = param($request->body->get("deck_id"));
 
@@ -97,6 +98,7 @@ $stack_router->get("/in-deck/:id", [
 
 $stack_router->put("/:id", [
     Middleware::requireToBeLoggedIn(),
+    Middleware::stringLengthGuard("name", 128, "Stack's name"),
     function (Request $request, Response $response) {
         $stack_id = param(intval($request->param->get("id")));
 

@@ -16,6 +16,7 @@ $deck_router = new Router();
 
 $deck_router->post("/", [
     Middleware::requireToBeLoggedIn(),
+    Middleware::stringLengthGuard("name", 128, "Deck's name"),
     function (Request $request, Response $response) {
         $response->json(
             Deck::insert(
@@ -45,6 +46,7 @@ $deck_router->delete("/:id", [
 
 $deck_router->put("/:id", [
     Middleware::requireToBeLoggedIn(),
+    Middleware::stringLengthGuard("name", 128, "Deck's name"),
     function (Request $request, Response $response) {
         $deck_id = param(intval($request->param->get("id")));
 

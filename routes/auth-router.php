@@ -58,6 +58,8 @@ $auth_router->post("/login", [
 
 $auth_router->post("/register", [
     Middleware::requireToBeLoggedOut(Middleware::RESPONSE_JSON),
+    Middleware::stringLengthGuard("username", 64, "Username"),
+    Middleware::stringLengthGuard("password", 255, "Password"),
     function (Request $request, Response $response) {
         $username = param($request->body->get("username"));
         $password = param(password_hash($request->body->get("password"), PASSWORD_DEFAULT));
