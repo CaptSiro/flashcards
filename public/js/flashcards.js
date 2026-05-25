@@ -297,6 +297,10 @@ share.querySelector("button[type=submit]").addEventListener("pointerup", async (
 
 
 
+function deck_label(deck) {
+    return `${deck.name} (${deck.creator})`;
+}
+
 async function load_decks() {
     const decks = await AJAX.get("/deck/users/", JSONHandler());
     if (decks.error !== undefined) {
@@ -314,7 +318,7 @@ async function load_decks() {
         grid.append(
             Item(
                 "deck",
-                deck.name,
+                deck_label(deck),
                 [],
                 OptionalComponents(deck.rank === CREATOR || deck.rank === EDITOR, [
                     Opt("Edit", () => {
@@ -387,7 +391,7 @@ async function load_stacks(s) {
         section: "stack",
         label: Span(_, [
             "Deck: ",
-            Span("important", s.deck.name)
+            Span("important", deck_label(s.deck))
         ]),
         deck: s.deck
     });

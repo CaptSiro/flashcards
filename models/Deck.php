@@ -14,15 +14,20 @@ require_once __DIR__ . "/Stack.php";
 class Deck {
     public int $id;
     public string $name;
+    public string $creator;
     public int $rank;
 
 
 
     static function insert(Param $name, Param $user_id): Result {
+        $creator = param(Privilege::RANK_CREATOR);
         $is_unique = Database::get()->fetch(
-                "SELECT COUNT(id) as amount
+                "SELECT COUNT(decks.id) as amount
         FROM decks
-        WHERE `name` = $name",
+        JOIN flashcards.privileges p on decks.id = p.decks_id
+            AND p.`rank` = $creator
+            AND p.users_id = $user_id
+        WHERE decks.`name` = $name",
                 Count::class
             )->amount === 0;
 
@@ -39,7 +44,7 @@ class Deck {
         }
 
         Privilege::insert(
-            param(0),
+            param(Privilege::RANK_CREATOR),
             param($side_effect->last_inserted_ID()),
             $user_id
         );
@@ -51,10 +56,11 @@ class Deck {
 
     static function by_id(Param $id): Result {
         $deck = Database::get()->fetch(
-            "SELECT decks.id, `name`, p.rank
+            "SELECT decks.id, name, u.username as creator, p.rank
         FROM decks
             JOIN privileges p ON decks.id = p.decks_id
-                AND p.decks_id = $id",
+                AND p.decks_id = $id
+            JOIN flashcards.users u on p.users_id = u.id",
             self::class
         );
 
@@ -74,11 +80,16 @@ class Deck {
      * @throws \OakBase\MixedIndexingException
      */
     static function users(Param $user_id): Result {
+        $creator = param(Privilege::RANK_CREATOR);
         $deck = Database::get()->fetch_all(
-            "SELECT decks.id, `name`, p.rank
+            "SELECT decks.id, decks.name as name, u.username as creator, p.rank
         FROM decks
             JOIN privileges p ON decks.id = p.decks_id
                 AND p.users_id = $user_id
+            JOIN privileges creator ON decks.id = creator.decks_id
+                AND creator.users_id = $user_id
+                AND p.`rank` = $creator
+            JOIN flashcards.users u on u.id = creator.users_id
         ORDER BY `name`",
             self::class
         );

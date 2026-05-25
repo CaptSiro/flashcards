@@ -13,7 +13,10 @@
     <script>
         AJAX.DOMAIN_HOME = "<?= $GLOBALS["__HOME__"] ?>";
         const stack_id = <?= $GLOBALS["stack_id"] ?>;
-        const cards = shuffle_mut(JSON.parse(`<?= str_replace("\\", "\\\\", json_encode($GLOBALS["cards"])) ?>`));
+        <?php $json = json_encode($GLOBALS["cards"], JSON_PRETTY_PRINT) ?>
+        <?php $json = str_replace("\\", "\\\\", $json) ?>
+        <?php $json = str_replace("`", "\\`", $json) ?>
+        const cards = shuffle_mut(JSON.parse(`<?= $json ?>`));
     </script>
     <script src="<?= $GLOBALS["__HOME__"] ?>/public/js/exam.js" defer></script>
 </head>

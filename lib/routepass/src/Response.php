@@ -465,6 +465,8 @@ class Response {
      * Parses object into JSON text representation and sends it to the user.
      */
     public function json($jsonEncodeAble, $jsonEncodeFlags = 0, $jsonEncodeDepth = 512) {
+        $this->setHeader('Content-Type', 'application/json');
+        $this->generateHeaders();
         echo(json_encode($jsonEncodeAble, $jsonEncodeFlags, $jsonEncodeDepth));
         $this->flush();
     }

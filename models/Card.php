@@ -19,6 +19,8 @@ class Card {
     public string $answer;
     public int $decks_id;
     public int $rank;
+    public string $decks_name;
+    public string $stacks_name;
 
 
 
@@ -93,6 +95,42 @@ class Card {
                     LEFT JOIN question_images qi ON i.src = qi.images_src
                 GROUP BY qi.cards_id
             ) as question_images ON question_images.cards_id = c.id",
+            self::class
+        );
+
+        if ($cards === false) {
+            return fail(new NotFoundExc("There are no cards in stack with id: " . $stack_id->value()));
+        }
+
+        return success($cards);
+    }
+
+    static function random(Param $deck_id, Param $count): Result {
+        $cards = Database::get()->fetch_all(
+            "SELECT c.decks_id, d.name as decks_name, s.name as stacks_name, c.id, question, answer, question_images.sources as question_images, answer_images.sources as answer_images
+        FROM cards_in_stacks
+            JOIN cards c ON cards_in_stacks.cards_id = c.id
+            JOIN stacks s ON cards_in_stacks.stacks_id = s.id
+            JOIN flashcards.decks d ON c.decks_id = d.id
+            LEFT JOIN (
+                SELECT
+                    ai.cards_id,
+                    GROUP_CONCAT(CONCAT(i.src, i.ext) SEPARATOR '/') sources
+                FROM images as i
+                    LEFT JOIN answer_images ai ON i.src = ai.images_src
+                GROUP BY ai.cards_id
+            ) as answer_images ON answer_images.cards_id = c.id
+            LEFT JOIN (
+                SELECT
+                    qi.cards_id,
+                    GROUP_CONCAT(CONCAT(i.src, i.ext) SEPARATOR '/') sources
+                FROM images as i
+                    LEFT JOIN question_images qi ON i.src = qi.images_src
+                GROUP BY qi.cards_id
+            ) as question_images ON question_images.cards_id = c.id
+            WHERE c.decks_id = $deck_id
+            ORDER BY RAND()
+            LIMIT $count",
             self::class
         );
 

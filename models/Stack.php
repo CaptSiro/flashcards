@@ -23,7 +23,7 @@ class Stack {
         $is_unique = Database::get()->fetch(
                 "SELECT COUNT(id) as amount
             FROM stacks
-            WHERE `name` = $name",
+            WHERE `name` = $name AND `decks_id` = $deck_id",
                 Count::class
             )->amount === 0;
 

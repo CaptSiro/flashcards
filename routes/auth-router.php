@@ -131,7 +131,7 @@ $auth_router->delete("/", [
 
 
 $auth_router->get("/stay-logged-in", [function (Request $request, Response $response) {
-    setcookie("PHPSESSID", $request->cookies->get("PHPSESSID"), time() + 86_400 * 30, "/");
+    setcookie("PHPSESSID", $request->cookies->get("PHPSESSID"), time() + 86_400 * 30, $_SERVER["HOME_DIR"]);
     $response->json(["message" => "Done"]);
 }]);
 

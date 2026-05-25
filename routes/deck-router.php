@@ -78,4 +78,32 @@ $deck_router->get("/users/", [
 
 
 
+$deck_router->get('/random', [
+    function (Request $request, Response $response) {
+        $ids = explode(',', $request->query->get('ids'));
+        $cards = [];
+
+        foreach ($ids as $id) {
+            $result = Deck::by_id(param(intval($id)));
+            if ($result->isFailure()) {
+                continue;
+            }
+
+            $deck = $result->getSuccess();
+            $c = Card::random(param($deck->id), param(1));
+            if ($c->isFailure()) {
+                continue;
+            }
+
+            $cards = array_merge($cards, $c->getSuccess());
+        }
+
+        $response->json(
+            $cards[array_rand($cards)]
+        );
+    },
+]);
+
+
+
 return $deck_router;
