@@ -33,7 +33,7 @@
 
 
     <div class="modals">
-        <div class="window form" id="create-deck">
+        <div class="window form" id="create-root">
             <div class="wrapper">
                 <label for="deck-name">Deck name:</label>
                 <input type="text" name="deck-name" id="deck-name">
@@ -52,7 +52,7 @@
         </div>
 
 
-        <div class="window form" id="create-stack">
+        <div class="window form" id="create-deck">
             <div class="wrapper">
                 <label for="stack-name">Stack name:</label>
                 <input type="text" name="stack-name" id="stack-name">
@@ -71,7 +71,7 @@
         </div>
 
 
-        <div class="window form" id="create-card">
+        <div class="window form" id="create-stack">
             <div id="question">
                 <div class="wrapper">
                     <label for="card-question">Question:</label>
