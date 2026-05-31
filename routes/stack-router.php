@@ -39,6 +39,30 @@ $stack_router->post("/", [
 
 
 
+$stack_router->get("/:id", [
+    Middleware::requireToBeLoggedIn(),
+    function (Request $request, Response $response) {
+        $stack_id = param($request->param->get("id"));
+        $user_id = param($request->session->get("user")->id);
+
+        $stack = Stack::by_id($stack_id, $user_id)
+            ->forwardFailure($response)
+            ->getSuccess();
+
+        Privilege::check(
+            $user_id,
+            param($stack->decks_id),
+            [Privilege::RANK_CREATOR, Privilege::RANK_EDITOR, Privilege::RANK_GUEST]
+        )
+            ->forwardFailure($response)
+            ->getSuccess();
+
+        $response->json($stack);
+    },
+], ["id" => Router::REGEX_NUMBER]);
+
+
+
 $stack_router->delete("/:id", [
     Middleware::requireToBeLoggedIn(),
     function (Request $request, Response $response) {
@@ -79,7 +103,7 @@ $stack_router->get("/in-deck/:id", [
         Privilege::check(
             param($request->session->get("user")->id),
             $deck_id,
-            [Privilege::RANK_CREATOR, Privilege::RANK_EDITOR, Privilege::RANK_QUEST]
+            [Privilege::RANK_CREATOR, Privilege::RANK_EDITOR, Privilege::RANK_GUEST]
         )
             ->forwardFailure($response)
             ->getSuccess();

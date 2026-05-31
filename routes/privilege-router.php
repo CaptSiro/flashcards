@@ -62,7 +62,7 @@ $privilege_router->patch("/:id", [
         $deck_id = param(intval($request->body->get("deck_id")));
         $rank = param($request->body->get("rank"));
 
-        if (!(in_array($rank->value(), [Privilege::RANK_EDITOR, Privilege::RANK_QUEST]) && $rank->value() !== 0)) {
+        if (!(in_array($rank->value(), [Privilege::RANK_EDITOR, Privilege::RANK_GUEST]) && $rank->value() !== 0)) {
             $response->fail(new InvalidArgumentExc("Invalid privilege rank."));
         }
 

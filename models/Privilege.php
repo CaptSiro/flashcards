@@ -14,7 +14,7 @@ class Privilege {
 
     const RANK_EDITOR = 1;
 
-    const RANK_QUEST = 2;
+    const RANK_GUEST = 2;
     const PRIVILEGES = [0, 1, 2];
     public int $id;
     public int $rank;

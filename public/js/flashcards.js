@@ -2,6 +2,15 @@ const CREATOR = 0;
 const EDITOR = 1;
 const GUEST = 2;
 
+const STATE_ROOT = 'root';
+const STATE_DECK = 'deck';
+const STATE_STACK = 'stack';
+
+const STATE_DEFAULT = {
+    id: "",
+    section: STATE_ROOT,
+};
+
 const buttonBack = $(".back");
 
 
@@ -22,81 +31,63 @@ $(".logout").addEventListener("pointerup", async () => {
 /**
  * @typedef State
  * @property {string} section
- * @property {HTMLElement} label
+ * @property {string} id
  */
-/**
- * @type {State[]}
- */
-const states = [{
-    section: "deck",
-    label: Span()
-}];
 
 buttonBack.addEventListener("pointerup", () => {
-    states.pop();
-    state_change();
+    history.back();
 });
 
-window.addEventListener("popstate", () => {
-    states.pop();
-    if (states.length === 0) {
-        return;
-    }
-
-    state_change();
+window.addEventListener("load", () => {
+    const s = get_state();
+    loaders.get(s.section)(s);
 });
 
+window.addEventListener("hashchange", () => {
+    const s = get_state();
+    loaders.get(s.section)(s);
+});
+
+
+const hash_regex = /#([\w_]+)-(\d+)/;
 /**
  * @return {State}
  */
 function get_state() {
-    if (states.length - 1 < 0) {
-        return {
-            section: "deck",
-            label: Span()
-        };
+    const groups = hash_regex.exec(location.hash);
+    if (groups === null) {
+        return STATE_DEFAULT;
     }
 
-    return states[states.length - 1];
+    return {
+        section: groups[1],
+        id: groups[2],
+    };
 }
 
 /**
  * @param {State} state
+ * @param {HTMLElement} label
  */
-function set_state(state) {
-    if (objectEqual(state, get_state(), ["label"])) {
-        return;
+function set_state(state, label = undefined) {
+    state_label.textContent = "";
+
+    if (label !== undefined) {
+        state_label.append(label);
     }
 
-    state_label.textContent = "";
-    state_label.append(state.label);
-
-    states.push(state);
-    buttonBack.style.opacity = "1";
-    // state_change();
-}
-
-const loaders = new Map([
-    ["deck", load_decks],
-    ["stack", load_stacks],
-    ["card", load_cards]
-]);
-
-const state_label = $(".state-label");
-
-function state_change() {
-    const s = get_state();
-    loaders.get(s.section)(s);
-
-    state_label.textContent = "";
-    state_label.append(s.label);
-
-    buttonBack.style.opacity = s.section === "deck"
+    buttonBack.style.opacity = state.section === STATE_ROOT
         ? "0"
         : "1";
 }
 
-state_change();
+const loaders = new Map([
+    [STATE_ROOT, load_decks],
+    [STATE_DECK, load_stacks],
+    [STATE_STACK, load_cards]
+]);
+
+const state_label = $(".state-label");
 
 
 
@@ -143,7 +134,7 @@ $("#create-deck button[type=submit]").addEventListener("pointerup", async () => 
     }
 
     deck_control.clear();
-    load_decks();
+    await load_decks(STATE_DEFAULT);
     clear_windows();
 });
 
@@ -160,14 +151,9 @@ $("#create-stack button[type=submit]").addEventListener("pointerup", async () =>
         return;
     }
 
-    const s = get_state();
-    if (s?.deck.id === undefined) {
-        return;
-    }
-
     const body = JSON.stringify({
         name: stack_name,
-        deck_id: s?.deck.id
+        deck_id: get_state().id
     });
 
     const response = stack_win.dataset.mode === "PUT"
@@ -180,7 +166,7 @@ $("#create-stack button[type=submit]").addEventListener("pointerup", async () =>
     }
 
     stack_control.clear();
-    load_stacks(get_state());
+    await load_stacks(get_state());
     clear_windows();
 });
 
@@ -194,6 +180,31 @@ const card_answer = card_win.querySelector("#answer");
 const card_answer_input = $("#card-answer");
 const card_answer_images = $("#card-answer-images");
 const card_control = new FormControl("create-card");
+
+card_question_input.addEventListener("keydown", event => {
+    switch (event.key.toLowerCase()) {
+        case "tab": {
+            event.preventDefault();
+            view_answer_form();
+            break;
+        }
+
+        case "escape": {
+            event.preventDefault();
+            card_question_input.blur();
+            clear_windows();
+            break;
+        }
+    }
+});
+
+card_answer_input.addEventListener("keydown", event => {
+    if (event.key.toLowerCase() === "escape") {
+        event.preventDefault();
+        card_answer_input.blur();
+        clear_windows();
+    }
+});
 
 $("#create-card .next").addEventListener("pointerup", view_answer_form);
 
@@ -216,16 +227,10 @@ $("#create-card button[type=submit]").addEventListener("pointerup", async () => 
         return;
     }
 
-    const s = get_state();
-    console.log(s);
-    if (s?.stack.id === undefined) {
-        return;
-    }
-
     const body = toFormData({
         question,
         answer,
-        stack_id: s.stack.id
+        stack_id: get_state().id
     });
 
     for (const file of question_images) {
@@ -251,13 +256,14 @@ $("#create-card button[type=submit]").addEventListener("pointerup", async () => 
     card_question_images.value = "";
     card_answer_images.value = "";
 
-    load_cards(get_state());
+    await load_cards(get_state());
     clear_windows();
 });
 
 function view_answer_form() {
     card_question.classList.add("display-none");
     card_answer.classList.remove("display-none");
+    card_answer_input.focus();
 }
 
 function view_question_form() {
@@ -301,7 +307,9 @@ function deck_label(deck) {
     return `${deck.name} (${deck.creator})`;
 }
 
-async function load_decks() {
+async function load_decks(state) {
+    set_state(state);
+
     const decks = await AJAX.get("/deck/users/", JSONHandler());
     if (decks.error !== undefined) {
         console.log(decks);
@@ -374,7 +382,9 @@ async function load_decks() {
                         })
                     ])
                 ]),
-                () => load_stacks({ deck })
+                () => {
+                    location.hash = STATE_DECK + "-" + deck.id;
+                }
             )
         );
     }
@@ -382,21 +392,20 @@ async function load_decks() {
 
 
 
-async function load_stacks(s) {
-    if (s.deck === undefined) {
-        return;
-    }
+async function get_deck(id) {
+    return await AJAX.get("/deck/" + id, JSONHandler());
+}
 
-    set_state({
-        section: "stack",
-        label: Span(_, [
-            "Deck: ",
-            Span("important", deck_label(s.deck))
-        ]),
-        deck: s.deck
-    });
+async function load_stacks(state) {
+    const deck = await get_deck(state.id);
+    console.log(deck);
 
-    const deck_id = s.deck.id;
+    set_state(state, Span(_, [
+        "Deck: ",
+        Span("important", deck_label(deck))
+    ]));
+
+    const deck_id = deck.id;
 
     const responses = await Promise.all([
         AJAX.get("/stack/in-deck/" + deck_id, JSONHandler()),
@@ -452,7 +461,9 @@ async function load_stacks(s) {
                     evt.target.closest(".stack").remove();
                 })
             ]),
-            () => load_cards({ stack }),
+            () => {
+                location.hash = STATE_STACK + "-" + stack.id;
+            },
             true
         );
 
@@ -466,21 +477,19 @@ async function load_stacks(s) {
 
 
 
-async function load_cards(s) {
-    if (s.stack === undefined) {
-        return;
-    }
+async function get_stack(id) {
+    return await AJAX.get("/stack/" + id, JSONHandler());
+}
 
-    set_state({
-        section: "card",
-        label: Span(_, [
-            "Stack: ",
-            Span("important", s.stack.name)
-        ]),
-        stack: s.stack
-    });
+async function load_cards(state) {
+    const stack = await get_stack(state.id);
 
-    const stack_id = s.stack.id;
+    set_state(state, Span(_, [
+        "Stack: ",
+        Span("important", stack.name)
+    ]));
+
+    const stack_id = stack.id;
 
     const responses = await Promise.all([
         AJAX.get("/card/in-stack/" + stack_id, JSONHandler()),
@@ -582,6 +591,7 @@ function AddButton() {
             const win = show_window("create-" + get_state().section);
             win.dataset.mode = "POST";
             win.querySelector("button[type=submit]").textContent = "Create";
+            win.querySelector('[name]')?.focus();
         })
     );
 }

@@ -159,7 +159,7 @@ $card_router->get("/in-stack/:id", [
         Privilege::check(
             $user_id,
             param($stack->decks_id),
-            [Privilege::RANK_CREATOR, Privilege::RANK_EDITOR, Privilege::RANK_QUEST]
+            [Privilege::RANK_CREATOR, Privilege::RANK_EDITOR, Privilege::RANK_GUEST]
         )
             ->forwardFailure($response);
 

@@ -29,6 +29,21 @@ $deck_router->post("/", [
 
 
 
+$deck_router->get("/:id", [
+    Middleware::requireToBeLoggedIn(),
+    function (Request $request, Response $response) {
+        $user_id = param($request->session->get("user")->id);
+        $deck_id = param($request->param->get("id"));
+
+        Privilege::check($user_id, $deck_id, [Privilege::RANK_CREATOR, Privilege::RANK_EDITOR, Privilege::RANK_GUEST])
+            ->forwardFailure($response);
+
+        $response->json(Deck::by_id($deck_id));
+    },
+]);
+
+
+
 $deck_router->delete("/:id", [
     Middleware::requireToBeLoggedIn(),
     function (Request $request, Response $response) {
