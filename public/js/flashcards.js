@@ -111,8 +111,8 @@ window.addEventListener("keydown", evt => {
 
 const deck_win = $("#create-root");
 const deck_name_input = $("#deck-name");
-const deck_control = new FormControl("create-deck");
-$("#create-deck button[type=submit]").addEventListener("pointerup", async () => {
+const deck_control = new FormControl("create-root");
+$("#create-root button[type=submit]").addEventListener("pointerup", async () => {
     const deck_name = deck_name_input.value.trim();
 
     if (deck_name === "") {
@@ -142,8 +142,8 @@ $("#create-deck button[type=submit]").addEventListener("pointerup", async () => 
 
 const stack_win = $("#create-deck");
 const stack_name_input = $("#stack-name");
-const stack_control = new FormControl("create-stack");
-$("#create-stack button[type=submit]").addEventListener("pointerup", async () => {
+const stack_control = new FormControl("create-deck");
+$("#create-deck button[type=submit]").addEventListener("pointerup", async () => {
     const stack_name = stack_name_input.value.trim();
 
     if (stack_name === "") {
@@ -179,7 +179,7 @@ const card_question_images = $("#card-question-images");
 const card_answer = card_win.querySelector("#answer");
 const card_answer_input = $("#card-answer");
 const card_answer_images = $("#card-answer-images");
-const card_control = new FormControl("create-card");
+const card_control = new FormControl("create-stack");
 
 card_question_input.addEventListener("keydown", event => {
     switch (event.key.toLowerCase()) {
@@ -206,11 +206,11 @@ card_answer_input.addEventListener("keydown", event => {
     }
 });
 
-$("#create-card .next").addEventListener("pointerup", view_answer_form);
+$("#create-stack .next").addEventListener("pointerup", view_answer_form);
 
-$("#create-card .previous").addEventListener("pointerup", view_question_form);
+$("#create-stack .previous").addEventListener("pointerup", view_question_form);
 
-$("#create-card button[type=submit]").addEventListener("pointerup", async () => {
+$("#create-stack button[type=submit]").addEventListener("pointerup", async () => {
     const question = card_question_input.value.trim();
     const question_images = card_question_images.files;
 
@@ -330,7 +330,7 @@ async function load_decks(state) {
                 [],
                 OptionalComponents(deck.rank === CREATOR || deck.rank === EDITOR, [
                     Opt("Edit", () => {
-                        const win = show_window("create-deck");
+                        const win = show_window("create-root");
                         win.dataset.mode = "PUT";
                         win.dataset.id = deck.id;
                         win.querySelector("button[type=submit]").textContent = "Edit";
@@ -441,7 +441,7 @@ async function load_stacks(state) {
             })],
             OptionalComponents(can_user_edit, [
                 Opt("Edit", () => {
-                    const win = show_window("create-stack");
+                    const win = show_window("create-deck");
                     win.dataset.mode = "PUT";
                     win.dataset.id = stack.id;
                     win.querySelector("button[type=submit]").textContent = "Edit";
@@ -520,7 +520,7 @@ async function load_cards(state) {
             || (card.question_images !== null && card.question_images !== undefined);
 
         const edit = () => {
-            const win = show_window("create-card");
+            const win = show_window("create-stack");
             win.dataset.mode = "PUT";
             win.dataset.id = card.id;
             win.querySelector("button[type=submit]").textContent = "Edit";
