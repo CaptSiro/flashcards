@@ -109,7 +109,7 @@ window.addEventListener("keydown", evt => {
 
 
 
-const deck_win = $("#create-deck");
+const deck_win = $("#create-root");
 const deck_name_input = $("#deck-name");
 const deck_control = new FormControl("create-deck");
 $("#create-deck button[type=submit]").addEventListener("pointerup", async () => {
@@ -140,7 +140,7 @@ $("#create-deck button[type=submit]").addEventListener("pointerup", async () => 
 
 
 
-const stack_win = $("#create-stack");
+const stack_win = $("#create-deck");
 const stack_name_input = $("#stack-name");
 const stack_control = new FormControl("create-stack");
 $("#create-stack button[type=submit]").addEventListener("pointerup", async () => {
@@ -172,7 +172,7 @@ $("#create-stack button[type=submit]").addEventListener("pointerup", async () =>
 
 
 
-const card_win = $("#create-card");
+const card_win = $("#create-stack");
 const card_question = card_win.querySelector("#question");
 const card_question_input = $("#card-question");
 const card_question_images = $("#card-question-images");
