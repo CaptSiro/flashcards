@@ -589,6 +589,10 @@ async function show_stats() {
     wrong_span.textContent = Number(outcomes[0]).toLocaleString();
     percentage_span.textContent = Number(Math.round(percentage * 100) / 100).toLocaleString() + "%";
 
+    if (stack_id === null || stack_id === undefined) {
+        return;
+    }
+
     const response = await AJAX.post("/exam/result", JSONHandler(), {
         body: JSON.stringify({
             fraction: percentage,

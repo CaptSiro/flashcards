@@ -327,7 +327,11 @@ async function load_decks(state) {
             Item(
                 "deck",
                 deck_label(deck),
-                [],
+                [Button("button-like", "Test", evt => {
+                    evt.stopImmediatePropagation();
+
+                    window.location.replace(AJAX.DOMAIN_HOME + "/exam/?deck=" + deck.id);
+                })],
                 OptionalComponents(deck.rank === CREATOR || deck.rank === EDITOR, [
                     Opt("Edit", () => {
                         const win = show_window("create-root");

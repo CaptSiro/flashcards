@@ -12,7 +12,7 @@
     <script src="<?= $GLOBALS["__HOME__"] ?>/public/js/tungsten.js"></script>
     <script>
         AJAX.DOMAIN_HOME = "<?= $GLOBALS["__HOME__"] ?>";
-        const stack_id = <?= $GLOBALS["stack_id"] ?>;
+        const stack_id = JSON.parse(<?= json_encode($GLOBALS["stack_id"]) ?>);
         <?php $json = json_encode($GLOBALS["cards"], JSON_PRETTY_PRINT) ?>
         <?php $json = str_replace("\\", "\\\\", $json) ?>
         <?php $json = str_replace("`", "\\`", $json) ?>
@@ -35,7 +35,11 @@
     <nav>
         <button class="button-like back"><span class="mono">&lt;</span></button>
         <div class="state-label">
-            <span>Stack: <i><b id="current-deck"><?= $GLOBALS["stack_name"] ?></b></i></span>
+            <?php if (is_null($GLOBALS["deck_name"])): ?>
+                <span>Stack: <i><b id="current-deck"><?= $GLOBALS["stack_name"] ?></b></i></span>
+            <?php else: ?>
+                <span>Deck: <i><b id="current-deck"><?= $GLOBALS["deck_name"] ?></b></i></span>
+            <?php endif; ?>
         </div>
         <span class="void"></span>
     </nav>
